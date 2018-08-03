@@ -9,15 +9,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentatio
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{67F47FBE-61D4-4928-A7C8-9FF8C3D8180E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HbCrm.Core.Tests", "Tests\HbCrm.Core.Tests\HbCrm.Core.Tests.csproj", "{98D3C545-F4DD-4393-9DF4-EC014C53FB04}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HbCrm.Core.Tests", "Tests\HbCrm.Core.Tests\HbCrm.Core.Tests.csproj", "{98D3C545-F4DD-4393-9DF4-EC014C53FB04}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HbCrm.Core", "Libraries\HbCrm.Core\HbCrm.Core.csproj", "{8C1583F0-F5C0-4D77-B2CA-B703CF9B4C65}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HbCrm.Core", "Libraries\HbCrm.Core\HbCrm.Core.csproj", "{8C1583F0-F5C0-4D77-B2CA-B703CF9B4C65}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HbCrm.Data", "Libraries\HbCrm.Data\HbCrm.Data.csproj", "{4FCF452C-36C6-4097-9F01-7C464715C385}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HbCrm.Data", "Libraries\HbCrm.Data\HbCrm.Data.csproj", "{4FCF452C-36C6-4097-9F01-7C464715C385}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HbCrm.Services", "Libraries\HbCrm.Services\HbCrm.Services.csproj", "{3E19D169-096C-4D3E-AEB4-0435B9091B63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HbCrm.Services", "Libraries\HbCrm.Services\HbCrm.Services.csproj", "{3E19D169-096C-4D3E-AEB4-0435B9091B63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HbCrm.Web", "Presentation\HbCrm.Web\HbCrm.Web.csproj", "{ABC585D1-437B-4F08-A012-74B3D79A231F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HbCrm.Web", "Presentation\HbCrm.Web\HbCrm.Web.csproj", "{ABC585D1-437B-4F08-A012-74B3D79A231F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HbCrm.Data.Tests", "Tests\HbCrm.Data.Tests\HbCrm.Data.Tests.csproj", "{D8AFCFC3-0F97-45ED-A48D-57161AA73E85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{ABC585D1-437B-4F08-A012-74B3D79A231F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ABC585D1-437B-4F08-A012-74B3D79A231F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ABC585D1-437B-4F08-A012-74B3D79A231F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8AFCFC3-0F97-45ED-A48D-57161AA73E85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8AFCFC3-0F97-45ED-A48D-57161AA73E85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8AFCFC3-0F97-45ED-A48D-57161AA73E85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8AFCFC3-0F97-45ED-A48D-57161AA73E85}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +61,7 @@ Global
 		{4FCF452C-36C6-4097-9F01-7C464715C385} = {3F835446-D0F1-4598-811A-4093C645CF63}
 		{3E19D169-096C-4D3E-AEB4-0435B9091B63} = {3F835446-D0F1-4598-811A-4093C645CF63}
 		{ABC585D1-437B-4F08-A012-74B3D79A231F} = {969F191D-D290-4B39-9478-2DC8246D7931}
+		{D8AFCFC3-0F97-45ED-A48D-57161AA73E85} = {67F47FBE-61D4-4928-A7C8-9FF8C3D8180E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {061B9E9B-FF92-4EEE-B044-6C4ACDB9C9D8}
