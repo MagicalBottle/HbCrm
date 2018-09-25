@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HbCrm.Services", "Libraries
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HbCrm.Web", "Presentation\HbCrm.Web\HbCrm.Web.csproj", "{ABC585D1-437B-4F08-A012-74B3D79A231F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HbCrm.Data.Tests", "Tests\HbCrm.Data.Tests\HbCrm.Data.Tests.csproj", "{D8AFCFC3-0F97-45ED-A48D-57161AA73E85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HbCrm.Data.Tests", "Tests\HbCrm.Data.Tests\HbCrm.Data.Tests.csproj", "{D8AFCFC3-0F97-45ED-A48D-57161AA73E85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
