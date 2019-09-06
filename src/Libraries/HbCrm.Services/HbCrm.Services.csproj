@@ -9,4 +9,9 @@
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="2.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\HbCrm.Core\HbCrm.Core.csproj" />
+    <ProjectReference Include="..\HbCrm.Data\HbCrm.Data.csproj" />
+  </ItemGroup>
+
 </Project>

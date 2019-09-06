@@ -17,7 +17,7 @@ namespace HbCrm.Data
         /// </summary>
         /// <typeparam name="TEntity">实体的类型</typeparam>
         /// <returns>给定的实体类型的实例的DbSet</returns>
-        DbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity;
+        DbSet<TEntity> Set<TEntity>() where TEntity : class;
 
         /// <summary>
         /// 把所有在context中的的更改写入的数据库
@@ -48,7 +48,7 @@ namespace HbCrm.Data
         /// <param name="sql">执行的sql</param>
         /// <param name="parameters">执行sql中的参数值</param>
         /// <returns>linq查询语句</returns>
-        IQueryable<TEntity> EntityFromSql<TEntity>(string sql,params object[] parameters) where TEntity : BaseEntity;
+        IQueryable<TEntity> EntityFromSql<TEntity>(string sql,params object[] parameters) where TEntity : class;
 
         /// <summary>
         /// 执行sql

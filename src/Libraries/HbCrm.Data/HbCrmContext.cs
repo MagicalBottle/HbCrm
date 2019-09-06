@@ -1,4 +1,4 @@
-﻿using HbCrm.Core;
+﻿using HbCrm.Data.Mapping;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,15 +7,14 @@ using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using HbCrm.Data.Mapping;
 
 namespace HbCrm.Data
 {
-    public partial class HbCrmObjectContext : DbContext, IDbContext
+    public partial class HbCrmContext : DbContext, IDbContext
     {
 
         #region Ctor
-        public HbCrmObjectContext(DbContextOptions<HbCrmObjectContext> options)
+        public HbCrmContext(DbContextOptions<HbCrmContext> options)
             : base(options)
         {
 
@@ -26,6 +25,7 @@ namespace HbCrm.Data
         #region Methods
 
         /// <summary>
+        /// nopcommerence的写法
         /// 进一步配置模型
         /// ①可以使用链式操作配置模型 modelBuilder.Entity<Blog>().ToTable("blogs").Property(b => b.BlogId).HasColumnName("blog_id");
         /// ②可以采用实现IEntityTypeConfiguration或者IQueryTypeConfiguration接口的类，然后调用modelBuilder.ApplyConfiguration(实现接口的配置类)
@@ -39,11 +39,11 @@ namespace HbCrm.Data
             //动态加载所有的配置
             var typeConfigurations = Assembly.GetExecutingAssembly().GetTypes().Where(type =>
                       (type.BaseType?.IsGenericType ?? false)
-                      && (type.BaseType.GetGenericTypeDefinition() == typeof(NopEntityTypeConfiguration<>)
-                          || type.BaseType.GetGenericTypeDefinition() == typeof(NopQueryTypeConfiguration<>)));
+                      && (type.BaseType.GetGenericTypeDefinition() == typeof(EntityTypeConfiguration<>)
+                          || type.BaseType.GetGenericTypeDefinition() == typeof(QueryTypeConfiguration<>)));
             foreach (var typeConfiguration in typeConfigurations)
             {
-                var configuration =(IMappingConfiguration) Activator.CreateInstance(typeConfiguration);
+                var configuration = (IMappingConfiguration)Activator.CreateInstance(typeConfiguration);
                 configuration.ApplyConfiguration(modelBuilder);
 
                 //如果不使用统一接口IMappingConfiguration
@@ -60,7 +60,7 @@ namespace HbCrm.Data
         /// </summary>
         /// <typeparam name="TEntity">实体的类型</typeparam>
         /// <returns>给定的实体类型的实例的DbSet</returns>
-        public virtual new DbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity
+        public virtual new DbSet<TEntity> Set<TEntity>() where TEntity : class
         {
             return base.Set<TEntity>();
         }
@@ -93,9 +93,9 @@ namespace HbCrm.Data
         /// <param name="sql">执行的sql</param>
         /// <param name="parameters">执行sql中的参数值</param>
         /// <returns>linq查询语句</returns>
-       public virtual IQueryable<TEntity> EntityFromSql<TEntity>(string sql, params object[] parameters) where TEntity : BaseEntity
+        public virtual IQueryable<TEntity> EntityFromSql<TEntity>(string sql, params object[] parameters) where TEntity : class
         {
-            return this.Set<TEntity>().FromSql(CreateSqlWithParameters(sql,parameters), parameters);
+            return this.Set<TEntity>().FromSql(CreateSqlWithParameters(sql, parameters), parameters);
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace HbCrm.Data
             }
             else
             {
-               result= this.Database.ExecuteSqlCommand(sql, parameters);
+                result = this.Database.ExecuteSqlCommand(sql, parameters);
             }
             //执行完后，要恢复原来的设置
             this.Database.SetCommandTimeout(previousTimeout);
@@ -176,7 +176,7 @@ namespace HbCrm.Data
             }
             return sql;
         }
-        
+
         #endregion
     }
 }

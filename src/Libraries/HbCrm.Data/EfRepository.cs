@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HbCrm.Data
 {
-    public partial class EfRepository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
+    public partial class EfRepository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         #region Fields
 

@@ -7,13 +7,41 @@ using System.Linq;
 using System.Threading.Tasks;
 using HbCrm.Services.Authentication;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using HbCrm.Data.Mapping;
+using HbCrm.Data;
+using Microsoft.Extensions.Configuration;
+using HbCrm.Core.Data;
+using HbCrm.Services.Admin;
+using HbCrm.Core.Data;
+using HbCrm.Data;
 
 namespace HbCrm.Web
 {
     public static class Builder
     {
-        public static void UseHbCrm(this IServiceCollection services, IHostingEnvironment env)
+        public static void UseHbCrm(this IServiceCollection services, IHostingEnvironment env, IConfiguration config)
         {
+            services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+            services.AddScoped<IDbContext, HbCrmContext>();
+            services.AddSingleton<DatabaseOption>(config.GetSection("Database").Get<DatabaseOption>());
+            services.AddDbContext<HbCrmContext>((provider, option) =>
+            {
+                DatabaseOption databaseOption = provider.GetRequiredService<DatabaseOption>();
+                switch (databaseOption.DbType)
+                {
+                    case DbTypes.MsSql:
+                        option.UseSqlServer(databaseOption.ConnectionString);
+                        break;
+                    case DbTypes.MySql:
+                        option.UseMySql(databaseOption.ConnectionString);
+                        break;
+                    default:
+                        throw new NotSupportedException("The database type "+databaseOption.DbType+" no support!");
+                        
+                }
+            });
             services.AddAuthentication(HbCrmAuthenticationDefaults.AdminAuthenticationScheme)
                    .AddCookie(HbCrmAuthenticationDefaults.AdminAuthenticationScheme, option =>
                    {
@@ -28,7 +56,7 @@ namespace HbCrm.Web
 
         }
 
-        public static void UseHbCrm(this IApplicationBuilder app, IHostingEnvironment env)
+        public static void UseHbCrm(this IApplicationBuilder app, IHostingEnvironment env, IConfiguration config)
         {
             if (env.IsDevelopment())
             {

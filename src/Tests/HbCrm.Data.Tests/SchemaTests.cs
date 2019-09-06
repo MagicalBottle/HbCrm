@@ -13,9 +13,9 @@ namespace HbCrm.Data.Tests
         [Fact]
         public void Can_Generate_Schema()
         {
-            DbContextOptions<HbCrmObjectContext> options = new DbContextOptions<HbCrmObjectContext>();
+            DbContextOptions<HbCrmContext> options = new DbContextOptions<HbCrmContext>();
 
-            HbCrmObjectContext context = new HbCrmObjectContext(options);
+            HbCrmContext context = new HbCrmContext(options);
             string script=context.GenerateCreateScript();
 
         }

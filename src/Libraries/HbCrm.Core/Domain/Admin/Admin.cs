@@ -2,23 +2,29 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace HbCrm.Core.Domain
+namespace HbCrm.Core.Domain.Admin
 {
+
     /// <summary>
     /// 管理员
     /// </summary>
-    public partial class Admin:BaseEntity
+    public partial class Admin : EditorEntity
     {
 
         #region Ctor
 
         public Admin()
         {
-
+            Guid = new Guid();
         }
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// 主键
+        /// </summary>
+        public int Id { get; set; }
 
         /// <summary>
         /// Admin 的 Guid
@@ -28,7 +34,12 @@ namespace HbCrm.Core.Domain
         /// <summary>
         /// 登录账号名称
         /// </summary>
-        public string Name { get; set; }
+        public string UserName { get; set; }
+
+        /// <summary>
+        /// 登录密码 密文
+        /// </summary>
+        public string Password { get; set; }
 
         /// <summary>
         /// 昵称
@@ -43,7 +54,7 @@ namespace HbCrm.Core.Domain
         /// <summary>
         /// 手机号
         /// </summary>
-        public string MobileNumber { get; set; }
+        public string MobilePhone { get; set; }
         #endregion
 
 

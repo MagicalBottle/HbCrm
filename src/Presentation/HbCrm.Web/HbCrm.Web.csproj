@@ -13,9 +13,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\HbCrm.Data\HbCrm.Data.csproj" />
     <ProjectReference Include="..\..\Libraries\HbCrm.Services\HbCrm.Services.csproj" />
   </ItemGroup>
 
