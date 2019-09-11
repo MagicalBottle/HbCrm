@@ -25,7 +25,7 @@ namespace HbCrm.Services.Authentication
         /// <summary>
         /// 后台登录页面
         /// </summary>
-        public static PathString LoginPath => new PathString("/Login");
+        public static PathString LoginPath => new PathString("/Admin/Home/Login");
         
         /// <summary>
         ///后台没有权限跳转的页面

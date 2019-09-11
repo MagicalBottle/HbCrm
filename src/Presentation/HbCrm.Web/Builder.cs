@@ -62,6 +62,7 @@ namespace HbCrm.Web
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseStaticFiles();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

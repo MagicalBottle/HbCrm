@@ -1,0 +1,39 @@
+﻿@{
+    Layout = "_NormalLayout";
+    ViewBag.Title = "HBCRM-登录";
+}
+<div class="container-fluid">
+    <div class="row">
+        <form method="post" class="col-sm-10 col-md-10 col-lg-8  col-xl-4  offset-sm-1 offset-md-1 offset-lg-4 offset-xl-4">
+            <div class="form-group row " >
+                <label for="userName" class="col-2">用户名</label>
+                <input type="email" class="form-control col-10 is-invalid" id="userName" aria-describedby="userNameHelp" placeholder="请输入用户名">
+                <div class="invalid-feedback offset-2">
+                    请输入用户名
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="password" class="col-2">密码</label>
+                <input type="password" class="form-control col-10 " id="password" placeholder="请输入密码">
+                
+            </div>
+            <div class="form-group row">
+                <div class="col-10 offset-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="isPersistent">
+                        <label class="form-check-label" for="isPersistent">
+                            记住我
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-4 offset-4">
+                    <button type="submit" class="btn btn-primary login">登录</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+

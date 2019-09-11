@@ -15,7 +15,7 @@ namespace HbCrm.Core.Domain.Admin
 
         public Admin()
         {
-            Guid = new Guid();
+            Guid = new Guid().ToString();
         }
         #endregion
 
@@ -29,7 +29,7 @@ namespace HbCrm.Core.Domain.Admin
         /// <summary>
         /// Admin 的 Guid
         /// </summary>
-        public Guid Guid { get; set; }
+        public string Guid { get; set; }
 
         /// <summary>
         /// 登录账号名称
@@ -55,6 +55,12 @@ namespace HbCrm.Core.Domain.Admin
         /// 手机号
         /// </summary>
         public string MobilePhone { get; set; }
+
+        /// <summary>
+        /// QQ
+        /// </summary>
+        public string QQ { get; set; }
+
         #endregion
 
 

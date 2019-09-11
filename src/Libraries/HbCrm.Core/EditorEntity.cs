@@ -22,9 +22,9 @@ namespace HbCrm.Core
         /// </summary>
         public virtual DateTime? CreateDate { get; set; }
         /// <summary>
-        /// 修改人ID
+        /// 最后修改人ID
         /// </summary>
-        public virtual int LastUpdateBy { get; set; }
+        public virtual int? LastUpdateBy { get; set; }
         /// <summary>
         /// 最后修改人
         /// </summary>
