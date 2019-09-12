@@ -21,6 +21,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HbCrm.Web", "Presentation\H
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HbCrm.Data.Tests", "Tests\HbCrm.Data.Tests\HbCrm.Data.Tests.csproj", "{D8AFCFC3-0F97-45ED-A48D-57161AA73E85}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reference", "Reference", "{8E4C68DC-EA32-4B06-8F60-639234B54299}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Bootstrap", "Bootstrap", "{3D899F16-CA58-4753-8329-6C671A59F57B}"
+	ProjectSection(SolutionItems) = preProject
+		Resources.txt = Resources.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +69,7 @@ Global
 		{3E19D169-096C-4D3E-AEB4-0435B9091B63} = {3F835446-D0F1-4598-811A-4093C645CF63}
 		{ABC585D1-437B-4F08-A012-74B3D79A231F} = {969F191D-D290-4B39-9478-2DC8246D7931}
 		{D8AFCFC3-0F97-45ED-A48D-57161AA73E85} = {67F47FBE-61D4-4928-A7C8-9FF8C3D8180E}
+		{3D899F16-CA58-4753-8329-6C671A59F57B} = {8E4C68DC-EA32-4B06-8F60-639234B54299}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {061B9E9B-FF92-4EEE-B044-6C4ACDB9C9D8}

@@ -2,38 +2,34 @@
     Layout = "_NormalLayout";
     ViewBag.Title = "HBCRM-登录";
 }
-<div class="container-fluid">
-    <div class="row">
-        <form method="post" class="col-sm-10 col-md-10 col-lg-8  col-xl-4  offset-sm-1 offset-md-1 offset-lg-4 offset-xl-4">
-            <div class="form-group row " >
-                <label for="userName" class="col-2">用户名</label>
-                <input type="email" class="form-control col-10 is-invalid" id="userName" aria-describedby="userNameHelp" placeholder="请输入用户名">
-                <div class="invalid-feedback offset-2">
-                    请输入用户名
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="password" class="col-2">密码</label>
-                <input type="password" class="form-control col-10 " id="password" placeholder="请输入密码">
-                
-            </div>
-            <div class="form-group row">
-                <div class="col-10 offset-2">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="isPersistent">
-                        <label class="form-check-label" for="isPersistent">
-                            记住我
-                        </label>
+<link rel="stylesheet" href="~/css/login.css" />
+<body class="bg-primary">
+    <div class="container-fluid ">
+        <div class="row mb-5 login-container">
+            <div class="col-sm-8 col-md-6 col-lg-4 mx-auto">
+                <div class="card card-signin mb-5 flex-row rounded-1">
+                    <div class="bg-login-image d-flex col-5"></div>
+                    <div class="card-body col-7">
+                        <h5 class="card-title text-center">HBCRM</h5>
+                        <form class="form-signin">
+                            <div class="form-label-group mb-3 ">
+                                <input type="text" id="userName" class="form-control" placeholder="用户名" >
+                            </div>
+
+                            <div class="form-label-group   mb-3">
+                                <input type="password" id="password" class="form-control" placeholder="密码" >
+                            </div>
+
+                            <div class="custom-control custom-checkbox   mb-3">
+                                <input type="checkbox" class="custom-control-input" id="isPersistent">
+                                <label class="custom-control-label" for="isPersistent">记住我</label>
+                            </div>
+                            <button class="btn btn-lg btn-primary btn-block text-uppercase " type="submit" id="login">登录</button>
+                        </form>
                     </div>
                 </div>
             </div>
-            <div class="form-group row">
-                <div class="col-sm-4 offset-4">
-                    <button type="submit" class="btn btn-primary login">登录</button>
-                </div>
-            </div>
-
-        </form>
+        </div>
     </div>
-</div>
+</body>
 

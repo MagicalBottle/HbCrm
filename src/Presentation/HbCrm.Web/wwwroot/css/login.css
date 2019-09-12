@@ -1,0 +1,14 @@
+﻿.login-container {
+    margin-top:10rem;
+}
+.bg-login-image {
+    background: scroll center url("../images/login-card-left.jpg");
+    background-size: cover;
+}
+.card-signin{
+    overflow:hidden;
+    /*border-radius:1rem;*/
+}
+.rounded-1 {
+    border-radius:1rem;
+}

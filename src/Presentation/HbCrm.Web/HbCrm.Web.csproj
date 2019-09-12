@@ -9,7 +9,6 @@
     <Folder Include="Models\Customer\" />
     <Folder Include="wwwroot\lib\" />
     <Folder Include="wwwroot\js\" />
-    <Folder Include="wwwroot\css\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 

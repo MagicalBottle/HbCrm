@@ -1,0 +1,42 @@
+bootstrap官方地址
+https://getbootstrap.com/
+
+bootstrap4中文文档
+https://getbootstrap.net/docs/getting-started/javascript/
+
+bootstrap3中文文档
+https://www.bootcss.com/
+
+实例
+http://sudasuta.com/bootstrap-admin-templates.html
+https://binarytheme.com/BTlivedemos/04-2014/10/bs-admin-bcore/icon.html
+
+AdminLTE3 bootstrap4
+https://adminlte.io/themes/dev/AdminLTE/index3.html 参考这个
+
+登录页
+https://startbootstrap.com/snippets/registration-page/
+https://startbootstrap.com/snippets/login/
+
+https://startbootstrap.com/themes/sb-admin-2/ 参考这个
+
+6.中文网主题
+https://www.bootstraptheme.cn/houtaizhuti/
+
+1. Bootstrap 4 网站模板
+https://themewagon.com/themes/free-bootstrap-weddi
+
+2. 免费的Bootstrap模板
+https://themefisher.com/free-bootstrap-templates/
+
+3. 免费的Bootstrap模板和主题
+https://gridgum.com/themes/category/free/
+
+4. 最佳的Bootstrap模板
+https://colorlib.com/wp/cat/bootstrap/
+
+5. 最全的Bootstrap模板
+https://startbootstrap.com/template-categories/all/  snippets  这里可以直接拿代码  分功能（轮播图）
+
+Bootstrap模板
+https://templatemo.com/page/1
