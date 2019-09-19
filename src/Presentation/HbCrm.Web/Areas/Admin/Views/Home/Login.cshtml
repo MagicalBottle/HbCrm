@@ -4,24 +4,24 @@
 }
 <link rel="stylesheet" href="~/css/login.css" />
 <body class="bg-primary">
-    <div class="container-fluid ">
-        <div class="row mb-5 login-container">
+    <div class="container-fluid row">
+        <div class="row align-items-center w-100 login-container">
             <div class="col-sm-8 col-md-6 col-lg-4 mx-auto">
-                <div class="card card-signin mb-5 flex-row rounded-1">
+                <div class="card card-signin  flex-row rounded-1">
                     <div class="bg-login-image d-flex col-5"></div>
                     <div class="card-body col-7">
                         <h5 class="card-title text-center">HBCRM</h5>
                         <form class="form-signin">
                             <div class="form-label-group mb-3 ">
-                                <input type="text" id="userName" class="form-control" placeholder="用户名" >
+                                <input type="text" name="userName" class="form-control" placeholder="用户名">
                             </div>
 
                             <div class="form-label-group   mb-3">
-                                <input type="password" id="password" class="form-control" placeholder="密码" >
+                                <input type="password" name="password" class="form-control" placeholder="密码">
                             </div>
 
                             <div class="custom-control custom-checkbox   mb-3">
-                                <input type="checkbox" class="custom-control-input" id="isPersistent">
+                                <input type="checkbox" class="custom-control-input" id="isPersistent" name="isPersistent" >
                                 <label class="custom-control-label" for="isPersistent">记住我</label>
                             </div>
                             <button class="btn btn-lg btn-primary btn-block text-uppercase " type="submit" id="login">登录</button>
@@ -31,5 +31,46 @@
             </div>
         </div>
     </div>
+    <script src="~/lib/jquery-validation/jquery.validate.js"></script>
+    <script src="~/lib/jquery-formvalidation/js/formvalidation.js"></script>
+    <script type="text/javascript">
+        var vali = $(".form-signin").formvalidation({
+            rules: {
+                userName: {
+                    required: true
+                },
+                password: {
+                    required: true
+                }
+            },
+            messages: {
+                userName: "请输入登录名",
+                password: "请输入密码"
+            },
+            submitHandler: function (form) {
+                var isPersistent = $("#isPersistent")[0].checked;
+                var requestData = "isPersistent=" + isPersistent + "&" + $('.form-signin').serialize()
+                $.ajax({
+                    type: "POST",
+                    url: "",
+                    dataType: "json",
+                    data: requestData,
+                    error: function (request, message, error) { 
+                        alert(request);
+                    },
+                    success: function (responseData) {
+                        data = JSON.parse(responseData);
+                        if (data.LoginStatus == 1) { 
+                            window.location.href = "index";
+                        }
+                        if (data.LoginStatus == 0) {
+                            alert("登录失败");
+                            return;
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 

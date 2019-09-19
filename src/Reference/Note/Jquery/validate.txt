@@ -1,0 +1,19 @@
+﻿本来想用BootstrapValidator (http://bootstrapvalidator.com)，但是他不在更新还是基于Bootstrap3.X
+
+我们用Bootstrap4+ validation   https://jqueryvalidation.org/
+
+参考了		jQuery 插件开发 https://www.cnblogs.com/gavin-num1/p/5655126.html
+			Bootstrap4+ validation封装 https://blog.csdn.net/u010506919/article/details/75137353
+
+				Bootstrap4 关于气泡 https://getbootstrap.com/docs/4.3/components/tooltips/
+				关于表单验证 https://getbootstrap.com/docs/4.3/components/forms/?#tooltips
+                $element.tooltip("dispose");//清除以前的气泡
+                $element.addClass("is-valid");//添加已验证样式
+                $element.removeClass("is-invalid");//清除未验证样式
+
+				jQuery 防止提交递归 https://jqueryvalidation.org/documentation/
+				 $("#myform").validate({
+				  submitHandler: function(form) {
+					form.submit();
+				  }
+				 });

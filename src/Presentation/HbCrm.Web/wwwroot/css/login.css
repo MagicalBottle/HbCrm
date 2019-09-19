@@ -1,5 +1,19 @@
-﻿.login-container {
-    margin-top:10rem;
+﻿html, body {
+    height: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+}
+body {
+    display: -ms-flexbox; 
+    display: flex;
+    align-content: center !important;
+    justify-content: center !important;
+}
+
+.login-container {
+    /*position:absolute;
+    top:50%;
+    transform:translateY(-50%);*/
 }
 .bg-login-image {
     background: scroll center url("../images/login-card-left.jpg");
