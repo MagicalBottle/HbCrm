@@ -1,4 +1,6 @@
-﻿@{
+﻿@using HbCrm.Core.Configuration;
+@inject HbCrmConfiguration Configuration
+@{
     Layout = "_NormalLayout";
     ViewBag.Title = "HBCRM-登录";
 }
@@ -11,7 +13,7 @@
                     <div class="bg-login-image d-flex col-5"></div>
                     <div class="card-body col-7">
                         <h5 class="card-title text-center">HBCRM</h5>
-                        <form class="form-signin">
+                        <form class="form-signin" action="@Url.Action("Login", "Home", new { area = "Admin" })">
                             <div class="form-label-group mb-3 ">
                                 <input type="text" name="userName" class="form-control" placeholder="用户名">
                             </div>
@@ -21,7 +23,7 @@
                             </div>
 
                             <div class="custom-control custom-checkbox   mb-3">
-                                <input type="checkbox" class="custom-control-input" id="isPersistent" name="isPersistent" >
+                                <input type="checkbox" class="custom-control-input" id="isPersistent" name="isPersistent">
                                 <label class="custom-control-label" for="isPersistent">记住我</label>
                             </div>
                             <button class="btn btn-lg btn-primary btn-block text-uppercase " type="submit" id="login">登录</button>
@@ -52,16 +54,19 @@
                 var requestData = "isPersistent=" + isPersistent + "&" + $('.form-signin').serialize()
                 $.ajax({
                     type: "POST",
-                    url: "",
+                    url: "@Url.Action("Login", "Home", new { area = "Admin" })",
                     dataType: "json",
                     data: requestData,
-                    error: function (request, message, error) { 
+                    error: function (request, message, error) {
                         alert(request);
                     },
                     success: function (responseData) {
                         data = JSON.parse(responseData);
-                        if (data.LoginStatus == 1) { 
-                            window.location.href = "index";
+                        if (data.LoginStatus == 1) {
+                            if (data.ReturnUrl && data.ReturnUrl.length!=0) {
+                            window.location.href =data.ReturnUrl;
+                            }
+                            window.location.href ="@Url.Action("Index", "Home", new { area = "Admin" })";
                         }
                         if (data.LoginStatus == 0) {
                             alert("登录失败");

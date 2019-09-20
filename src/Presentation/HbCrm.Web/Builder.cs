@@ -15,6 +15,12 @@ using HbCrm.Core.Data;
 using HbCrm.Services.Admin;
 using HbCrm.Core.Data;
 using HbCrm.Data;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using HbCrm.Core.Configuration;
+using HbCrm.Core.Domain.Authorize;
+using HbCrm.Services.Authorize;
+using Microsoft.AspNetCore.Authorization;
+using HbCrm.Services.Web;
 
 namespace HbCrm.Web
 {
@@ -22,13 +28,15 @@ namespace HbCrm.Web
     {
         public static void UseHbCrm(this IServiceCollection services, IHostingEnvironment env, IConfiguration config)
         {
-            services.AddScoped<IAdminService, AdminService>();
-            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
             services.AddScoped<IDbContext, HbCrmContext>();
-            services.AddSingleton<DatabaseOption>(config.GetSection("Database").Get<DatabaseOption>());
+            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+
+            HbCrmConfiguration hbCrmConfiguration = config.GetSection("HbCrmConfiguration").Get<HbCrmConfiguration>();
+            services.TryAddSingleton<HbCrmConfiguration>(hbCrmConfiguration);
+
             services.AddDbContext<HbCrmContext>((provider, option) =>
             {
-                DatabaseOption databaseOption = provider.GetRequiredService<DatabaseOption>();
+                DatabaseOption databaseOption = provider.GetRequiredService<HbCrmConfiguration>().DatabaseOption;
                 switch (databaseOption.DbType)
                 {
                     case DbTypes.MsSql:
@@ -38,20 +46,37 @@ namespace HbCrm.Web
                         option.UseMySql(databaseOption.ConnectionString);
                         break;
                     default:
-                        throw new NotSupportedException("The database type "+databaseOption.DbType+" no support!");
-                        
+                        throw new NotSupportedException("The database type " + databaseOption.DbType + " no support!");
+
                 }
             });
+
+
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IAuthenticationService, CookieAuthenticationService>();
+            services.AddScoped<IWorkContext, WorkContext>();
+            services.AddScoped<IPermissionService, PermissionService>();
+
             services.AddAuthentication(HbCrmAuthenticationDefaults.AdminAuthenticationScheme)
                    .AddCookie(HbCrmAuthenticationDefaults.AdminAuthenticationScheme, option =>
                    {
                        option.LoginPath = HbCrmAuthenticationDefaults.LoginPath;
                        option.AccessDeniedPath = HbCrmAuthenticationDefaults.AccessDeniedPath;
-                   })
-                   .AddCookie(HbCrmAuthenticationDefaults.CustomerAuthenticationScheme, option =>
-                   {
-                       option.LoginPath = HbCrmAuthenticationDefaults.SigninPath;
+                       option.Cookie.Name = HbCrmAuthenticationDefaults.AdminAuthenticationScheme;
                    });
+                   //.AddCookie(HbCrmAuthenticationDefaults.CustomerAuthenticationScheme, option =>
+                   //{
+                   //    option.LoginPath = HbCrmAuthenticationDefaults.SigninPath;
+                   //});
+
+            services.AddAuthorization(options =>
+                PermissionKeys.AllPermissions.ForEach(keys =>
+                    options.AddPolicy(keys.Name, policy => policy.Requirements.Add(new AdminAuthorizationRequirement { Policy=keys.Name}))
+            ));
+
+            services.AddSingleton<IAuthorizationHandler, AdminAuthorizationHandler>();
+
             services.AddMvc();
 
         }
@@ -62,6 +87,7 @@ namespace HbCrm.Web
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseAuthentication();
             app.UseStaticFiles();
             app.UseMvc(routes =>
             {

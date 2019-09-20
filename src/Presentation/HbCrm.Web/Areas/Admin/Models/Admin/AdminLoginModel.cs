@@ -21,5 +21,10 @@ namespace HbCrm.Web.Areas.Admin.Models.Admin
         /// cookie持久化
         /// </summary>
         public bool IsPersistent { get; set; }
+
+        /// <summary>
+        /// 跳转地址
+        /// </summary>
+        public string ReturnUrl { get; set; }
     }
 }

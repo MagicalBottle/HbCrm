@@ -7,8 +7,16 @@ namespace HbCrm.Web.Areas.Admin.Models.Admin
 {
     public class AdminLoginSuccessModel
     {
+        /// <summary>
+        /// 登录状态
+        /// </summary>
         public LoginStatus LoginStatus { get; set; }
-        
+
+        /// <summary>
+        /// 跳转地址
+        /// </summary>
+        public string ReturnUrl { get; set; }
+
     }
 
     public enum LoginStatus
