@@ -36,6 +36,7 @@ namespace HbCrm.Web.Areas.Admin.Controllers
         public IActionResult Index()
         {
             var admin = _workContext.Admin ;
+            List<SysAdminRole> ars = admin.AdminRoles;
             return View();
         }
 
@@ -49,7 +50,7 @@ namespace HbCrm.Web.Areas.Admin.Controllers
         [AllowAnonymous]
         public IActionResult Login(AdminLoginModel adminLoginModel)
         {
-            HbCrm.Core.Domain.Admin.Admin admin = _adminService.GetAdmin(adminLoginModel.UserName);
+            HbCrm.Core.Domain.Admin.SysAdmin admin = _adminService.GetAdminByUserName(adminLoginModel.UserName);
             AdminLoginSuccessModel loginSuccessModel = new AdminLoginSuccessModel();
             loginSuccessModel.LoginStatus = LoginStatus.Error;
             if (admin != null && admin.Password == adminLoginModel.Password)

@@ -6,6 +6,6 @@ namespace HbCrm.Services.Web
 {
    public interface IWorkContext
     {
-        HbCrm.Core.Domain.Admin.Admin Admin { get; set; }
+        HbCrm.Core.Domain.Admin.SysAdmin Admin { get; set; }
     }
 }

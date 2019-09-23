@@ -20,11 +20,11 @@ namespace HbCrm.Core
         /// <summary>
         /// 创建日期
         /// </summary>
-        public virtual DateTime? CreateDate { get; set; }
+        public virtual DateTime CreateDate { get; set; }
         /// <summary>
         /// 最后修改人ID
         /// </summary>
-        public virtual int? LastUpdateBy { get; set; }
+        public virtual int LastUpdateBy { get; set; }
         /// <summary>
         /// 最后修改人
         /// </summary>
@@ -32,6 +32,6 @@ namespace HbCrm.Core
         /// <summary>
         /// 最后更新日期
         /// </summary>
-        public virtual DateTime? LastUpdateDate { get; set; }
+        public virtual DateTime LastUpdateDate { get; set; }
     }
 }

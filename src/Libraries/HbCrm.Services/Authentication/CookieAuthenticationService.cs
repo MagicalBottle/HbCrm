@@ -15,7 +15,7 @@ namespace HbCrm.Services.Authentication
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IAdminService _adminService;
 
-        private HbCrm.Core.Domain.Admin.Admin _cachedAdmin;
+        private HbCrm.Core.Domain.Admin.SysAdmin _cachedAdmin;
 
         public CookieAuthenticationService(IHttpContextAccessor httpContextAccessor, IAdminService adminService)
         {
@@ -28,7 +28,7 @@ namespace HbCrm.Services.Authentication
         /// </summary>
         /// <param name="admin">登录的账号</param>
         /// <param name="isPersistent">登录信息持久化到客户端，true 是，false 否</param>
-        public async void SignIn(Core.Domain.Admin.Admin admin, bool isPersistent)
+        public async void SignIn(Core.Domain.Admin.SysAdmin admin, bool isPersistent)
         {
 
             List<Claim> claims = new List<Claim>();
@@ -58,7 +58,7 @@ namespace HbCrm.Services.Authentication
         /// 获取身份验证的账号
         /// </summary>
         /// <returns></returns>
-        public HbCrm.Core.Domain.Admin.Admin GetAuthenticatedAdmin()
+        public HbCrm.Core.Domain.Admin.SysAdmin GetAuthenticatedAdmin()
         {
             if (_cachedAdmin != null)
             {
@@ -72,14 +72,14 @@ namespace HbCrm.Services.Authentication
             }
 
 
-            HbCrm.Core.Domain.Admin.Admin admin = null;
+            HbCrm.Core.Domain.Admin.SysAdmin admin = null;
             Claim adminClaim = authenticateResult.Principal.FindFirst(
                 claim => claim.Type == ClaimTypes.Name
              && claim.Issuer == HbCrmAuthenticationDefaults.ClaimsIssuer);
 
             if (adminClaim != null)
             {
-                admin = _adminService.GetAdmin(adminClaim.Value);
+                admin = _adminService.GetAdminByUserName(adminClaim.Value);
             }
 
             if (admin == null)

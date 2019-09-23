@@ -7,11 +7,15 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace HbCrm.Data.Mapping.Admin
 {
-    public class AdminMap : EntityTypeConfiguration<HbCrm.Core.Domain.Admin.Admin>
+    public class SysAdminMap : EntityTypeConfiguration<SysAdmin>
     {
-        public override void Configure(EntityTypeBuilder<Core.Domain.Admin.Admin> builder)
+        public override void Configure(EntityTypeBuilder<SysAdmin> builder)
         {
-            builder.HasKey(admin => admin.Id);
+            builder.ToTable("sys_admin");
+            builder.HasKey(model => model.Id);
+            //builder.Ignore(model => model.AdminRoles);
+
+            //builder.Ignore(modle => modle.Roles);
             //builder.Property(admin => admin.CreatebyName).HasMaxLength(50);
             //builder.Property(admin => admin.Email).HasMaxLength(200);
             //builder.Property(admin => admin.Guid).HasMaxLength(64);

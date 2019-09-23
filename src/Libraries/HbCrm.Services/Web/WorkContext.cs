@@ -12,7 +12,7 @@ namespace HbCrm.Services.Web
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IAdminService _adminService;
-        private HbCrm.Core.Domain.Admin.Admin _cachedAdmin;
+        private HbCrm.Core.Domain.Admin.SysAdmin _cachedAdmin;
 
         public WorkContext(IHttpContextAccessor httpContextAccessor, IAdminService adminService)
         {
@@ -22,7 +22,7 @@ namespace HbCrm.Services.Web
         /// <summary>
         /// 当前登录用户
         /// </summary>
-        public HbCrm.Core.Domain.Admin.Admin Admin
+        public HbCrm.Core.Domain.Admin.SysAdmin Admin
         {
             get
             {
@@ -40,7 +40,7 @@ namespace HbCrm.Services.Web
 
                     if (adminClaim != null)
                     {
-                        _cachedAdmin = _adminService.GetAdmin(adminClaim.Value);
+                        _cachedAdmin = _adminService.GetAdminByUserName(adminClaim.Value);
                     }
                     return _cachedAdmin;
 

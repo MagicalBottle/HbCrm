@@ -32,6 +32,8 @@ namespace HbCrm.Data
         ///     实现接口的类中实现方法Configure()在方法中配置模型
         ///     因为有两个接口，所以这里自定义一个接口IMappingConfiguration，用来统一上面两个接口。
         ///     也可以不用定义接口，但是要分别遍历两个接口的实现类，直接modelBuilder.ApplyConfiguration(实现接口的配置类)
+        ///     
+        ///     ***modelBuilder.ApplyConfigurationsFromAssembly();或者直接用这个方法，自动读取****
         /// </summary>
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -45,7 +47,6 @@ namespace HbCrm.Data
             {
                 var configuration = (IMappingConfiguration)Activator.CreateInstance(typeConfiguration);
                 configuration.ApplyConfiguration(modelBuilder);
-
                 //如果不使用统一接口IMappingConfiguration
                 //遍历的时候区分一下接口
                 //(NopEntityTypeConfiguration) Activator.CreateInstance(typeConfiguration);
@@ -60,7 +61,7 @@ namespace HbCrm.Data
         /// </summary>
         /// <typeparam name="TEntity">实体的类型</typeparam>
         /// <returns>给定的实体类型的实例的DbSet</returns>
-        public virtual new DbSet<TEntity> Set<TEntity>() where TEntity : class
+        protected virtual new DbSet<TEntity> Set<TEntity>() where TEntity : class
         {
             return base.Set<TEntity>();
         }

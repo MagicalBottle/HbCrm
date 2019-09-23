@@ -36,6 +36,7 @@ namespace HbCrm.Web
 
             services.AddDbContext<HbCrmContext>((provider, option) =>
             {
+                option.UseLazyLoadingProxies();
                 DatabaseOption databaseOption = provider.GetRequiredService<HbCrmConfiguration>().DatabaseOption;
                 switch (databaseOption.DbType)
                 {
@@ -64,11 +65,11 @@ namespace HbCrm.Web
                        option.LoginPath = HbCrmAuthenticationDefaults.LoginPath;
                        option.AccessDeniedPath = HbCrmAuthenticationDefaults.AccessDeniedPath;
                        option.Cookie.Name = HbCrmAuthenticationDefaults.AdminAuthenticationScheme;
+                   })
+                   .AddCookie(HbCrmAuthenticationDefaults.CustomerAuthenticationScheme, option =>
+                   {
+                       option.LoginPath = HbCrmAuthenticationDefaults.SigninPath;
                    });
-                   //.AddCookie(HbCrmAuthenticationDefaults.CustomerAuthenticationScheme, option =>
-                   //{
-                   //    option.LoginPath = HbCrmAuthenticationDefaults.SigninPath;
-                   //});
 
             services.AddAuthorization(options =>
                 PermissionKeys.AllPermissions.ForEach(keys =>

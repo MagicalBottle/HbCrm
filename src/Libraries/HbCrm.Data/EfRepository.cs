@@ -27,7 +27,7 @@ namespace HbCrm.Data
 
         #region Properties
 
-        protected virtual DbSet<TEntity> Entities
+        public  virtual DbSet<TEntity> Entities
         {
             get {
                 if (_entities == null)

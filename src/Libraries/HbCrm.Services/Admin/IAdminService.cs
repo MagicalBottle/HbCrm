@@ -7,6 +7,6 @@ namespace HbCrm.Services.Admin
 {
    public interface IAdminService
     {
-        HbCrm.Core.Domain.Admin.Admin GetAdmin(string userName);
+        HbCrm.Core.Domain.Admin.SysAdmin GetAdminByUserName(string userName);
     }
 }

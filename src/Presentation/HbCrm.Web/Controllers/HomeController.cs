@@ -17,7 +17,7 @@ namespace HbCrm.Web.Controllers
         }
         public IActionResult Index()
         {
-           var admin= _adminService.GetAdmin("lily");
+          // var admin= _adminService.GetAdminByUserName("lily");
             return View();
         }
     }

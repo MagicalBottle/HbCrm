@@ -5,15 +5,16 @@ using System.Text;
 namespace HbCrm.Core.Domain.Admin
 {
 
+
     /// <summary>
     /// 管理员
     /// </summary>
-    public partial class Admin : EditorEntity
+    public partial class SysAdmin : EditorEntity
     {
 
         #region Ctor
 
-        public Admin()
+        public SysAdmin()
         {
             Guid = new Guid().ToString();
         }
@@ -60,6 +61,11 @@ namespace HbCrm.Core.Domain.Admin
         /// QQ
         /// </summary>
         public string QQ { get; set; }
+
+        /// <summary>
+        /// 用户角色关联表
+        /// </summary>
+        public virtual List<SysAdminRole> AdminRoles { get; set; }
 
         #endregion
 

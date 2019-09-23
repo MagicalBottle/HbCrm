@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace HbCrm.Core.Data
 {
     public partial interface IRepository<TEntity> where TEntity : class
     {
         #region Properties
-
+        
         /// <summary>
         /// 实体的集合
         /// </summary>

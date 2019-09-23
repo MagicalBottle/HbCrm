@@ -12,7 +12,7 @@ namespace HbCrm.Services.Authentication
         /// </summary>
         /// <param name="admin">登录的账号</param>
         /// <param name="isPersistent">登录信息持久化到客户端，true 是，false 否</param>
-         void SignIn(HbCrm.Core.Domain.Admin.Admin admin, bool isPersistent);
+         void SignIn(HbCrm.Core.Domain.Admin.SysAdmin admin, bool isPersistent);
 
         /// <summary>
         /// 登出
@@ -23,6 +23,6 @@ namespace HbCrm.Services.Authentication
         /// 获取身份验证的账号
         /// </summary>
         /// <returns></returns>
-        HbCrm.Core.Domain.Admin.Admin GetAuthenticatedAdmin();
+        HbCrm.Core.Domain.Admin.SysAdmin GetAuthenticatedAdmin();
     }
 }
