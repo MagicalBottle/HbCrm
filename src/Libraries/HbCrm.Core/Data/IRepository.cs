@@ -68,6 +68,19 @@ namespace HbCrm.Core.Data
         /// <param name="entities">多个实体</param>
         void Delete(IEnumerable<TEntity> entities);
 
+        /// <summary>
+        /// 开启关闭懒加载
+        /// </summary>
+        /// <param name="enabled">true 开启，false 关闭</param>
+        void LazyLoadingEnabled(bool enabled);
+
+        /// <summary>
+        /// 将实体从context中分离
+        /// </summary>
+        /// <typeparam name="TEntity">实体的类型</typeparam>
+        /// <param name="entity">要分离的实体实例</param>
+        void Detach(TEntity entity);
+
         #endregion
     }
 }

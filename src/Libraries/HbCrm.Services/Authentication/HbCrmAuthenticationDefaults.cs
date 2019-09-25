@@ -30,7 +30,7 @@ namespace HbCrm.Services.Authentication
         /// <summary>
         ///后台没有权限跳转的页面
         /// </summary>
-        public static PathString AccessDeniedPath => new PathString("/Forbidden");
+        public static PathString AccessDeniedPath => new PathString("/Admin/Home/Forbidden");
 
         /// <summary>
         /// 前台登录页面

@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Text;
 using HbCrm.Core.Domain.Authorize;
 using System.Linq;
+using HbCrm.Core.Caching;
+using HbCrm.Core.Domain.Admin;
 
 namespace HbCrm.Services.Authorize
 {
@@ -13,45 +15,47 @@ namespace HbCrm.Services.Authorize
         private readonly IWorkContext _workContext;
         private readonly IRepository<SysFunction> _functionRepository;
         private readonly IRepository<SysFunctionRole> _functionRoleRepository;
-
-
+        private readonly ICacheManager _cache;
+        
         public PermissionService(IWorkContext workContext,
             IRepository<SysFunction> functionRepository,
-            IRepository<SysFunctionRole> functionRoleRepository)
+            IRepository<SysFunctionRole> functionRoleRepository,
+            ICacheManager cache)
         {
             _workContext = workContext;
             _functionRepository = functionRepository;
             _functionRoleRepository = functionRoleRepository;
+            _cache = cache;
         }
 
         /// <summary>
         /// 判定权限
         /// </summary>
-        /// <param name="name">权限名称</param>
+        /// <param name="functionSystermName">权限名称</param>
         /// <returns>true 有此权限；false 无此权限</returns>
-        public bool Authorize(string name)
+        public bool Authorize(string functionSystermName)
         {
-            if (string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(functionSystermName))
             {
                 return false;
             }
-           return this.Authorize(name, _workContext.Admin);
+           return this.Authorize(functionSystermName, _workContext.Admin);
         }
         /// <summary>
         ///  判定权限
         /// </summary>
-        /// <param name="name">权限名称</param>
+        /// <param name="functionSystermName">权限名称</param>
         /// <param name="admin">当前用户</param>
-        /// <returns></returns>
-        public bool Authorize(string name,HbCrm.Core.Domain.Admin.SysAdmin admin)
+        /// <returns>true 有此权限；false 无此权限</returns>
+        public bool Authorize(string functionSystermName, SysAdmin admin)
         {
-            if (string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(functionSystermName))
             {
                 return false;
             }
             foreach (var role in admin.AdminRoles)
             {
-                if (Authorize(name, role.RoleId))
+                if (Authorize(functionSystermName, role.RoleId))
                 {
                     return true;
                 }
@@ -59,12 +63,28 @@ namespace HbCrm.Services.Authorize
             return false ;
         }
 
-        protected bool Authorize(string name, int roleId)
-        {
-            var functions = GetFunctionsByRoleId(roleId);
+        /// <summary>
+        /// 判定权限
+        /// </summary>
+        /// <param name="functionSystermName">权限名称</param>
+        /// <param name="roleId">角色ID</param>
+        /// <returns>true 有此权限；false 无此权限</returns>
+        protected bool Authorize(string functionSystermName, int roleId)
+        {            
+            string key = string.Format(HbCrmCachingDefaults.PermissionsRoleIdCacheKey, roleId);
+            var functions = _cache.Get(key, () => 
+            {
+                return GetFunctionsByRoleId(roleId);
+            });
+
+            if (functions == null||functions.Count<=0)
+            {
+                return false;
+            }
+
             foreach (var f in functions)
             {
-                if (f.FunctionSystermName == name)
+                if (functionSystermName.Equals(f.FunctionSystermName, StringComparison.InvariantCultureIgnoreCase))
                 {
                     return true;
                 }
@@ -72,6 +92,11 @@ namespace HbCrm.Services.Authorize
             return false;
         }
 
+        /// <summary>
+        /// 获取权限
+        /// </summary>
+        /// <param name="roleId">角色id</param>
+        /// <returns>角色所拥有的权限集合</returns>
         protected virtual List<SysFunction> GetFunctionsByRoleId(int roleId)
         {
                 var query = from f in _functionRepository.Table

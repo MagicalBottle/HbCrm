@@ -1,8 +1,9 @@
-﻿
+﻿@model HbCrm.Core.Domain.Admin.SysAdmin
 @{
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
 <h2>Admin/Index</h2>
 
+<a href="@Url.Action("Index", "Account", new { area = "Admin" ,id=Model.Id })">@Model.UserName</a>
 <a href="@Url.Action("Logout", "Home", new { area = "Admin" })">登出</a>

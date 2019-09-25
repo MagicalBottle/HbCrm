@@ -149,6 +149,15 @@ namespace HbCrm.Data
             }
             entityEntry.State = EntityState.Detached;
         }
+
+        /// <summary>
+        /// 开启关闭懒加载
+        /// </summary>
+        /// <param name="enabled">true 开启，false 关闭</param>
+       public void LazyLoadingEnabled(bool enabled)
+        {
+            base.ChangeTracker.LazyLoadingEnabled = enabled;  
+        }
         #endregion
 
 

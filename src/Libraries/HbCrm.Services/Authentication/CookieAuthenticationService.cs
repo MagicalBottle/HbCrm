@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using HbCrm.Services.Admin;
 using System.Linq;
+using HbCrm.Core.Caching;
+using HbCrm.Services.Web;
 
 namespace HbCrm.Services.Authentication
 {
@@ -14,13 +16,18 @@ namespace HbCrm.Services.Authentication
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IAdminService _adminService;
+        private readonly ICacheManager _cache;
+        private readonly IWorkContext _workContext;
 
-        private HbCrm.Core.Domain.Admin.SysAdmin _cachedAdmin;
-
-        public CookieAuthenticationService(IHttpContextAccessor httpContextAccessor, IAdminService adminService)
+        public CookieAuthenticationService(IHttpContextAccessor httpContextAccessor,
+            IAdminService adminService,
+            ICacheManager cache,
+            IWorkContext workContext)
         {
             _httpContextAccessor = httpContextAccessor;
             _adminService = adminService;
+            _cache = cache;
+            _workContext = workContext;
         }
 
         /// <summary>
@@ -42,7 +49,7 @@ namespace HbCrm.Services.Authentication
             };
             await _httpContextAccessor.HttpContext.SignInAsync(HbCrmAuthenticationDefaults.AdminAuthenticationScheme, principal, properties);
 
-            _cachedAdmin = admin;
+            _workContext.Admin = admin;
         }
 
         /// <summary>
@@ -50,8 +57,22 @@ namespace HbCrm.Services.Authentication
         /// </summary>
         public async void SignOut()
         {
-            _cachedAdmin = null;
-            await _httpContextAccessor.HttpContext.SignOutAsync(HbCrmAuthenticationDefaults.AdminAuthenticationScheme);
+            //移除缓存
+            var httpContext = _httpContextAccessor.HttpContext;
+            if (httpContext != null && httpContext.User.Identity.IsAuthenticated && !string.IsNullOrWhiteSpace(httpContext.User.Identity.Name))
+            {
+                Claim adminClaim = httpContext.User.FindFirst(
+                         claim => claim.Type == ClaimTypes.Name
+                      && claim.Issuer == HbCrmAuthenticationDefaults.ClaimsIssuer);
+
+                if (adminClaim != null)
+                {
+                    string key = string.Format(HbCrmCachingDefaults.AdminUserNameCacheKey, adminClaim.Value);                    
+                    _cache.Remove(key);
+                }
+
+            }
+            await httpContext.SignOutAsync(HbCrmAuthenticationDefaults.AdminAuthenticationScheme);
         }
 
         /// <summary>
@@ -60,35 +81,7 @@ namespace HbCrm.Services.Authentication
         /// <returns></returns>
         public HbCrm.Core.Domain.Admin.SysAdmin GetAuthenticatedAdmin()
         {
-            if (_cachedAdmin != null)
-            {
-                return _cachedAdmin;
-            }
-
-            AuthenticateResult authenticateResult = _httpContextAccessor.HttpContext.AuthenticateAsync(HbCrmAuthenticationDefaults.AdminAuthenticationScheme).Result;
-            if (!authenticateResult.Succeeded)
-            {
-                return null;
-            }
-
-
-            HbCrm.Core.Domain.Admin.SysAdmin admin = null;
-            Claim adminClaim = authenticateResult.Principal.FindFirst(
-                claim => claim.Type == ClaimTypes.Name
-             && claim.Issuer == HbCrmAuthenticationDefaults.ClaimsIssuer);
-
-            if (adminClaim != null)
-            {
-                admin = _adminService.GetAdminByUserName(adminClaim.Value);
-            }
-
-            if (admin == null)
-            {
-                return null;
-            }
-            _cachedAdmin = admin;
-            return admin;
-
+            return _workContext.Admin;
         }
 
     }

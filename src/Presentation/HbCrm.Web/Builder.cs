@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 using HbCrm.Services.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using HbCrm.Data.Mapping;
 using HbCrm.Data;
 using Microsoft.Extensions.Configuration;
 using HbCrm.Core.Data;
 using HbCrm.Services.Admin;
-using HbCrm.Core.Data;
-using HbCrm.Data;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using HbCrm.Core.Configuration;
 using HbCrm.Core.Domain.Authorize;
 using HbCrm.Services.Authorize;
 using Microsoft.AspNetCore.Authorization;
 using HbCrm.Services.Web;
+using EasyCaching.Core;
+using EasyCaching.InMemory;
+using HbCrm.Core.Caching;
 
 namespace HbCrm.Web
 {
@@ -28,6 +28,8 @@ namespace HbCrm.Web
     {
         public static void UseHbCrm(this IServiceCollection services, IHostingEnvironment env, IConfiguration config)
         {
+            services.AddEasyCaching(option => option.UseInMemory("hbcrm_memory_cache"));
+            services.AddScoped<ICacheManager, MemoryCacheManager>();//封装一层，缓存用的是EasyCaching
             services.AddScoped<IDbContext, HbCrmContext>();
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
@@ -55,8 +57,8 @@ namespace HbCrm.Web
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IAdminService, AdminService>();
-            services.AddScoped<IAuthenticationService, CookieAuthenticationService>();
             services.AddScoped<IWorkContext, WorkContext>();
+            services.AddScoped<IAuthenticationService, CookieAuthenticationService>();
             services.AddScoped<IPermissionService, PermissionService>();
 
             services.AddAuthentication(HbCrmAuthenticationDefaults.AdminAuthenticationScheme)

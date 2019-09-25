@@ -66,5 +66,11 @@ namespace HbCrm.Data
         /// <typeparam name="TEntity">实体的类型</typeparam>
         /// <param name="entity">要分离的实体实例</param>
         void Detach<TEntity>(TEntity entity) where TEntity : class;
+
+        /// <summary>
+        /// 开启关闭懒加载
+        /// </summary>
+        /// <param name="enabled">true 开启，false 关闭</param>
+        void LazyLoadingEnabled(bool enabled);
     }
 }

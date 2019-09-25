@@ -27,9 +27,10 @@ namespace HbCrm.Data
 
         #region Properties
 
-        public  virtual DbSet<TEntity> Entities
+        public virtual DbSet<TEntity> Entities
         {
-            get {
+            get
+            {
                 if (_entities == null)
                 {
                     _entities = _context.Set<TEntity>();
@@ -226,6 +227,26 @@ namespace HbCrm.Data
             }
         }
 
+
+        /// <summary>
+        /// 开启关闭懒加载
+        /// </summary>
+        /// <param name="enabled">true 开启，false 关闭</param>
+        public void LazyLoadingEnabled(bool enabled)
+        {
+            _context.LazyLoadingEnabled(enabled);
+        }
+
+
+        /// <summary>
+        /// 将实体从context中分离
+        /// </summary>
+        /// <typeparam name="TEntity">实体的类型</typeparam>
+        /// <param name="entity">要分离的实体实例</param>
+        public void Detach(TEntity entity)
+        {
+            _context.Detach(entity);
+        }
         #endregion
     }
 }

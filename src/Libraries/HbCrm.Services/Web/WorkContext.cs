@@ -3,8 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using HbCrm.Services.Admin;
+using HbCrm.Core.Domain.Admin;
 using System.Security.Claims;
 using HbCrm.Services.Authentication;
+using HbCrm.Core.Caching;
 
 namespace HbCrm.Services.Web
 {
@@ -12,17 +14,21 @@ namespace HbCrm.Services.Web
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IAdminService _adminService;
-        private HbCrm.Core.Domain.Admin.SysAdmin _cachedAdmin;
+        private readonly ICacheManager _cache;
+        private SysAdmin _cachedAdmin;
 
-        public WorkContext(IHttpContextAccessor httpContextAccessor, IAdminService adminService)
+        public WorkContext(IHttpContextAccessor httpContextAccessor,
+            IAdminService adminService,
+            ICacheManager cache)
         {
             _httpContextAccessor = httpContextAccessor;
             _adminService = adminService;
+            _cache = cache;
         }
         /// <summary>
         /// 当前登录用户
         /// </summary>
-        public HbCrm.Core.Domain.Admin.SysAdmin Admin
+        public SysAdmin Admin
         {
             get
             {
@@ -30,6 +36,7 @@ namespace HbCrm.Services.Web
                 {
                     return _cachedAdmin;
                 }
+
 
                 var httpContext = _httpContextAccessor.HttpContext;
                 if (httpContext != null && httpContext.User.Identity.IsAuthenticated && !string.IsNullOrWhiteSpace(httpContext.User.Identity.Name))
@@ -40,7 +47,12 @@ namespace HbCrm.Services.Web
 
                     if (adminClaim != null)
                     {
-                        _cachedAdmin = _adminService.GetAdminByUserName(adminClaim.Value);
+
+                        string key = string.Format(HbCrmCachingDefaults.AdminUserNameCacheKey, adminClaim.Value);
+                        _cachedAdmin= _cache.Get<SysAdmin>(key, () =>
+                        {
+                            return _adminService.GetAdminByUserNameNoLazy(adminClaim.Value);
+                        });
                     }
                     return _cachedAdmin;
 
@@ -50,6 +62,12 @@ namespace HbCrm.Services.Web
             }
             set
             {
+                if (value != null)
+                {
+                    //值不为空的时候，缓存
+                    string key = string.Format(HbCrmCachingDefaults.AdminUserNameCacheKey, value.UserName);
+                    _cache.Set<SysAdmin>(key, value);
+                }
                 _cachedAdmin = value;
             }
         }
