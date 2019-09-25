@@ -42,5 +42,10 @@ namespace HbCrm.Core.Domain.Admin
         /// </summary>
         public virtual List<SysFunctionRole> FunctionRoles { get; set; }
 
+        /// <summary>
+        /// 菜单角色关联表
+        /// </summary>
+        public virtual List<SysMenuRole> MenuRoles { get; set; }
+
     }
 }

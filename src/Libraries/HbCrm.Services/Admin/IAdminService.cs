@@ -10,6 +10,9 @@ namespace HbCrm.Services.Admin
         SysAdmin GetAdminByUserName(string userName);
 
 
-        SysAdmin GetAdminByUserNameNoLazy(string userName);
+       // SysAdmin GetAdminByUserNameNoLazy(string userName);
+
+
+        SysAdmin GetAdminAllInforByUserName(string userName);
     }
 }

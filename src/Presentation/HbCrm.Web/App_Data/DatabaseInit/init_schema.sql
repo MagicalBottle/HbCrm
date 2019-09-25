@@ -118,13 +118,30 @@ CREATE TABLE `sys_menu` (
   `LastUpdateByName` varchar(50) NOT NULL,
   `LastUpdateDate` datetime(6) NOT NULL,
   `MenuName` VARCHAR(30) NOT NULL,
+  `MenuSystermName` VARCHAR(30) NOT NULL,
   `MenuRemark` VARCHAR(200) DEFAULT NULL,
   `MenuUrl` VARCHAR(255) NOT NULL,
-  `ParentMenuId` INT(11) NOT NULL,
+  `ParentMenuId` INT(11) DEFAULT 0 NOT NULL,
   `MenuIcon` VARCHAR(50) DEFAULT NULL,
   `MenuSort` INT(11) NOT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `sys_menurole`;
+
+CREATE TABLE `sys_menurole` (
+   `Id` INT(11) NOT NULL AUTO_INCREMENT,  
+  `CreateBy` INT(11) NOT NULL,
+  `CreatebyName` VARCHAR(50) NOT NULL,
+  `CreateDate` DATETIME(6) NOT NULL,
+  `LastUpdateBy` INT(11) NOT NULL,
+  `LastUpdateByName` VARCHAR(50) NOT NULL,
+  `LastUpdateDate` DATETIME(6) NOT NULL,
+  `MenuId` INT(11) NOT NULL, 
+  `RoleId` INT(11) NOT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
 
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

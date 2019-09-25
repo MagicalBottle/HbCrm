@@ -58,7 +58,7 @@ namespace HbCrm.Web.Areas.Admin.Controllers
         [AllowAnonymous]
         public IActionResult Login(AdminLoginModel adminLoginModel)
         {
-            HbCrm.Core.Domain.Admin.SysAdmin admin = _adminService.GetAdminByUserNameNoLazy(adminLoginModel.UserName);
+            HbCrm.Core.Domain.Admin.SysAdmin admin = _adminService.GetAdminAllInforByUserName(adminLoginModel.UserName);
             AdminLoginSuccessModel loginSuccessModel = new AdminLoginSuccessModel();
             loginSuccessModel.LoginStatus = LoginStatus.Error;
             if (admin != null && admin.Password == adminLoginModel.Password)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using HbCrm.Core.Domain.Authorize;
 
 namespace HbCrm.Core.Domain.Admin
 {
@@ -66,6 +67,24 @@ namespace HbCrm.Core.Domain.Admin
         /// 用户角色关联表
         /// </summary>
         public virtual List<SysAdminRole> AdminRoles { get; set; }
+
+        #region ignoe
+        /// <summary>
+        /// 对应角色集合
+        /// </summary>
+        public List<SysRole> Roles { get; set; }
+
+        /// <summary>
+        /// 用户对应功能集合
+        /// </summary>
+        public List<SysFunction> Functions { get; set; }
+
+        /// <summary>
+        /// 用户对应菜单集合
+        /// </summary>
+        public List<SysMenu> Menus { get; set; }
+
+        #endregion
 
         #endregion
 

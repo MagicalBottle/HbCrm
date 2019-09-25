@@ -32,7 +32,7 @@ namespace HbCrm.Core.Domain.Authorize
         /// <summary>
         /// 上级菜单ID
         /// </summary>
-        public int ParentId { get; set; }
+        public int ParentMenuId { get; set; }
 
         /// <summary>
         /// 菜单图标
@@ -49,5 +49,9 @@ namespace HbCrm.Core.Domain.Authorize
         /// </summary>
         public string MenuRemark { get; set; }
 
+        /// <summary>
+        /// 菜单角色关联表
+        /// </summary>
+        public virtual List<SysMenuRole> MenuRoles { get; set; }
     }
 }

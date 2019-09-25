@@ -51,7 +51,7 @@ namespace HbCrm.Services.Web
                         string key = string.Format(HbCrmCachingDefaults.AdminUserNameCacheKey, adminClaim.Value);
                         _cachedAdmin= _cache.Get<SysAdmin>(key, () =>
                         {
-                            return _adminService.GetAdminByUserNameNoLazy(adminClaim.Value);
+                            return _adminService.GetAdminAllInforByUserName(adminClaim.Value);
                         });
                     }
                     return _cachedAdmin;

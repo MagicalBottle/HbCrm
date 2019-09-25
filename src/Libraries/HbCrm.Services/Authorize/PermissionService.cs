@@ -13,18 +13,15 @@ namespace HbCrm.Services.Authorize
     public class PermissionService : IPermissionService
     {
         private readonly IWorkContext _workContext;
-        private readonly IRepository<SysFunction> _functionRepository;
-        private readonly IRepository<SysFunctionRole> _functionRoleRepository;
+        private readonly IFunctionService _functionService;
         private readonly ICacheManager _cache;
         
         public PermissionService(IWorkContext workContext,
-            IRepository<SysFunction> functionRepository,
-            IRepository<SysFunctionRole> functionRoleRepository,
+            IFunctionService functionService,
             ICacheManager cache)
         {
             _workContext = workContext;
-            _functionRepository = functionRepository;
-            _functionRoleRepository = functionRoleRepository;
+            _functionService= functionService;
             _cache = cache;
         }
 
@@ -53,60 +50,15 @@ namespace HbCrm.Services.Authorize
             {
                 return false;
             }
-            foreach (var role in admin.AdminRoles)
+            foreach (var f in admin.Functions)
             {
-                if (Authorize(functionSystermName, role.RoleId))
+                if (functionSystermName.Equals(f.FunctionSystermName,StringComparison.InvariantCultureIgnoreCase))
                 {
                     return true;
                 }
             }
             return false ;
         }
-
-        /// <summary>
-        /// 判定权限
-        /// </summary>
-        /// <param name="functionSystermName">权限名称</param>
-        /// <param name="roleId">角色ID</param>
-        /// <returns>true 有此权限；false 无此权限</returns>
-        protected bool Authorize(string functionSystermName, int roleId)
-        {            
-            string key = string.Format(HbCrmCachingDefaults.PermissionsRoleIdCacheKey, roleId);
-            var functions = _cache.Get(key, () => 
-            {
-                return GetFunctionsByRoleId(roleId);
-            });
-
-            if (functions == null||functions.Count<=0)
-            {
-                return false;
-            }
-
-            foreach (var f in functions)
-            {
-                if (functionSystermName.Equals(f.FunctionSystermName, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// 获取权限
-        /// </summary>
-        /// <param name="roleId">角色id</param>
-        /// <returns>角色所拥有的权限集合</returns>
-        protected virtual List<SysFunction> GetFunctionsByRoleId(int roleId)
-        {
-                var query = from f in _functionRepository.Table
-                            join fr in _functionRoleRepository.Table on f.Id equals fr.FunctionId
-                            where fr.RoleId == roleId
-                            orderby fr.Id
-                            select f;
-
-                return query.ToList();
-            
-        }
+        
     }
 }
