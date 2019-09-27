@@ -38,7 +38,7 @@ namespace HbCrm.Web
 
             services.AddDbContext<HbCrmContext>((provider, option) =>
             {
-                option.UseLazyLoadingProxies();
+                //option.UseLazyLoadingProxies();
                 DatabaseOption databaseOption = provider.GetRequiredService<HbCrmConfiguration>().DatabaseOption;
                 switch (databaseOption.DbType)
                 {

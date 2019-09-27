@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,6 +8,7 @@ namespace HbCrm.Core.Domain.Authorize
     /// <summary>
     /// 菜单类
     /// </summary>
+    [Serializable]
     public partial class SysMenu : EditorEntity
     {
         /// <summary>
@@ -53,5 +55,19 @@ namespace HbCrm.Core.Domain.Authorize
         /// 菜单角色关联表
         /// </summary>
         public virtual List<SysMenuRole> MenuRoles { get; set; }
+
+        #region ignore
+        /// <summary>
+        /// 子菜单
+        /// </summary>
+        public virtual List<SysMenu> ChildrenMenus { get; set; } = new List<SysMenu>();
+
+
+        /// <summary>
+        /// 深度，默认0
+        /// </summary>
+        public int Deep { get; set; }
+        #endregion
+
     }
 }

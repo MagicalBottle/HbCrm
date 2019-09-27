@@ -4,6 +4,7 @@ using System.Text;
 using HbCrm.Core.Data;
 using HbCrm.Core.Domain.Authorize;
 using System.Linq;
+using HbCrm.Core.Extensions;
 
 namespace HbCrm.Services.Authorize
 {
@@ -32,6 +33,44 @@ namespace HbCrm.Services.Authorize
                         select m;
 
             return query.ToList();
+        }
+
+        /// <summary>
+        /// 组织好菜单数据
+        /// </summary>
+        /// <param name="menus">数据库查出的原始数据</param>
+        /// <returns>组织好的菜单集合</returns>
+        public List<SysMenu> FormData(List<SysMenu> inputMenus)
+        {
+            if (inputMenus == null || inputMenus.Count <= 0)
+            {
+                return inputMenus;
+            }
+            Dictionary<int, SysMenu> dicTemp = new Dictionary<int, SysMenu>();
+            Dictionary<int, SysMenu> dicReturn = new Dictionary<int, SysMenu>();
+
+            var menus =ObjectExtensions.CloneByStream( inputMenus);
+            //按pid排序才不影响下面的判断dic.ContainsKey(menu.ParentMenuId)
+            foreach (var menu in menus.OrderBy(m => m.ParentMenuId))
+            {
+                if (menu.ParentMenuId == 0)
+                {
+                    menu.Deep = 0;
+                    dicReturn.Add(menu.Id, menu);
+                }
+                else
+                {
+                    //如果当前的菜单的父级是刚才添加过的，那么关联上
+                    if (dicTemp.ContainsKey(menu.ParentMenuId))
+                    {
+                        menu.Deep = dicTemp[menu.ParentMenuId].Deep + 1;
+                        dicTemp[menu.ParentMenuId].ChildrenMenus.Add(menu);
+                    }
+                }
+                dicTemp.Add(menu.Id, menu);
+            }
+            dicTemp = null;
+            return dicReturn.Values.ToList();
         }
     }
 }

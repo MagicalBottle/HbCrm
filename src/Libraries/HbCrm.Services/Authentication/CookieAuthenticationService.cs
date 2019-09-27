@@ -46,6 +46,7 @@ namespace HbCrm.Services.Authentication
             {
                 IsPersistent = isPersistent,
                 IssuedUtc = DateTime.UtcNow
+                //ExpiresUtc = DateTimeOffset.MaxValue 最大值 。默认值14天
             };
             await _httpContextAccessor.HttpContext.SignInAsync(HbCrmAuthenticationDefaults.AdminAuthenticationScheme, principal, properties);
 

@@ -13,5 +13,12 @@ namespace HbCrm.Services.Authorize
         /// <param name="roleId">角色id</param>
         /// <returns>菜单集合</returns>
         List<SysMenu> GetMenusByRoleId(int roleId);
+
+        /// <summary>
+        /// 组织好菜单数据
+        /// </summary>
+        /// <param name="menus">数据库查出的原始数据</param>
+        /// <returns>组织好的菜单集合</returns>
+        List<SysMenu> FormData(List<SysMenu> menus);
     }
 }

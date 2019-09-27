@@ -75,16 +75,13 @@ namespace HbCrm.Services.Admin
         {
             if (string.IsNullOrWhiteSpace(userName))
                 return null;
-
-            _adminRepository.LazyLoadingEnabled(false);//要缓存，必须.Lazy=false 且_adminRepository.Table 且  _adminRepository.Detach(sysAdmin) 
-                                                       //另一种方式就是取消懒加载 注释代码option.UseLazyLoadingProxies(); 
-                                                       //用户信息
+            
+            //用户信息
             var queryAdmin = from c in _adminRepository.Table
                              orderby c.Id
                              where c.UserName == userName
                              select c;
             var sysAdmin = queryAdmin.FirstOrDefault();
-            _adminRepository.Detach(sysAdmin);
 
             //对应角色
             var queryRoles = from r in _roleRepository.Table

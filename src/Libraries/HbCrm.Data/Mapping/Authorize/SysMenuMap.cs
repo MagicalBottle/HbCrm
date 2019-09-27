@@ -14,6 +14,8 @@ namespace HbCrm.Data.Mapping.Authorize
         {
             builder.ToTable("sys_menu");
             builder.HasKey(model => model.Id);
+            builder.Ignore(model => model.ChildrenMenus);
+            builder.Ignore(model => model.Deep);
         }
     }
 }

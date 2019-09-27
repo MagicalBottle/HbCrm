@@ -7,7 +7,8 @@ namespace HbCrm.Core
     /// <summary>
     /// 创建 修改记录
     /// </summary>
-   public  class EditorEntity
+    [Serializable]
+    public  class EditorEntity
     {
         /// <summary>
         /// 创建人ID

@@ -1,5 +1,9 @@
-﻿<!DOCTYPE html>
-
+﻿@using HbCrm.Core.Domain.Authorize
+@using System.Text
+@using System.Collections;
+@inject HbCrm.Services.Web.IWorkContext _context
+@inject HbCrm.Services.Authorize.IMenuService _menuService
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -10,6 +14,39 @@
     <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
 </head>
 <body>
-    @RenderBody()   
+    @{
+        var menusFormData = _menuService.FormData(_context.Admin.Menus);
+
+        string CreateMenuTree(List<SysMenu> menus)
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach (var menu in menus)
+            {
+                if (menu.ChildrenMenus != null && menu.ChildrenMenus.Count > 0)
+                {
+
+                    builder.Append("<li>");
+                    builder.Append("<a href=\"" + menu.MenuUrl + "\">" + menu.MenuName + "</a>");
+                    builder.Append("<ul>");
+                    builder.Append(CreateMenuTree(menu.ChildrenMenus));
+                    builder.Append("</ul>");
+                    builder.Append("</li>");
+                }
+                else
+                {
+                    builder.Append("<li>");
+                    builder.Append("<a href=\"" + menu.MenuUrl + "\">" + menu.MenuName + "</a>");
+                    builder.Append("</li>");
+                }
+            }
+            return builder.ToString();
+        }
+        ViewBag.MenusString = CreateMenuTree(menusFormData);
+    }
+
+    <ul class="menu">
+        @Html.Raw(ViewBag.MenusString)
+    </ul>
+    @RenderBody()
 </body>
 </html>
