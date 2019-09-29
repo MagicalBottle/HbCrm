@@ -71,5 +71,12 @@ namespace HbCrm.Services.Web
                 _cachedAdmin = value;
             }
         }
+
+        public HttpContext HttpContext
+        {
+            get {
+                return _httpContextAccessor.HttpContext;
+            }
+        }
     }
 }

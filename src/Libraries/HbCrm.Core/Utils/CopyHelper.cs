@@ -7,11 +7,13 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 
-namespace HbCrm.Core.Extensions
+
+
+namespace HbCrm.Core.Utils
 {
-   public static class ObjectExtensions
+    public static class CopyHelper
     {
-        public static T CloneByJson<T>(this T source)
+        public static T CopyDeepByJson<T>(this T source)
         {
             if (Object.ReferenceEquals(source, null))
             {
@@ -22,7 +24,7 @@ namespace HbCrm.Core.Extensions
             return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(source), deserializeSettings);
         }
 
-        public static T CloneByStream<T>(T source)
+        public static T CopyDeepByStream<T>(T source)
         {
             //涉及的类都要加[Serializable]
             if (!typeof(T).IsSerializable)

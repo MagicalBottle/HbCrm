@@ -10,6 +10,8 @@
     <Folder Include="wwwroot\js\" />
     <Folder Include="wwwroot\images\" />
     <Folder Include="wwwroot\lib\jquery-formvalidation\css\" />
+    <Folder Include="wwwroot\lib\adminlte\" />
+    <Folder Include="wwwroot\lib\fontawesome\" />
   </ItemGroup>
 
   <ItemGroup>

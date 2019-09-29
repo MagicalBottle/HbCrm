@@ -62,11 +62,20 @@ namespace HbCrm.Core.Domain.Authorize
         /// </summary>
         public virtual List<SysMenu> ChildrenMenus { get; set; } = new List<SysMenu>();
 
+        /// <summary>
+        /// 父菜单
+        /// </summary>
+        public SysMenu ParentMenu { get; set; }
 
         /// <summary>
         /// 深度，默认0
         /// </summary>
         public int Deep { get; set; }
+
+        /// <summary>
+        /// 选中菜单。true 选中，false 不选中。默认 false
+        /// </summary>
+        public bool Active { get; set; } = false;
         #endregion
 
     }

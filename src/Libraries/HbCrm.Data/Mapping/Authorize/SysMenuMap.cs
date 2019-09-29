@@ -16,6 +16,8 @@ namespace HbCrm.Data.Mapping.Authorize
             builder.HasKey(model => model.Id);
             builder.Ignore(model => model.ChildrenMenus);
             builder.Ignore(model => model.Deep);
+            builder.Ignore(model => model.ParentMenu);
+            builder.Ignore(model => model.Active);
         }
     }
 }

@@ -4,7 +4,9 @@ using System.Text;
 using HbCrm.Core.Data;
 using HbCrm.Core.Domain.Authorize;
 using System.Linq;
-using HbCrm.Core.Extensions;
+using HbCrm.Core.Utils;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace HbCrm.Services.Authorize
 {
@@ -49,7 +51,7 @@ namespace HbCrm.Services.Authorize
             Dictionary<int, SysMenu> dicTemp = new Dictionary<int, SysMenu>();
             Dictionary<int, SysMenu> dicReturn = new Dictionary<int, SysMenu>();
 
-            var menus =ObjectExtensions.CloneByStream( inputMenus);
+            var menus = CopyHelper.CopyDeepByJson(inputMenus);
             //按pid排序才不影响下面的判断dic.ContainsKey(menu.ParentMenuId)
             foreach (var menu in menus.OrderBy(m => m.ParentMenuId))
             {
@@ -63,14 +65,61 @@ namespace HbCrm.Services.Authorize
                     //如果当前的菜单的父级是刚才添加过的，那么关联上
                     if (dicTemp.ContainsKey(menu.ParentMenuId))
                     {
-                        menu.Deep = dicTemp[menu.ParentMenuId].Deep + 1;
-                        dicTemp[menu.ParentMenuId].ChildrenMenus.Add(menu);
+                        var tempParentMenu = dicTemp[menu.ParentMenuId];
+                        menu.Deep = tempParentMenu.Deep + 1;
+                        tempParentMenu.ChildrenMenus.Add(menu);
+                        menu.ParentMenu = tempParentMenu;
                     }
                 }
                 dicTemp.Add(menu.Id, menu);
             }
             dicTemp = null;
             return dicReturn.Values.ToList();
+        }
+
+        /// <summary>
+        /// 标记请求的链接为选中状态
+        /// </summary>
+        /// <param name="menus">必须是调用<see cref="FormData"/>方法处理后的</param>
+        /// <param name="httpContext">请求上下文</param>
+        public void ActiveMenu(List<SysMenu> menus, HttpContext httpContext)
+        {
+            if (httpContext == null || httpContext.Request == null || !httpContext.Request.Path.HasValue)
+            {
+                return;
+            }
+            string url = httpContext.Request.Path.ToString();
+            if (string.Equals("/Admin", url, StringComparison.InvariantCultureIgnoreCase) || string.Equals("/Admin/Home", url, StringComparison.InvariantCultureIgnoreCase))
+            {
+                url = "/Admin/Home/Index";
+            }
+
+            foreach (var menu in menus)
+            {
+                if (string.Equals(menu.MenuUrl, url, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    ActiveMenu(menu);
+                }
+                var childrenMenus = menu.ChildrenMenus;
+                if (childrenMenus != null && childrenMenus.Count > 0)
+                {
+                    ActiveMenu(childrenMenus, httpContext);
+                }
+                
+            }
+        }
+
+        /// <summary>
+        /// 标记当前菜单，以及他的祖先菜单
+        /// </summary>
+        /// <param name="menu"></param>
+        private void ActiveMenu(SysMenu menu)
+        {
+            menu.Active = true;
+            if (menu.ParentMenu != null)
+            {
+                ActiveMenu(menu.ParentMenu);
+            }
         }
     }
 }
