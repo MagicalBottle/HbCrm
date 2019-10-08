@@ -1,0 +1,40 @@
+﻿
+bootstrap-table 支持bootstrap4  由中国人发起 https://blog.wenzhixin.net.cn/
+https://examples.bootstrap-table.com/index.html#welcome.html
+https://github.com/wenzhixin/bootstrap-table
+
+treegrid  https://github.com/maxazan/jquery-treegrid/tree/0.3.0
+https://examples.bootstrap-table.com/index.html#extensions/treegrid.html
+代码不多，可以自己修改，没有分页
+
+jsGrid 开源 商用 支持修改 有分页  没有treegrid
+http://js-grid.com/
+
+datatables   开源 商用 有分页  没有treegrid  支持bootstrap4  （支持修改要购买）
+https://datatables.net/
+
+jstree https://www.jstree.com/demo/
+https://github.com/vakata/jstree
+
+ztree
+https://github.com/zTree/zTree_v3
+
+tree
+https://github.com/jonmiles/bootstrap-treeview
+
+java 后台系统事例
+https://github.com/qzw1210/springboot_authority
+
+.net abp  后台系统事例
+https://github.com/Jimmey-Jiang/ABP-ASP.NET-Boilerplate-Project-CMS/tree/master/src
+
+layx
+https://github.com/MonkSoul/Layx
+
+layer 弹出层 laydate 时间控件  Bootstrap Date Range Picker
+https://www.layui.com/
+
+模态框 modal 和弹出层差不多一个意思
+https://github.com/jschr/bootstrap-modal
+https://github.com/kylefox/jquery-modal  加载ajax数据弹出  和layer弹出层应该差不多
+https://github.com/drublic/css-modal 加载ajax数据弹出 

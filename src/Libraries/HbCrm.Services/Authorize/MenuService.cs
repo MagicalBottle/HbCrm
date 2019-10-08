@@ -88,24 +88,48 @@ namespace HbCrm.Services.Authorize
             {
                 return;
             }
-            string url = httpContext.Request.Path.ToString();
-            if (string.Equals("/Admin", url, StringComparison.InvariantCultureIgnoreCase) || string.Equals("/Admin/Home", url, StringComparison.InvariantCultureIgnoreCase))
+            string [] urls = httpContext.Request.Path.ToString().Split("/",StringSplitOptions.RemoveEmptyEntries);
+            string control = string.Empty;// /Admin /Admin/Home /Admin/Home/Index   /Admin/Menu /Admin/Menu/Index 
+            if (urls.Length <= 0)
             {
-                url = "/Admin/Home/Index";
+                return;
             }
+            if (urls.Length == 1)
+            {
+                control="Home";
+            }
+            if (urls.Length >= 2)
+            {
+                control = urls[1];
+            }
+            ActiveMenu(menus, control);
+        }
 
+        /// <summary>
+        /// 标记请求的链接为选中状态
+        /// </summary>
+        /// <param name="menus">必须是调用<see cref="FormData"/>方法处理后的</param>
+        /// <param name="control">路径，控制器的部分</param>
+        private void ActiveMenu(List<SysMenu> menus,string control)
+        {
             foreach (var menu in menus)
             {
-                if (string.Equals(menu.MenuUrl, url, StringComparison.InvariantCultureIgnoreCase))
+                //  /Admin/Menu/Edit/2  数据库保存 /Admin/Menu/Index   取[1]做对比
+                string [] urls= menu.MenuUrl.Split("/", StringSplitOptions.RemoveEmptyEntries);
+                if (urls.Length >= 2)
                 {
-                    ActiveMenu(menu);
+                    if (string.Equals(urls[1], control, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        ActiveMenu(menu);
+                    }
                 }
+                
                 var childrenMenus = menu.ChildrenMenus;
                 if (childrenMenus != null && childrenMenus.Count > 0)
                 {
-                    ActiveMenu(childrenMenus, httpContext);
+                    ActiveMenu(childrenMenus, control);
                 }
-                
+
             }
         }
 
