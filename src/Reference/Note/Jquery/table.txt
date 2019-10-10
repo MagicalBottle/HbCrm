@@ -1,11 +1,30 @@
 ﻿
-bootstrap-table 支持bootstrap4  由中国人发起 https://blog.wenzhixin.net.cn/
+bootstrap-table 支持bootstrap4  由中国人发起
+https://blog.wenzhixin.net.cn/
 https://examples.bootstrap-table.com/index.html#welcome.html
 https://github.com/wenzhixin/bootstrap-table
+
+参考使用：
+https://www.cnblogs.com/wangjiming/p/9370568.html
+https://www.jianshu.com/p/b9d0f0935263
+
+整理的文档
+https://blog.csdn.net/yapengliu/article/details/80191699
+
+重点坑，columns  field  一定和后台返回的一致。后台属性大写，序列化后首字母小写了，MenuName=> menuName 导致加载不了数据
+参考序列化配置https://www.cnblogs.com/zmaiwxl/p/9229143.html
+
+返回数据格式{total:4,rows:[{},{}]}   totalField:totals(改变total) dataField:rowss(改变rows) 用系统自带的return Json(result)得到的是json 
+用Newtonsoft.Json序列化后返回给前端是字符串类型，必须用responseHandler:function(data){ return JSON.parse(data)}
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
 
 treegrid  https://github.com/maxazan/jquery-treegrid/tree/0.3.0
 https://examples.bootstrap-table.com/index.html#extensions/treegrid.html
 代码不多，可以自己修改，没有分页
+
+--------------------------------------------------------------------------用上面两个----------------------------------------------------------
 
 jsGrid 开源 商用 支持修改 有分页  没有treegrid
 http://js-grid.com/

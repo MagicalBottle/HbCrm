@@ -7,6 +7,7 @@ using System.Linq;
 using HbCrm.Core.Utils;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
+using HbCrm.Core;
 
 namespace HbCrm.Services.Authorize
 {
@@ -37,6 +38,7 @@ namespace HbCrm.Services.Authorize
             return query.ToList();
         }
 
+        #region 后台菜单列表
         /// <summary>
         /// 组织好菜单数据
         /// </summary>
@@ -88,7 +90,7 @@ namespace HbCrm.Services.Authorize
             {
                 return;
             }
-            string [] urls = httpContext.Request.Path.ToString().Split("/",StringSplitOptions.RemoveEmptyEntries);
+            string[] urls = httpContext.Request.Path.ToString().Split("/", StringSplitOptions.RemoveEmptyEntries);
             string control = string.Empty;// /Admin /Admin/Home /Admin/Home/Index   /Admin/Menu /Admin/Menu/Index 
             if (urls.Length <= 0)
             {
@@ -96,7 +98,7 @@ namespace HbCrm.Services.Authorize
             }
             if (urls.Length == 1)
             {
-                control="Home";
+                control = "Home";
             }
             if (urls.Length >= 2)
             {
@@ -110,12 +112,12 @@ namespace HbCrm.Services.Authorize
         /// </summary>
         /// <param name="menus">必须是调用<see cref="FormData"/>方法处理后的</param>
         /// <param name="control">路径，控制器的部分</param>
-        private void ActiveMenu(List<SysMenu> menus,string control)
+        private void ActiveMenu(List<SysMenu> menus, string control)
         {
             foreach (var menu in menus)
             {
                 //  /Admin/Menu/Edit/2  数据库保存 /Admin/Menu/Index   取[1]做对比
-                string [] urls= menu.MenuUrl.Split("/", StringSplitOptions.RemoveEmptyEntries);
+                string[] urls = menu.MenuUrl.Split("/", StringSplitOptions.RemoveEmptyEntries);
                 if (urls.Length >= 2)
                 {
                     if (string.Equals(urls[1], control, StringComparison.InvariantCultureIgnoreCase))
@@ -123,7 +125,7 @@ namespace HbCrm.Services.Authorize
                         ActiveMenu(menu);
                     }
                 }
-                
+
                 var childrenMenus = menu.ChildrenMenus;
                 if (childrenMenus != null && childrenMenus.Count > 0)
                 {
@@ -145,5 +147,41 @@ namespace HbCrm.Services.Authorize
                 ActiveMenu(menu.ParentMenu);
             }
         }
+
+        #endregion
+
+
+
+        /// <summary>
+        /// 分页获取菜单
+        /// </summary>
+        /// <param name="pageNumber">页数（默认第1页）</param>
+        /// <param name="pageSize">每页条数（默认10条）</param>
+        /// <param name="menuMame">菜单名称（默认为空）</param>
+        /// <param name="menuSystermName">菜单系统名称（默认为空）</param>
+        /// <param name="sortName">排序的字段（默认为空）</param>
+        /// <param name="sortOrder">排序方式 asc desc</param>
+        /// <returns></returns>
+        public IPagedList<SysMenu> GetMenus(int pageNumber = 1, int pageSize = 10, string menuName = null, string menuSystermName = null, string sortName = "Id", string sortOrder = "ASC")
+        {
+            var query = from m in _menuRepository.TableNoTracking
+
+                        select m;
+
+            if (sortOrder.ToUpper() == "ASC")
+            {
+                query = query.OrderBy(m => m.MenuName);
+            }
+            if (sortOrder.ToUpper() == "DESC")
+            {
+                query = query.OrderByDescending(m =>
+                    m.GetType().GetProperty(sortName).Name
+                );
+            }
+
+
+            return new PagedList<SysMenu>(query, pageNumber, pageSize);
+        }
+
     }
 }

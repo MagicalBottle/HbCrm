@@ -15,11 +15,11 @@
                         <h5 class="card-title text-center">HBCRM</h5>
                         <form class="form-signin" action="@Url.Action("Login", "Home", new { area = "Admin" })">
                             <div class="form-label-group mb-3 ">
-                                <input type="text" name="userName" class="form-control" placeholder="用户名">
+                                <input id="userName" type="text" name="userName" class="form-control" placeholder="用户名">
                             </div>
 
                             <div class="form-label-group   mb-3">
-                                <input type="password" name="password" class="form-control" placeholder="密码">
+                                <input id="password" type="password" name="password" class="form-control" placeholder="密码">
                             </div>
 
                             <div class="custom-control custom-checkbox   mb-3">
@@ -51,12 +51,17 @@
             },
             submitHandler: function (form) {
                 var isPersistent = $("#isPersistent")[0].checked;
-                var requestData = "isPersistent=" + isPersistent + "&" + $('.form-signin').serialize()
+                //var requestData = "isPersistent=" + isPersistent + "&" + $('.form-signin').serialize();
+                var requestData = {};
+                requestData.isPersistent = isPersistent;
+                requestData.userName = $("#userName").val().trim();
+                requestData.password = $("#password").val().trim();
                 $.ajax({
                     type: "POST",
                     url: "@Url.Action("Login", "Home", new { area = "Admin" })",
                     dataType: "json",
-                    data: requestData,
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify(requestData),
                     error: function (request, message, error) {
                         alert(request);
                     },

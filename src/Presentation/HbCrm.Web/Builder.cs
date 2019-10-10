@@ -21,6 +21,7 @@ using HbCrm.Services.Web;
 using EasyCaching.Core;
 using EasyCaching.InMemory;
 using HbCrm.Core.Caching;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace HbCrm.Web
 {

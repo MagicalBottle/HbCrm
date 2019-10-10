@@ -1,4 +1,5 @@
-﻿using HbCrm.Core.Domain.Authorize;
+﻿using HbCrm.Core;
+using HbCrm.Core.Domain.Authorize;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -28,5 +29,17 @@ namespace HbCrm.Services.Authorize
         /// <param name="menus">必须是调用<see cref="FormData"/>方法处理后的</param>
         /// <param name="httpContext">请求上下文</param>
         void ActiveMenu(List<SysMenu> menus, HttpContext httpContext);
+
+        /// <summary>
+        /// 分页获取菜单
+        /// </summary>
+        /// <param name="pageNumber">页数（默认第1页）</param>
+        /// <param name="pageSize">每页条数（默认10条）</param>
+        /// <param name="menuMame">菜单名称（默认为空）</param>
+        /// <param name="menuSystermName">菜单系统名称（默认为空）</param>
+        /// <param name="sortName">排序的字段（默认为空）</param>
+        /// <param name="sortOrder">排序方式 asc desc</param>
+        /// <returns></returns>
+        IPagedList<SysMenu> GetMenus( int pageNumber = 1, int pageSize = 10, string menuName = null, string menuSystermName = null, string sortName = "Id", string sortOrder ="ASC");
     }
 }
