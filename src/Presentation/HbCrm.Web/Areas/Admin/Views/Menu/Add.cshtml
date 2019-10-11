@@ -11,7 +11,95 @@
 <!-- Css -->
 <!-- Scripts -->
 @section Scripts{
-    <script>
+    <script src="~/lib/jquery-validation/jquery.validate.js"></script>
+    <script src="~/lib/jquery-formvalidation/js/formvalidation.js"></script>
+    <script type="text/javascript">
+        var validator  = $("#form-add-menu").formvalidation({
+            rules: {
+                menuName: {
+                    required: true
+                },
+                menuSystermName: {
+                    required: true
+                },
+                firstParentId: {
+                    required: true
+                },
+                secondParentId: {
+                    required: true
+                },
+                menuIcon: {
+                    required: true
+                },
+                menuSort: {
+                    required: true
+                },
+                menuUrl: {
+                    required: true
+                }
+            },
+            messages: {
+                userName: "请输入菜单名称",
+                password: "请输入菜单系统名称",
+                firstParentId: "请选择菜单级别",
+                secondParentId: "请选择菜单级别",
+                menuIcon: "请选择菜单图标",
+                menuSort: "请输入菜单排序",
+                menuUrl: "请输入菜单地址"
+            },
+            submitHandler: function (form) {
+                var requestData = {};
+                requestData.menuName = $("#menuName").val().trim();
+                requestData.menuSystermName = $("#menuSystermName").val().trim();
+                requestData.firstParentId = $("#firstParentId").val().trim();
+                requestData.secondParentId = $("#secondParentId").val().trim();
+                requestData.menuIcon = $("#menuIcon").val().trim();
+                requestData.menuSort = $("#menuSort").val().trim();
+                requestData.menuUrl = $("#menuUrl").val().trim();
+                requestData.menuRemark = $("#menuRemark").val().trim();
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Login", "Home", new { area = "Admin" })",
+                    dataType: "json",
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify(requestData),
+                    error: function (request, message, error) {
+                        alert(request);
+                    },
+                    success: function (responseData) {
+                        data = JSON.parse(responseData);
+                        var backToList = $("#btn-save").data("backToList");
+                        if (backToList) {
+                            window.location.href = "@Url.Action("Index", "Menu", new { area = "Admin" })";
+                        } else {
+                            //清空所有选项
+                            $("#menuName").val('');
+                            $("#menuSystermName").val('');
+                            $("#firstParentId").val(0);
+                            $("#secondParentId").val(0);
+                            $("#menuIcon").val('');
+                            $("#menuSort").val(0);
+                            $("#menuUrl").val('');
+                            $("#menuRemark").val('');
+                         }
+                        if (data.LoginStatus == 0) {
+                            alert("登录失败");
+                            return;
+                        }
+                    }
+                });
+            }
+        }); //validator
+        $("#btn-save").click(function () {
+            $(this).data("backToList",true);
+            validator.form();
+        });
+
+        $("#btn-save-add").click(function () {
+            $("#btn-save").data("backToList", false);
+            validator.form();
+        })
+
 
     </script>
 }
@@ -21,9 +109,9 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <a id="btn-add-menu" href="@Url.Action("Index","Menu",new { area = "Admin" })" class="btn btn-info btn-primary">
+                <a id="btn-menu-list" href="@Url.Action("Index","Menu",new { area = "Admin" })" class="btn btn-info btn-primary">
                     <i class="fas fa-angle-left"></i>
-                   菜单列表
+                    返回菜单列表
                 </a>
             </div><!-- /.col -->
             <div class="col-sm-6">
@@ -41,273 +129,79 @@
 <section class="content">
     <div class="row">
         <div class="col-12">
-            <div class="card card-secondary">
+            <div class="card card-green">
                 <div class="card-header">
-                    <h3 class="card-title">Budget</h3>
-
+                    <h3 class="card-title">新增菜单</h3>
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
                             <i class="fas fa-minus"></i>
                         </button>
                     </div>
                 </div>
-                <div class="card-body" style="display: block;">
-                    <div class="form-group">
-                        <label for="inputEstimatedBudget">Estimated budget</label>
-                        <input type="number" id="inputEstimatedBudget" class="form-control" value="2300" step="1">
-                    </div>
-                    <div class="form-group">
-                        <label for="inputSpentBudget">Total amount spent</label>
-                        <input type="number" id="inputSpentBudget" class="form-control" value="2000" step="1">
-                    </div>
-                    <div class="form-group">
-                        <label for="inputEstimatedDuration">Estimated project duration</label>
-                        <input type="number" id="inputEstimatedDuration" class="form-control" value="20" step="0.1">
-                    </div>
+                <div class="card-body">
+                    <form id="form-add-menu">
+                        <div class="form-row ">
+                            <div class="form-group col-6">
+                                <label for="menuName" class=" col-form-label">菜单名称</label>
+                                <input type="text" class="form-control" id="menuName" name="menuName" placeholder="菜单名称">
+                            </div>
+                            <div class="form-group  col-6">
+                                <label for="menuSystermName" class="col-form-label">菜单系统名称</label>
+                                <input type="text" class="form-control" id="menuSystermName" name="menuSystermName" placeholder="菜单系统名称">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-6">
+                                <label for="firstParentId">一级菜单</label>
+                                <select id="firstParentId" name="firstParentId" class="form-control">
+                                    <option selected value="0">作为一级菜单</option>
+                                    <option>.</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="secondParentId">二级菜单</label>
+                                <select id="secondParentId" name="secondParentId" class="form-control">
+                                    <option selected value="0">作为二级菜单</option>
+                                    <option>...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-6">
+                                <label for="menuIcon" class=" col-form-label ">菜单图标</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="menuIcon" name="menuIcon" placeholder="菜单图标">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-info" type="button" id="button-addon2">选择图标</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group  col-6">
+                                <label for="menuSort" class="col-form-label">排序</label>
+                                <input type="text" class="form-control" id="menuSort" name="menuSort" placeholder="0">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="menuUrl" class="col-form-label">菜单地址</label>
+                            <input type="text" class="form-control" id="menuUrl" name="menuUrl" placeholder="菜单地址">
+                        </div>
+                        <div class="form-group">
+                            <label for="menuRemark" class=" col-form-label">菜单说明</label>
+                            <textarea class="form-control" id="menuRemark" name="menuRemark" placeholder="菜单说明"></textarea>
+                        </div>
+
+                        <div class="row justify-content-center ">
+                            <input type="button" id="btn-save" value="保存" class="btn btn-success mr-5 " style="width:8rem;">
+                            <input type="button" id="btn-save-add" value="保存/添加" class="btn btn-success" style="width:8rem;">
+                        </div>
+                    </form>
+
                 </div>
                 <!-- /.card-body -->
             </div>
             <!-- /.card -->
-            <div class="card card-info">
-                <div class="card-header">
-                    <h3 class="card-title">Files</h3>
-
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body p-0">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>File Name</th>
-                                <th>File Size</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            <tr>
-                                <td>Functional-requirements.docx</td>
-                                <td>49.8005 kb</td>
-                                <td class="text-right py-0 align-middle">
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>UAT.pdf</td>
-                                <td>28.4883 kb</td>
-                                <td class="text-right py-0 align-middle">
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Email-from-flatbal.mln</td>
-                                <td>57.9003 kb</td>
-                                <td class="text-right py-0 align-middle">
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Logo.png</td>
-                                <td>50.5190 kb</td>
-                                <td class="text-right py-0 align-middle">
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Contract-10_12_2014.docx</td>
-                                <td>44.9715 kb</td>
-                                <td class="text-right py-0 align-middle">
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
-                                    </div>
-                                </td>
-
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-            <div class="card card-info">
-                <div class="card-header">
-                    <h3 class="card-title">Files</h3>
-
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body p-0">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>File Name</th>
-                                <th>File Size</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            <tr>
-                                <td>Functional-requirements.docx</td>
-                                <td>49.8005 kb</td>
-                                <td class="text-right py-0 align-middle">
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>UAT.pdf</td>
-                                <td>28.4883 kb</td>
-                                <td class="text-right py-0 align-middle">
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Email-from-flatbal.mln</td>
-                                <td>57.9003 kb</td>
-                                <td class="text-right py-0 align-middle">
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Logo.png</td>
-                                <td>50.5190 kb</td>
-                                <td class="text-right py-0 align-middle">
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Contract-10_12_2014.docx</td>
-                                <td>44.9715 kb</td>
-                                <td class="text-right py-0 align-middle">
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
-                                    </div>
-                                </td>
-
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-            <div class="card card-info">
-                <div class="card-header">
-                    <h3 class="card-title">Files</h3>
-
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body p-0">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>File Name</th>
-                                <th>File Size</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            <tr>
-                                <td>Functional-requirements.docx</td>
-                                <td>49.8005 kb</td>
-                                <td class="text-right py-0 align-middle">
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>UAT.pdf</td>
-                                <td>28.4883 kb</td>
-                                <td class="text-right py-0 align-middle">
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Email-from-flatbal.mln</td>
-                                <td>57.9003 kb</td>
-                                <td class="text-right py-0 align-middle">
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Logo.png</td>
-                                <td>50.5190 kb</td>
-                                <td class="text-right py-0 align-middle">
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Contract-10_12_2014.docx</td>
-                                <td>44.9715 kb</td>
-                                <td class="text-right py-0 align-middle">
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
-                                    </div>
-                                </td>
-
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <a href="#" class="btn btn-secondary">Cancel</a>
-            <input type="submit" value="Save Changes" class="btn btn-success float-right">
         </div>
     </div>
 </section>
