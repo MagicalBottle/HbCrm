@@ -211,6 +211,45 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
+
+                <div class="card">
+                    <div class="card-header border-0 ">
+                        <div class="d-flex justify-content-between">
+                            <h3 class="card-title">搜索项</h3><div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row align-items-center">
+                            <div class="col-6">
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">菜单名称</div>
+                                    </div>
+                                    <input id="menuName" name="menuName" type="text" class="form-control" placeholder="菜单名称" aria-label="Username" aria-describedby="basic-addon1">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">菜单系统名称</div>
+                                    </div>
+                                    <input id="menuSystermName" name="menuSystermName" type="text" class="form-control" placeholder="菜单系统名称" aria-label="Username" aria-describedby="basic-addon1">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row align-items-center justify-content-center">
+                            <div class="col-4">
+                                <button id="btn_query" class="btn btn-primary btn-block">查询</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="card">
                     <div class="card-header border-0 ">
                         <div class="d-flex justify-content-between">
@@ -222,21 +261,6 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">菜单名称</span>
-                                </div>
-                                <input id="menuName" name="menuName" type="text" class="form-control" placeholder="菜单名称" aria-label="Username" aria-describedby="basic-addon1">
-                            </div>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">菜单名称</span>
-                                </div>
-                                <input id="menuSystermName" name="menuSystermName" type="text" class="form-control" placeholder="菜单系统名称" aria-label="Username" aria-describedby="basic-addon1">
-                            </div>
-                            <button id="btn_query" class="btn btn-primary">查询</button>
-                        </div>
                         <table id="list-menu-table"></table>
                     </div>
                 </div>

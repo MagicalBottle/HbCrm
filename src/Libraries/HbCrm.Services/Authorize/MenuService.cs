@@ -8,6 +8,7 @@ using HbCrm.Core.Utils;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using HbCrm.Core;
+using System.Linq.Dynamic.Core;
 
 namespace HbCrm.Services.Authorize
 {
@@ -164,19 +165,34 @@ namespace HbCrm.Services.Authorize
         /// <returns></returns>
         public IPagedList<SysMenu> GetMenus(int pageNumber = 1, int pageSize = 10, string menuName = null, string menuSystermName = null, string sortName = "Id", string sortOrder = "ASC")
         {
-            var query = from m in _menuRepository.TableNoTracking
+            //null 传播 https://github.com/StefH/System.Linq.Dynamic.Core/wiki/NullPropagation
 
+            var query = from m in _menuRepository.TableNoTracking
                         select m;
 
+            if (!string.IsNullOrEmpty(menuName))
+            {
+                //Contains 会包含 or name=''   indexof 不会  找不到-1
+                //转换成mysql locate() 只要找到返回的结果都大于0
+                query = query.Where(m => m.MenuName.IndexOf(menuName)>-1);
+            }
+
+            if (!string.IsNullOrEmpty(menuSystermName))
+            {
+                query = query.Where(m => m.MenuSystermName.IndexOf(menuSystermName) > -1);
+            }
+
+            if (string.IsNullOrWhiteSpace(sortName))
+            {
+                sortName = "Id";
+            }
             if (sortOrder.ToUpper() == "ASC")
             {
-                query = query.OrderBy(m => m.MenuName);
+                query= query.OrderBy(sortName+ " ASC");
             }
             if (sortOrder.ToUpper() == "DESC")
             {
-                query = query.OrderByDescending(m =>
-                    m.GetType().GetProperty(sortName).Name
-                );
+                query = query.OrderBy(sortName + " DESC");
             }
 
 

@@ -36,7 +36,13 @@ namespace HbCrm.Web.Areas.Admin.Controllers
             var result = new PagedListOutPut<SysMenu>();
             try
             {
-                menus = _menuService.GetMenus(param.PageNumber, param.PageSize);
+                menus = _menuService.GetMenus(
+                    pageNumber: param.PageNumber,
+                    pageSize: param.PageSize,
+                    menuName: param.MenuName,
+                    menuSystermName: param.MenuSystermName,
+                    sortName: param.SortName,
+                    sortOrder: param.SortOrder);
                 result.Rows = menus;
             }
             catch (Exception ex)
