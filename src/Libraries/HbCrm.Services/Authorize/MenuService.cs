@@ -199,5 +199,55 @@ namespace HbCrm.Services.Authorize
             return new PagedList<SysMenu>(query, pageNumber, pageSize);
         }
 
+
+        /// <summary>
+        /// 获取菜单下的所有子菜单（只获取一级）
+        /// </summary>
+        /// <param name="parentId"></param>
+        /// <returns></returns>
+        public List<SysMenu> GetLevelMenus(int parentId = 0)
+        {
+            var query = from m in _menuRepository.TableNoTracking
+                        where m.ParentMenuId==parentId
+                        orderby m.Id ascending
+                        select m;
+            return query.ToList();
+        }
+
+        /// <summary>
+        /// 是否存在同名系统菜单
+        /// </summary>
+        /// <param name="menuSystermName"></param>
+        /// <returns></returns>
+        public bool ExistMenuByMenuSystermName(string menuSystermName)
+        {
+            var query = from m in _menuRepository.TableNoTracking
+                        where m.MenuSystermName == menuSystermName
+                        select m;
+            if (query.ToList().Count() > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 添加菜单
+        /// </summary>
+        /// <param name="menu">菜单实体</param>
+        /// <returns>-1插入失败</returns>
+        public int AddMenu(SysMenu menu)
+        {
+            int result = -1;
+            try
+            {
+                result= _menuRepository.Insert(menu);
+            }
+            catch (Exception ex)
+            {
+            }
+            return result;
+        }
+
     }
 }

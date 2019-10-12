@@ -102,43 +102,36 @@ namespace HbCrm.Data
         /// 插入实体
         /// </summary>
         /// <param name="entity">实体</param>
-        public void Insert(TEntity entity)
+        public int Insert(TEntity entity)
         {
+            int result = -1;
             if (entity == null)
             {
                 throw new ArgumentNullException(nameof(entity));
             }
-            try
-            {
-                this.Entities.Add(entity);
-                _context.SaveChanges();
-            }
-            catch (DbUpdateException exception)
-            {
-                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(exception), exception);
-            }
+
+            this.Entities.Add(entity);
+            result = _context.SaveChanges();
+
+            return result;
         }
 
         /// <summary>
         /// 插入多个实体
         /// </summary>
         /// <param name="entities">多个实体</param>
-        public void Insert(IEnumerable<TEntity> entities)
+        public int Insert(IEnumerable<TEntity> entities)
         {
-
+            int result = -1;
             if (entities == null)
             {
                 throw new ArgumentNullException(nameof(entities));
             }
-            try
-            {
-                this.Entities.AddRange(entities);
-                _context.SaveChanges();
-            }
-            catch (DbUpdateException exception)
-            {
-                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(exception), exception);
-            }
+
+            this.Entities.AddRange(entities);
+            result = _context.SaveChanges();
+
+            return result;
         }
 
         /// <summary>

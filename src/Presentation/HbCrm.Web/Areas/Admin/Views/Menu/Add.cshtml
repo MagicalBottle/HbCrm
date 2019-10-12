@@ -51,15 +51,15 @@
                 var requestData = {};
                 requestData.menuName = $("#menuName").val().trim();
                 requestData.menuSystermName = $("#menuSystermName").val().trim();
-                requestData.firstParentId = $("#firstParentId").val().trim();
-                requestData.secondParentId = $("#secondParentId").val().trim();
+                requestData.firstParentMenuId = $("#firstParentMenuId").val().trim();
+                requestData.secondParentMenuId = $("#secondParentMenuId").val().trim();
                 requestData.menuIcon = $("#menuIcon").val().trim();
                 requestData.menuSort = $("#menuSort").val().trim();
                 requestData.menuUrl = $("#menuUrl").val().trim();
                 requestData.menuRemark = $("#menuRemark").val().trim();
                 $.ajax({
                     type: "POST",
-                    url: "@Url.Action("Login", "Home", new { area = "Admin" })",
+                    url: "@Url.Action("Add", "Menu", new { area = "Admin" })",
                     dataType: "json",
                     contentType: "application/json;charset=utf-8",
                     data: JSON.stringify(requestData),
@@ -68,38 +68,102 @@
                     },
                     success: function (responseData) {
                         data = JSON.parse(responseData);
-                        var backToList = $("#btn-save").data("backToList");
-                        if (backToList) {
-                            window.location.href = "@Url.Action("Index", "Menu", new { area = "Admin" })";
+                        if (data.Status == 1) {
+                            var backToList = $("#btn-save").data("backToList");
+                            if (backToList) {
+                                window.location.href = "@Url.Action("Index", "Menu", new { area = "Admin" })";
+                            } else {
+                                //清空所有选项
+                                $("#menuName").val('');
+                                $("#menuSystermName").val('');
+                                $("#firstParentMenuId").val(0);
+                                $("#secondParentMenuId").val(0);
+                                $("#menuIcon").val('');
+                                $("#menuSort").val(0);
+                                $("#menuUrl").val('');
+                                $("#menuRemark").val('');
+                            }
                         } else {
-                            //清空所有选项
-                            $("#menuName").val('');
-                            $("#menuSystermName").val('');
-                            $("#firstParentId").val(0);
-                            $("#secondParentId").val(0);
-                            $("#menuIcon").val('');
-                            $("#menuSort").val(0);
-                            $("#menuUrl").val('');
-                            $("#menuRemark").val('');
-                         }
-                        if (data.LoginStatus == 0) {
-                            alert("登录失败");
-                            return;
+                            if (data.Code == "menu_exsit_menuSystermName") { 
+                                alert("菜单系统名称已存在");
+                                $("#menuSystermName").focus();
+                                return;
+                            }
+                            alert(data.Message)
                         }
-                    }
-                });
-            }
+                    }//success
+                });//ajax
+            }//submitHandler
         }); //validator
         $("#btn-save").click(function () {
             $(this).data("backToList",true);
-            validator.form();
+            if (validator.form()) {
+                $("#form-add-menu").submit();
+            }
         });
 
         $("#btn-save-add").click(function () {
             $("#btn-save").data("backToList", false);
-            validator.form();
-        })
+            if (validator.form()) {
+                $("#form-add-menu").submit();
+            }
+        });
 
+        // 获取菜单
+        function getMenu(parentId) { 
+            //var requestData = {};
+            //requestData.ParentId = parentId;
+            $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("GetLevelMenus", "Menu", new { area = "Admin" })",
+                    dataType: "json",
+                    //contentType: "application/json;charset=utf-8",
+                    data: "parentId=" + parentId,
+                    error: function (request, message, error) {
+                        alert("获取菜单列表失败");
+                    },
+                    success: function (responseData) {
+                        data = JSON.parse(responseData);
+                        if (data.Status == 1) {
+                            if (parentId <= 0) {
+                                //一级菜单
+                                var $firstParentId = $("#firstParentMenuId");
+                                $firstParentId.html("");
+                                var selectOption = '<option value="0">作为一级菜单</option>';
+                                $.each(data.Rows, function (index, item,  value) {
+                                    selectOption += '<option value="' + item.Id + '">' + item.MenuName + '</option>';
+                                });
+                                $firstParentId.append(selectOption);
+                            } else { 
+                                //二级菜单
+                                var $secondParentId = $("#secondParentMenuId");
+                                $secondParentId.html("");
+                                var selectOption = '<option value="0">作为二级菜单</option>';
+                                $.each(data.Rows, function (index, item, value) {
+                                    selectOption += '<option value="' + item.Id + '">' + item.MenuName + '</option>';
+                                });
+                                $secondParentId.append(selectOption);
+                            }
+                        }
+                       
+                    }
+                });
+        }
+        //一级菜单选择
+        $("#firstParentMenuId").change(function () { 
+            var selectValue = $(this).val();
+            if (selectValue <= 0) {
+                return;
+            } else {
+                $("#secondParentMenuId").addClass("show");
+                getMenu(selectValue);
+            }
+        });
+       
+        $(function () {
+            //初始化一级菜单
+            getMenu(0);
+        });
 
     </script>
 }
@@ -152,17 +216,13 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group col-6">
-                                <label for="firstParentId">一级菜单</label>
-                                <select id="firstParentId" name="firstParentId" class="form-control">
-                                    <option selected value="0">作为一级菜单</option>
-                                    <option>.</option>
+                                <label for="firstParentMenuId">一级菜单</label>
+                                <select id="firstParentMenuId" name="firstParentMenuId" class="form-control">
                                 </select>
                             </div>
-                            <div class="form-group col-6">
-                                <label for="secondParentId">二级菜单</label>
-                                <select id="secondParentId" name="secondParentId" class="form-control">
-                                    <option selected value="0">作为二级菜单</option>
-                                    <option>...</option>
+                            <div class="form-group col-6 hidden">
+                                <label for="secondParentMenuId">二级菜单</label>
+                                <select id="secondParentMenuId" name="secondParentMenuId" class="form-control">
                                 </select>
                             </div>
                         </div>

@@ -64,6 +64,11 @@ namespace HbCrm.Core.Domain.Admin
         public string QQ { get; set; }
 
         /// <summary>
+        /// 微信号
+        /// </summary>
+        public string WeChar { get; set; }
+
+        /// <summary>
         /// 用户角色关联表
         /// </summary>
         public virtual List<SysAdminRole> AdminRoles { get; set; }

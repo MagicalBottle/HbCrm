@@ -36,13 +36,13 @@ namespace HbCrm.Core.Data
         /// 插入实体
         /// </summary>
         /// <param name="entity">实体</param>
-        void Insert(TEntity entity);
+        int Insert(TEntity entity);
 
         /// <summary>
         /// 插入多个实体
         /// </summary>
         /// <param name="entities">多个实体</param>
-        void Insert(IEnumerable<TEntity> entities);
+        int Insert(IEnumerable<TEntity> entities);
 
         /// <summary>
         /// 更新实体

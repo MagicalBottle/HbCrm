@@ -41,5 +41,26 @@ namespace HbCrm.Services.Authorize
         /// <param name="sortOrder">排序方式 asc desc</param>
         /// <returns></returns>
         IPagedList<SysMenu> GetMenus( int pageNumber = 1, int pageSize = 10, string menuName = null, string menuSystermName = null, string sortName = "Id", string sortOrder ="ASC");
+
+        /// <summary>
+        /// 获取菜单下的所有子菜单（只获取一级）
+        /// </summary>
+        /// <param name="parentId"></param>
+        /// <returns></returns>
+        List<SysMenu> GetLevelMenus(int parentId = 0);
+
+        /// <summary>
+        /// 是否存在同名系统菜单
+        /// </summary>
+        /// <param name="menuSystermName">系统菜单名称</param>
+        /// <returns></returns>
+        bool ExistMenuByMenuSystermName(string menuSystermName);
+
+        /// <summary>
+        /// 添加菜单
+        /// </summary>
+        /// <param name="menu">菜单实体</param>
+        /// <returns>-1插入失败</returns>
+        int AddMenu(SysMenu menu);
     }
 }

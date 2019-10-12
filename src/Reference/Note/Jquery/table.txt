@@ -6,9 +6,9 @@ https://github.com/wenzhixin/bootstrap-table
 
 参考使用：
 https://www.cnblogs.com/wangjiming/p/9370568.html
-https://www.jianshu.com/p/b9d0f0935263
+https://www.jianshu.com/p/b9d0f0935263 
 
-整理的文档
+整理的文档 中文  
 https://blog.csdn.net/yapengliu/article/details/80191699
 
 重点坑，columns  field  一定和后台返回的一致。后台属性大写，序列化后首字母小写了，MenuName=> menuName 导致加载不了数据

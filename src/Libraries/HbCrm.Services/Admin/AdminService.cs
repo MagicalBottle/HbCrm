@@ -5,7 +5,9 @@ using HbCrm.Core.Data;
 using HbCrm.Core.Domain.Admin;
 using HbCrm.Core.Domain.Authorize;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using Microsoft.EntityFrameworkCore;
+using HbCrm.Core;
 
 namespace HbCrm.Services.Admin
 {
@@ -117,5 +119,81 @@ namespace HbCrm.Services.Admin
 
             return sysAdmin;
         }
+
+        /// <summary>
+        /// 分页获取菜单
+        /// </summary>
+        /// <param name="pageNumber">页数（默认第1页）</param>
+        /// <param name="pageSize">每页条数（默认10条）</param>
+        /// <param name="sortName">排序的字段（默认为空）</param>
+        /// <param name="sortOrder">排序方式 asc desc</param>
+        /// <param name="userName">登录名</param>
+        /// <param name="nickName">昵称</param>
+        /// <param name="email">邮箱</param>
+        /// <param name="mobilePhone">手机号</param>
+        /// <param name="qQ">qq</param>
+        /// <param name="weChar">微信号</param>
+        /// <returns></returns>
+        public IPagedList<SysAdmin> GetAdmins(int pageNumber = 1, 
+            int pageSize = 10, 
+            string sortName = "Id",
+            string sortOrder = "ASC", 
+            string userName = null, 
+            string nickName = null,
+            string email = null,
+            string mobilePhone = null,
+            string qQ = null,
+            string weChar=null)
+        {
+            //null 传播 https://github.com/StefH/System.Linq.Dynamic.Core/wiki/NullPropagation
+
+            var query = from m in _adminRepository.TableNoTracking
+                        select m;
+
+            if (!string.IsNullOrEmpty(userName))
+            {
+                //Contains 会包含 or name=''   indexof 不会  找不到-1
+                //转换成mysql locate() 只要找到返回的结果都大于0
+                query = query.Where(m => m.UserName.IndexOf(userName) > -1);
+            }
+
+            if (!string.IsNullOrEmpty(nickName))
+            {
+                query = query.Where(m => m.NickName.IndexOf(nickName) > -1);
+            }
+
+            if (!string.IsNullOrEmpty(email))
+            {
+                query = query.Where(m => m.Email.IndexOf(email) > -1);
+            }
+
+            if (!string.IsNullOrEmpty(mobilePhone))
+            {
+                query = query.Where(m => m.MobilePhone.IndexOf(mobilePhone) > -1);
+            }
+
+            if (!string.IsNullOrEmpty(qQ))
+            {
+                query = query.Where(m => m.QQ.IndexOf(qQ) > -1);
+            }
+
+            if (string.IsNullOrWhiteSpace(sortName))
+            {
+                sortName = "Id";
+            }
+            if (sortOrder.ToUpper() == "ASC")
+            {
+                query = query.OrderBy(sortName + " ASC");
+            }
+            if (sortOrder.ToUpper() == "DESC")
+            {
+                query = query.OrderBy(sortName + " DESC");
+            }
+
+
+            return new PagedList<SysAdmin>(query, pageNumber, pageSize);
+        }
+
+
     }
 }
