@@ -22,6 +22,11 @@ using EasyCaching.Core;
 using EasyCaching.InMemory;
 using HbCrm.Core.Caching;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using FluentValidation.AspNetCore;
+using System.Reflection;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using FluentValidation;
+using AutoMapper;
 
 namespace HbCrm.Web
 {
@@ -86,8 +91,21 @@ namespace HbCrm.Web
 
             services.AddSingleton<IAuthorizationHandler, AdminAuthorizationHandler>();
 
-            services.AddMvc();
+            var mvcBuilder = services.AddMvc();
+            mvcBuilder.AddFluentValidation(option =>
+                {
+                    //https://docs.microsoft.com/zh-cn/aspnet/core/mvc/advanced/app-parts?view=aspnetcore-2.2
+                    var assemblies = mvcBuilder.PartManager.ApplicationParts
+                     .OfType<AssemblyPart>()
+                     .Where(part => part.Name.StartsWith("HbCrm", StringComparison.InvariantCultureIgnoreCase))
+                     .Select(part => part.Assembly);
+                    option.RegisterValidatorsFromAssemblies(assemblies);//从程序集中加载继承AbstractValidator<T> 的 public类，且是非 abstract的
+                    option.RunDefaultMvcValidationAfterFluentValidationExecutes = false;//去掉默认验证，只运行FluentValidation验证
+                    option.ImplicitlyValidateChildProperties = true;//支持子属性是类的验证      
+                });
+            ValidatorOptions.CascadeMode = CascadeMode.StopOnFirstFailure; //开启全局设置，第一个验证失败立即停止验证
 
+            services.AddAutoMapper(typeof(Builder));
         }
 
         public static void UseHbCrm(this IApplicationBuilder app, IHostingEnvironment env, IConfiguration config)

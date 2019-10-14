@@ -21,7 +21,7 @@ namespace HbCrm.Core
         /// <summary>
         /// 创建日期
         /// </summary>
-        public virtual DateTime CreateDate { get; set; }
+        public virtual DateTime CreateDate { get; set; } 
         /// <summary>
         /// 最后修改人ID
         /// </summary>

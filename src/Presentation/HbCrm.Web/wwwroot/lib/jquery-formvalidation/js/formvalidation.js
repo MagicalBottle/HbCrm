@@ -15,7 +15,7 @@
                 $element.tooltip({//重新生成气泡
                     title: error.text(),
                     placement: 'bottom'
-                })
+                });
                 $element.addClass("is-invalid");//添加未验证样式
                 $element.removeClass("is-valid");//清除已验证样式
             },

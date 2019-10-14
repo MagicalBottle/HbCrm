@@ -137,7 +137,7 @@ namespace HbCrm.Services.Admin
         public IPagedList<SysAdmin> GetAdmins(int pageNumber = 1, 
             int pageSize = 10, 
             string sortName = "Id",
-            string sortOrder = "ASC", 
+            string sortOrder = "DESC", 
             string userName = null, 
             string nickName = null,
             string email = null,
@@ -192,6 +192,42 @@ namespace HbCrm.Services.Admin
 
 
             return new PagedList<SysAdmin>(query, pageNumber, pageSize);
+        }
+
+        /// <summary>
+        /// 是否存在账号名称
+        /// </summary>
+        /// <param name="userName">账号名称</param>
+        /// <returns>true 存在，false 不存在</returns>
+        public bool ExistAdminUserName(string userName)
+        {
+            bool isExist = true;
+
+            var query = from m in _adminRepository.TableNoTracking
+                        select m;
+            isExist=query.Any(m => m.UserName == userName);
+
+            return isExist;
+
+        }
+
+        /// <summary>
+        /// 新增一个账号
+        /// </summary>
+        /// <param name="admin"></param>
+        /// <returns></returns>
+        public int AddAdmin(SysAdmin admin)
+        {
+
+            int result = -1;
+            try
+            {
+                result = _adminRepository.Insert(admin);               
+            }
+            catch (Exception ex)
+            {
+            }
+            return result;
         }
 
 

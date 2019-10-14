@@ -17,7 +17,7 @@ namespace HbCrm.Core.Domain.Admin
 
         public SysAdmin()
         {
-            Guid = new Guid().ToString();
+            Guid = System.Guid.NewGuid().ToString();
         }
         #endregion
 

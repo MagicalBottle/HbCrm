@@ -1,0 +1,25 @@
+﻿
+采用  FluentValidation 校验
+官网 https://fluentvalidation.net/
+官网基本用法：https://fluentvalidation.net/start
+官网集成asp.net core:https://fluentvalidation.net/aspnet
+
+参考
+https://blog.csdn.net/qin_yu_2010/article/details/87839448
+
+可以单个注册，也可以通过程序集自动查找
+services.AddMvc()
+  .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblies());
+
+
+The two cascade modes are:
+Continue (the default) - always invokes all validators in a rule definition
+StopOnFirstFailure - stops executing a rule as soon as a validator fails
+
+ValidatorOptions.CascadeMode = CascadeMode.StopOnFirstFailure;
+
+验证方式  默认全部验证。  验证出错就停止
+
+全局配置  startup类中
+To set the cascade mode globally, you can set the CascadeMode property on the static ValidatorOptions class during your application’s startup routine:
+ValidatorOptions.CascadeMode = CascadeMode.StopOnFirstFailure;

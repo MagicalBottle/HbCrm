@@ -12,12 +12,11 @@ namespace HbCrm.Web.Areas.Admin.Models
         /// 状态, 0失败 ，1成功 默认1
         /// </summary>
         public ReutnStatus Status { get; set; } = ReutnStatus.Success;
-
+        
         /// <summary>
         /// 错误编码
         /// </summary>
         public string Code { get; set; }
-
         /// <summary>
         /// 提示信息 默认Success
         /// </summary>
@@ -44,7 +43,6 @@ namespace HbCrm.Web.Areas.Admin.Models
         /// 错误编码
         /// </summary>
         public string Code { get; set; }
-
         /// <summary>
         /// 提示信息 默认Success
         /// </summary>
@@ -71,7 +69,7 @@ namespace HbCrm.Web.Areas.Admin.Models
         /// 状态, 0失败 ，1成功 默认1
         /// </summary>
         public ReutnStatus Status { get; set; } = ReutnStatus.Success;
-
+        
         /// <summary>
         /// 错误编码
         /// </summary>

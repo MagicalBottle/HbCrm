@@ -1,0 +1,199 @@
+﻿
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<!-- Css -->
+@section Css{
+
+}
+<!-- Css -->
+<!-- Scripts -->
+@section Scripts{
+    <script src="~/lib/jquery-validation/jquery.validate.js"></script>
+    <script src="~/lib/jquery-formvalidation/js/formvalidation.js"></script>
+    <script type="text/javascript">
+        var validator  = $("#form-add").formvalidation({
+            rules: {
+                UserName: {
+                    required: true
+                },
+                NickName: {
+                    required: true
+                },
+                Password: {
+                    required: true
+                },
+                ConfirmPassword: {
+                    required: true,
+                    equalTo: "#Password"
+                }
+                //Email: {
+                //    required: true
+                //},
+                //MobilePhone: {
+                //    required: true
+                //},
+                //QQ: {
+                //    required: true
+                //},
+                //WeChar: {
+                //    required: true
+                //}
+            },
+            messages: {
+                UserName: "请输入账号名称",
+                NickName: "请输入昵称",
+                Password: "请输入密码",
+                ConfirmPassword: { requird: "请确认密码", equalTo: "两次输入密码不一致" }
+                //Email: "请输入邮箱",
+                //MobilePhone: "请输入手机号",
+                //QQ: "请输入QQ",
+                //WeChar: "请输入微信号"
+            },
+            submitHandler: function (form) {
+                var requestData = $(form).serialize();
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Add", "Account", new { area = "Admin" })",
+                    dataType: "json",
+                    contentType: "application/x-www-form-urlencoded",
+                    data: requestData,
+                    error: function (request, message, error) {
+                        alert(request);
+                    },
+                    success: function (responseData) {
+                        data = JSON.parse(responseData);
+                        if (data.Status == 1) {
+                            var backToList = $("#btn-save").data("backToList");
+                            if (backToList) {
+                                window.location.href = "@Url.Action("Index", "Account", new { area = "Admin" })";
+                            } else {
+                                //清空所有选项
+                                $(form).find("input").each(function(index, element){
+                                    element.val("");
+                                });
+                            }
+                        } else {
+                            alert(data.Message)
+                        }
+                    }//success
+                });//ajax
+            }//submitHandler
+        }); //validator
+        $("#btn-save").click(function () {
+            $(this).data("backToList",true);
+            if (validator.form()) {
+                $("#form-add").submit();
+            }
+        });
+
+        $("#btn-save-add").click(function () {
+            $("#btn-save").data("backToList", false);
+            if (validator.form()) {
+                $("#form-add").submit();
+            }
+        });
+       
+        $(function () {
+            //初始化
+        });
+
+    </script>
+}
+<!-- Scripts -->
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <a id="btn-list" href="@Url.Action("Index","Account",new { area = "Admin" })" class="btn btn-info btn-primary">
+                    <i class="fas fa-angle-left"></i>
+                    返回账号列表
+                </a>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Add","Account",new { area="Admin"})">新增账号</a></li>
+                    <li class="breadcrumb-item active">账号权限</li>
+                    <li class="breadcrumb-item active">设置</li>
+                </ol>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-green">
+                <div class="card-header">
+                    <h3 class="card-title">新增账号</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form id="form-add">
+                        <div class="form-row ">
+                            <div class="form-group col-6">
+                                <label for="UserName" class=" col-form-label">账号名称</label>
+                                <input type="text" class="form-control" id="UserName" name="UserName" placeholder="账号名称">
+                            </div>
+                            <div class="form-group  col-6">
+                                <label for="NickName" class="col-form-label">昵称</label>
+                                <input type="text" class="form-control" id="NickName" name="NickName" placeholder="昵称">
+                            </div>
+                        </div>
+
+                        <div class="form-row ">
+                            <div class="form-group col-6">
+                                <label for="Password" class=" col-form-label">密码</label>
+                                <input type="password" class="form-control" id="Password" name="Password" placeholder="密码">
+                            </div>
+                            <div class="form-group  col-6">
+                                <label for="ConfirmPassword" class="col-form-label">确认密码</label>
+                                <input type="password" class="form-control" id="ConfirmPassword" name="ConfirmPassword" placeholder="确认密码">
+                            </div>
+                        </div>
+
+                        <div class="form-row ">
+                            <div class="form-group col-6">
+                                <label for="Email" class=" col-form-label">邮箱</label>
+                                <input type="text" class="form-control" id="Email" name="Email" placeholder="邮箱">
+                            </div>
+                            <div class="form-group  col-6">
+                                <label for="MobilePhone" class="col-form-label">手机号</label>
+                                <input type="text" class="form-control" id="MobilePhone" name="MobilePhone" placeholder="手机号">
+                            </div>
+                        </div>
+
+                        <div class="form-row ">
+                            <div class="form-group col-6">
+                                <label for="QQ" class=" col-form-label">QQ</label>
+                                <input type="text" class="form-control" id="QQ" name="QQ" placeholder="QQ">
+                            </div>
+                            <div class="form-group  col-6">
+                                <label for="WeChar" class="col-form-label">微信号</label>
+                                <input type="text" class="form-control" id="WeChar" name="WeChar" placeholder="微信号">
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-center ">
+                            <input type="button" id="btn-save" value="保存" class="btn btn-success mr-5 " style="width:8rem;">
+                            <input type="button" id="btn-save-add" value="保存/添加" class="btn btn-success" style="width:8rem;">
+                        </div>
+                    </form>
+
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+</section>
+<!-- /.content -->

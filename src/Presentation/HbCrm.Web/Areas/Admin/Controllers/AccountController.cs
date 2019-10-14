@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using HbCrm.Core;
 using HbCrm.Core.Domain.Admin;
 using HbCrm.Core.Domain.Authorize;
@@ -11,6 +12,7 @@ using HbCrm.Services.Web;
 using HbCrm.Web.Areas.Admin.Models;
 using HbCrm.Web.Areas.Admin.Models.Admin;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -22,10 +24,14 @@ namespace HbCrm.Web.Areas.Admin.Controllers
     {
         private readonly IAdminService _adminService;
         private readonly IWorkContext _context;
-        public AccountController(IAdminService adminService, IWorkContext context)
+        private readonly IMapper _mapper;
+        public AccountController(IAdminService adminService,
+            IWorkContext context,
+           IMapper mapper)
         {
             _adminService = adminService;
             _context = context;
+            _mapper = mapper;
         }
 
         [AdminAuthorize(Policy = PermissionKeys.AdminView)]
@@ -33,9 +39,9 @@ namespace HbCrm.Web.Areas.Admin.Controllers
         {
             return View();
         }
-        
+
         [AdminAuthorize(Policy = PermissionKeys.AdminView)]
-        public IActionResult List( AdminQueryParamInputModel param)
+        public IActionResult List(AdminQueryParamInputModel param)
         {
             IPagedList<SysAdmin> admin = null;
             var result = new PagedListReponseOutPut<SysAdmin>();
@@ -48,10 +54,10 @@ namespace HbCrm.Web.Areas.Admin.Controllers
                     sortOrder: param.SortOrder,
                     userName: param.UserName,
                     nickName: param.NickName,
-                    email:param.Email,
-                    mobilePhone:param.MobilePhone,
-                    qQ:param.QQ,
-                    weChar:param.WeChar);
+                    email: param.Email,
+                    mobilePhone: param.MobilePhone,
+                    qQ: param.QQ,
+                    weChar: param.WeChar);
 
                 result.Rows = admin;
             }
@@ -61,6 +67,63 @@ namespace HbCrm.Web.Areas.Admin.Controllers
                 result.Message = "Error";
             }
             return new JsonResult(JsonConvert.SerializeObject(result, new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd HH:mm:ss.ffff" }));
+        }
+
+
+        [AdminAuthorize(Policy = PermissionKeys.AdminAdd)]
+        [HttpGet]
+        public IActionResult Add()
+        {
+            return View();
+        }
+
+
+        [AdminAuthorize(Policy = PermissionKeys.AdminAdd)]
+        [HttpPost]
+        public IActionResult Add(AdminInputModel param)
+        {
+            var response = new ReponseOutPut();
+            response.Code = "menu_add_success";
+            response.Message = "新增账号成功";
+            if (!ModelState.IsValid)
+            {
+                response.Status = ReutnStatus.Error;
+                response.Code = "param_vaild_error";
+
+                var errorProperty = ModelState.Values.First(m => m.ValidationState == ModelValidationState.Invalid);
+                response.Message = errorProperty.Errors.First().ErrorMessage;//验证不通过的 //全局配置一个验证不通过就不在验证了，只存在一个错误信息
+
+                return new JsonResult(JsonConvert.SerializeObject(response));
+            }
+
+            // 检查用户名是否重复
+            var isExistUserName = _adminService.ExistAdminUserName(param.UserName);
+            if (isExistUserName)
+            {
+                response.Status = ReutnStatus.Error;
+                response.Code = "username_is_exist";
+                response.Message = "用户名已经存在";
+                return new JsonResult(JsonConvert.SerializeObject(response));
+            }
+
+            SysAdmin admin = _mapper.Map<AdminInputModel, SysAdmin>(param);
+
+            admin.CreateBy = _context.Admin.Id;
+            admin.CreatebyName = _context.Admin.UserName;
+            admin.CreateDate = DateTime.Now;
+            admin.LastUpdateBy = admin.CreateBy;
+            admin.LastUpdateByName = admin.CreatebyName;
+            admin.LastUpdateDate = admin.CreateDate;
+            
+            var result = _adminService.AddAdmin(admin);
+            if (result < 0)
+            {
+                response.Status = ReutnStatus.Error;
+                response.Code = "menu_add_error";
+                response.Message = "新增账号失败";
+            }
+
+            return new JsonResult(JsonConvert.SerializeObject(response));
         }
     }
 }

@@ -33,12 +33,26 @@ namespace HbCrm.Services.Admin
         IPagedList<SysAdmin> GetAdmins(int pageNumber = 1,
             int pageSize = 10,
             string sortName = "Id",
-            string sortOrder = "ASC",
+            string sortOrder = "DESC",
             string userName = null,
             string nickName = null,
             string email = null,
             string mobilePhone = null,
             string qQ = null,
             string weChar = null);
+
+        /// <summary>
+        /// 是否存在账号名称
+        /// </summary>
+        /// <param name="userName">账号名称</param>
+        /// <returns>true 存在，false 不存在</returns>
+        bool ExistAdminUserName(string userName);
+
+        /// <summary>
+        /// 新增一个账号
+        /// </summary>
+        /// <param name="admin"></param>
+        /// <returns></returns>
+        int AddAdmin(SysAdmin admin);
     }
 }
