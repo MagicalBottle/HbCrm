@@ -12,15 +12,15 @@ namespace HbCrm.Web.Areas.Admin.Models
         /// 状态, 0失败 ，1成功 默认1
         /// </summary>
         public ReutnStatus Status { get; set; } = ReutnStatus.Success;
-        
+
         /// <summary>
         /// 错误编码
         /// </summary>
-        public string Code { get; set; }
+        public string Code { get; set; } = "success";
         /// <summary>
         /// 提示信息 默认Success
         /// </summary>
-        public string Message { get; set; } = "Success";
+        public string Message { get; set; } = "获取成功";
     }
     public class PagedListReponseOutPut<T>
     {
@@ -42,11 +42,11 @@ namespace HbCrm.Web.Areas.Admin.Models
         /// <summary>
         /// 错误编码
         /// </summary>
-        public string Code { get; set; }
+        public string Code { get; set; } = "success";
         /// <summary>
         /// 提示信息 默认Success
         /// </summary>
-        public string Message { get; set; } = "Success";
+        public string Message { get; set; } = "获取成功";
     }
 
     /// <summary>
@@ -69,16 +69,15 @@ namespace HbCrm.Web.Areas.Admin.Models
         /// 状态, 0失败 ，1成功 默认1
         /// </summary>
         public ReutnStatus Status { get; set; } = ReutnStatus.Success;
-        
+
         /// <summary>
         /// 错误编码
         /// </summary>
-        public string Code { get; set; }
-
+        public string Code { get; set; } = "success";
         /// <summary>
         /// 提示信息 默认Success
         /// </summary>
-        public string Message { get; set; } = "Success";
+        public string Message { get; set; } = "获取成功";
     }
 }
 

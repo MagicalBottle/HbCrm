@@ -19,6 +19,7 @@ namespace HbCrm.Web.Areas.Validators.Admin
             //RuleFor(c => c.Email).NotEmpty().WithMessage("登录名不能为空");
             //RuleFor(c => c.QQ).NotEmpty().WithMessage("登录名不能为空");
             //RuleFor(c => c.WeChar).NotEmpty().WithMessage("登录名不能为空");
+            RuleFor(c => c.RoleIds).NotEmpty().WithMessage("必须分配一个角色");
         }
     }
 }

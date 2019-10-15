@@ -46,5 +46,10 @@ namespace HbCrm.Web.Areas.Admin.Models.Admin
         /// 微信号
         /// </summary>
         public string WeChar { get; set; }
+
+        /// <summary>
+        /// 角色id集合
+        /// </summary>
+        public List<int> RoleIds { get; set; }
     }
 }

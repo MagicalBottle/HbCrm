@@ -7,6 +7,7 @@
 <!-- Css -->
 @section Css{
     <link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.min.css?v=1.15.4" />
+    <link href="~/css/admin.css?v=1.0.0" rel="stylesheet" />
 }
 <!-- Css -->
 <!-- Scripts -->
@@ -41,6 +42,7 @@
                 url: url,
                 method: 'post',                      //请求方式（*）
                 toolbar: '#toolbar',                //工具按钮用哪个容器
+                toolbarAlign: '',                //自定义工具栏位置 默认left.  right 不赋值就独立成行
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                 pagination:true,                   //是否显示分页（*）
@@ -142,7 +144,7 @@
         // 查询参数
         function queryParams(params) {
             params.menuName = $("#menuName").val().trim();
-            params.menuSystermName = $("#menuSystermName").val().trim(); 
+            params.menuSystermName = $("#menuSystermName").val().trim();
             return params
         }
          //删除数据
@@ -179,7 +181,7 @@
         };
         $(function () {
             url = '@Url.Action("List","Menu",new { area="Admin"})';
-            InitTable(url);                       
+            InitTable(url);
         });
 
     </script>
@@ -212,46 +214,9 @@
         <div class="row">
             <div class="col-12">
 
-                <div class="card card-green">
-                    <div class="card-header border-0 ">
-                        <div class="d-flex justify-content-between">
-                            <h3 class="card-title">搜索项</h3><div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-row align-items-center">
-                            <div class="col-6">
-                                <div class="input-group mb-2">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">菜单名称</div>
-                                    </div>
-                                    <input id="menuName" name="menuName" type="text" class="form-control" placeholder="菜单名称" aria-label="Username" aria-describedby="basic-addon1">
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="input-group mb-2">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">菜单系统名称</div>
-                                    </div>
-                                    <input id="menuSystermName" name="menuSystermName" type="text" class="form-control" placeholder="菜单系统名称" aria-label="Username" aria-describedby="basic-addon1">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row align-items-center justify-content-center">
-                            <div class="col-4">
-                                <button id="btn_query" class="btn btn-primary btn-block">查询</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <div class="card card-gray">
-                    <div class="card-header border-0 ">
+                    <div class="card-header link border-0 " data-card-widget="collapse">
                         <div class="d-flex justify-content-between">
                             <h3 class="card-title">菜单列表</h3><div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
@@ -261,6 +226,47 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        <div id="toolbar">
+                            <!-- 搜索框-->
+                            <div class="card card-green">
+                                <div class="card-header link border-0 " data-card-widget="collapse">
+                                    <div class="d-flex justify-content-between">
+                                        <h3 class="card-title">搜索项</h3><div class="card-tools">
+                                            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-row align-items-center">
+                                        <div class="col-6">
+                                            <div class="input-group mb-2">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">菜单名称</div>
+                                                </div>
+                                                <input id="menuName" name="menuName" type="text" class="form-control" placeholder="菜单名称" aria-label="Username" aria-describedby="basic-addon1">
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="input-group mb-2">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">菜单系统名称</div>
+                                                </div>
+                                                <input id="menuSystermName" name="menuSystermName" type="text" class="form-control" placeholder="菜单系统名称" aria-label="Username" aria-describedby="basic-addon1">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row align-items-center justify-content-center">
+                                        <div class="col-4">
+                                            <button id="btn_query" class="btn btn-primary btn-block">查询</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 搜索框-->
+                        </div>
                         <table id="list-menu-table"></table>
                     </div>
                 </div>

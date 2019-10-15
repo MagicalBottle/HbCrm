@@ -1,0 +1,21 @@
+官网：https://select2.org
+文档：https://select2.org/getting-started/installation
+源码：https://github.com/select2/select2/releases
+Select2 is licensed under MIT.
+
+select2-bootstrap3-theme 官方初版
+https://github.com/select2/select2-bootstrap-theme
+
+第三方提供
+select2-bootstrap4-theme
+https://github.com/ttskch/select2-bootstrap4-theme/releases
+
+问题帮助
+https://stackoverflow.com/questions/tagged/jquery-select2?tab=votes&page=2&pagesize=15
+
+获取值  只能获取单个  不可行
+$('#selectid').select2().val();//获取选中的值[1,2,3]
+$('#selectid').val();
+
+$("#selectid").select2('data');//获取选中的值 对象的形式 [{disabled: false,element: option,id: "2",selected: false,text: "系统管理员",title: "",_resultId: "select2-Roles-result-w3ct-2"},{}]
+

@@ -34,6 +34,29 @@ namespace HbCrm.Core.Domain.Authorize
         public const string AdminDelete = "AdminDelete";
         #endregion
 
+
+        #region Role角色管理
+        /// <summary>
+        /// 查看角色
+        /// </summary>
+        public const string RoleView = "RoleView";
+
+        /// <summary>
+        /// 添加角色
+        /// </summary>
+        public const string RoleAdd = "RoleAdd";
+
+        /// <summary>
+        /// 编辑角色
+        /// </summary>
+        public const string RoleEdit = "RoleEdit";
+
+        /// <summary>
+        /// 删除角色
+        /// </summary>
+        public const string RoleDelete = "RoleDelete";
+        #endregion
+
         #region Menu 菜单管理
         /// <summary>
         /// 查看管理员
@@ -68,7 +91,12 @@ namespace HbCrm.Core.Domain.Authorize
             new PermissionRecord(){Name="MenuView",Description="查看菜单" },
             new PermissionRecord(){Name="MenuAdd",Description="添加菜单" },
             new PermissionRecord(){Name="MenuEdit",Description="编辑菜单"},
-            new PermissionRecord(){Name="MenuDelete",Description="删除菜单"}
+            new PermissionRecord(){Name="MenuDelete",Description="删除菜单"},
+
+            new PermissionRecord(){Name="RoleView",Description="查看角色" },
+            new PermissionRecord(){Name="RoleAdd",Description="添加角色" },
+            new PermissionRecord(){Name="RoleEdit",Description="编辑角色"},
+            new PermissionRecord(){Name="RoleDelete",Description="删除角色"}
 
         };
         #endregion

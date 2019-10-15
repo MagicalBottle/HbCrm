@@ -6,6 +6,7 @@
 <!-- Css -->
 @section Css{
     <link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.min.css?v=1.15.4" />
+    <link href="~/css/admin.css?v=1.0.0" rel="stylesheet" />
 }
 <!-- Css -->
 <!-- Scripts -->
@@ -156,7 +157,7 @@
                 '<a class="btn btn-sm btn-primary" href="@Url.Action("Edit","Account",new { area="Admin"})/'+row.Id+'" title="编辑"><i class="fas fa-edit"></i></a>　',
                 '<a class="btn btn-sm btn-danger" href="javascript:deleteMenu(' + row.Id + ')" title="删除"><i class="fas fa-trash-alt"></i></a>'
             ].join('');
-        };      
+        };
 
         // 查询参数
         function queryParams(params) {
@@ -240,7 +241,7 @@
             <div class="col-12">
                 <!-- 数据表格-->
                 <div class="card card-gray">
-                    <div class="card-header border-0 ">
+                    <div class="card-header link border-0 " data-card-widget="collapse">
                         <div class="d-flex justify-content-between">
                             <h3 class="card-title">账号列表</h3><div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
@@ -253,7 +254,7 @@
                         <div id="toolbar">
                             <!-- 搜索框-->
                             <div class="card card-green">
-                                <div class="card-header border-0 ">
+                                <div class="card-header link border-0 " data-card-widget="collapse">
                                     <div class="d-flex justify-content-between">
                                         <h3 class="card-title">搜索项</h3><div class="card-tools">
                                             <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">

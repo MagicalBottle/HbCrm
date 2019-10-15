@@ -6,15 +6,19 @@
 
 <!-- Css -->
 @section Css{
-
+    <link href="~/css/admin.css?v=1.0.0" rel="stylesheet" />
+    <link href="~/lib/jquery-select2/css/select2.css" rel="stylesheet" />
+    <link href="~/lib/jquery-select2/theme/select2-bootstrap4.css" rel="stylesheet" />
 }
 <!-- Css -->
 <!-- Scripts -->
 @section Scripts{
     <script src="~/lib/jquery-validation/jquery.validate.js"></script>
     <script src="~/lib/jquery-formvalidation/js/formvalidation.js"></script>
+    <script src="~/lib/jquery-select2/js/select2.min.js"></script>
+    <script src="~/lib/jquery-select2/js/i18n/zh-CN.js"></script>
     <script type="text/javascript">
-        var validator  = $("#form-add").formvalidation({
+        var validator = $("#form-add").formvalidation({
             rules: {
                 UserName: {
                     required: true
@@ -41,6 +45,10 @@
                 //WeChar: {
                 //    required: true
                 //}
+                , RoleIds: {
+                    required: true
+                }
+                
             },
             messages: {
                 UserName: "请输入账号名称",
@@ -51,6 +59,8 @@
                 //MobilePhone: "请输入手机号",
                 //QQ: "请输入QQ",
                 //WeChar: "请输入微信号"
+                ,
+                RoleIds:"必须分配一个角色"
             },
             submitHandler: function (form) {
                 var requestData = $(form).serialize();
@@ -95,9 +105,30 @@
                 $("#form-add").submit();
             }
         });
-       
+        
         $(function () {
             //初始化
+            $.ajax({ //失败会有提示，不用处理
+                cache: true,
+                url: "@Url.Action("GetAllRoles", "Role", new { area = "Admin" })",
+                dataType: 'json',
+                success: function (data) {
+                    var results = JSON.parse(data).Rows;
+                    $("#RoleIds").select2({
+                        placeholder: "请添加角色",//占位符
+                        theme: 'bootstrap4',//主题
+                        language: 'zh-CN',//语音
+                        allowClear: true,//出现清空按钮
+                        closeOnSelect: false,//选择后不关闭选项
+                        multiple: true,      //多选择
+                        data: results
+                    });//select2;
+                },//success
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("获取角色失败，请刷新页面");
+                    console.log(errorThrown);
+                }
+            });//ajax
         });
 
     </script>
@@ -129,10 +160,10 @@
     <div class="row">
         <div class="col-12">
             <div class="card card-green">
-                <div class="card-header">
+                <div class="card-header link" data-card-widget="collapse">
                     <h3 class="card-title">新增账号</h3>
                     <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="折叠">
                             <i class="fas fa-minus"></i>
                         </button>
                     </div>
@@ -180,6 +211,15 @@
                             <div class="form-group  col-6">
                                 <label for="WeChar" class="col-form-label">微信号</label>
                                 <input type="text" class="form-control" id="WeChar" name="WeChar" placeholder="微信号">
+                            </div>
+                        </div>
+
+                        <div class="form-row ">
+                            <div class="form-group col-12">
+                                <label for="RoleIds" class=" col-form-label">角色</label>
+                                <select class="form-control" id="RoleIds" name="RoleIds">
+                                    
+                                </select>
                             </div>
                         </div>
 
