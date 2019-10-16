@@ -114,8 +114,8 @@ namespace HbCrm.Web.Areas.Admin.Controllers
             admin.LastUpdateBy = admin.CreateBy;
             admin.LastUpdateByName = admin.CreatebyName;
             admin.LastUpdateDate = admin.CreateDate;
-            
-            var result = _adminService.AddAdmin(admin);
+
+            var result = _adminService.AddAdmin(admin,param.RoleIds);
             if (result < 0)
             {
                 response.Status = ReutnStatus.Error;

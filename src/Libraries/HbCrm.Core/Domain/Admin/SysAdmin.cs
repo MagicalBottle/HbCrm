@@ -71,23 +71,23 @@ namespace HbCrm.Core.Domain.Admin
         /// <summary>
         /// 用户角色关联表
         /// </summary>
-        public virtual List<SysAdminRole> AdminRoles { get; set; }
+        public virtual List<SysAdminRole> AdminRoles { get; set; } = new List<SysAdminRole>();
 
         #region ignoe
         /// <summary>
         /// 对应角色集合
         /// </summary>
-        public List<SysRole> Roles { get; set; }
+        public List<SysRole> Roles { get; set; } = new List<SysRole>();
 
         /// <summary>
         /// 用户对应功能集合
         /// </summary>
-        public List<SysFunction> Functions { get; set; }
+        public List<SysFunction> Functions { get; set; } = new List<SysFunction>();
 
         /// <summary>
         /// 用户对应菜单集合
         /// </summary>
-        public List<SysMenu> Menus { get; set; }
+        public List<SysMenu> Menus { get; set; } = new List<SysMenu>();
 
         #endregion
 

@@ -81,6 +81,12 @@ namespace HbCrm.Core.Data
         /// <param name="entity">要分离的实体实例</param>
         void Detach(TEntity entity);
 
+        /// <summary>
+        /// 开启事务执行
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns>result 大于0成功</returns>
+        int BeginTransaction(Action action);
         #endregion
     }
 }

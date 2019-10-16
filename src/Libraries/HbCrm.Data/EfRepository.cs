@@ -240,6 +240,17 @@ namespace HbCrm.Data
         {
             _context.Detach(entity);
         }
+
+        /// <summary>
+        /// 开启事务执行
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns>result 大于0成功</returns>
+        public int BeginTransaction(Action action)
+        {
+           return _context.BeginTransaction(action);
+        }
+
         #endregion
     }
 }

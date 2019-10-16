@@ -73,11 +73,11 @@ namespace HbCrm.Services.Admin
         }
 
 
-        public SysAdmin GetAdminAllInforByUserName (string userName)
+        public SysAdmin GetAdminAllInforByUserName(string userName)
         {
             if (string.IsNullOrWhiteSpace(userName))
                 return null;
-            
+
             //用户信息
             var queryAdmin = from c in _adminRepository.Table
                              orderby c.Id
@@ -108,12 +108,12 @@ namespace HbCrm.Services.Admin
 
             //对应功能
             var queryFunction = from f in _functionRepository.Table
-                            join fr in _functionRoleRepository.Table on f.Id equals fr.FunctionId
-                            join ar in _adminRoleRepository.Table on fr.RoleId equals ar.RoleId
-                            join a in _adminRepository.Table on ar.AdminId equals a.Id
-                            where a.UserName == userName
-                            orderby f.Id
-                            select f;
+                                join fr in _functionRoleRepository.Table on f.Id equals fr.FunctionId
+                                join ar in _adminRoleRepository.Table on fr.RoleId equals ar.RoleId
+                                join a in _adminRepository.Table on ar.AdminId equals a.Id
+                                where a.UserName == userName
+                                orderby f.Id
+                                select f;
             var sysFunctions = queryFunction.ToList();
             sysAdmin.Functions = sysFunctions;
 
@@ -134,16 +134,16 @@ namespace HbCrm.Services.Admin
         /// <param name="qQ">qq</param>
         /// <param name="weChar">微信号</param>
         /// <returns></returns>
-        public IPagedList<SysAdmin> GetAdmins(int pageNumber = 1, 
-            int pageSize = 10, 
+        public IPagedList<SysAdmin> GetAdmins(int pageNumber = 1,
+            int pageSize = 10,
             string sortName = "Id",
-            string sortOrder = "DESC", 
-            string userName = null, 
+            string sortOrder = "DESC",
+            string userName = null,
             string nickName = null,
             string email = null,
             string mobilePhone = null,
             string qQ = null,
-            string weChar=null)
+            string weChar = null)
         {
             //null 传播 https://github.com/StefH/System.Linq.Dynamic.Core/wiki/NullPropagation
 
@@ -205,7 +205,7 @@ namespace HbCrm.Services.Admin
 
             var query = from m in _adminRepository.TableNoTracking
                         select m;
-            isExist=query.Any(m => m.UserName == userName);
+            isExist = query.Any(m => m.UserName == userName);
 
             return isExist;
 
@@ -222,14 +222,49 @@ namespace HbCrm.Services.Admin
             int result = -1;
             try
             {
-                result = _adminRepository.Insert(admin);               
+                result = _adminRepository.Insert(admin);
             }
             catch (Exception ex)
             {
             }
+
             return result;
         }
 
+        /// <summary>
+        ///  新增一个账号
+        /// </summary>
+        /// <param name="admin">账号实体</param>
+        /// <param name="roleIds">账号分配了的角色id</param>
+        /// <returns>-1,实体插入失败，-2角色关系插入失败</returns>
+        public int AddAdmin(SysAdmin admin, List<int> roleIds)
+        {
+            int result = -1;
+            result = _adminRepository.BeginTransaction(() =>
+            {
+                result = _adminRepository.Insert(admin);
+                if (roleIds != null && roleIds.Count > 0)
+                {
+                    foreach (var id in roleIds)
+                    {
+                        var ar = new SysAdminRole()
+                        {
+                            AdminId = admin.Id,
+                            RoleId = id,
+                            CreateBy = admin.CreateBy,
+                            CreatebyName = admin.CreatebyName,
+                            CreateDate = admin.CreateDate,
+                            LastUpdateBy = admin.LastUpdateBy,
+                            LastUpdateByName = admin.LastUpdateByName,
+                            LastUpdateDate = admin.LastUpdateDate
+                        };
+                        admin.AdminRoles.Add(ar);
+                    }
+                    result = _adminRoleRepository.Insert(admin.AdminRoles);
+                }
+            });
+            return result;
+        }
 
     }
 }

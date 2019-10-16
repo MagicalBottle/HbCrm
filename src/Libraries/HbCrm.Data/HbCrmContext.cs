@@ -187,6 +187,38 @@ namespace HbCrm.Data
             return sql;
         }
 
+        /// <summary>
+        /// 开启事务执行
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns>result 大于0成功</returns>
+        public int BeginTransaction(Action action)
+        {
+            int result = -1;
+            if (Database.CurrentTransaction == null)
+            {
+                using (var transaction = Database.BeginTransaction())
+                {
+                    try
+                    {
+                        action.Invoke();
+                        transaction.Commit();
+                        result = 1;
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                    }
+                }
+            }
+            else
+            {
+                action.Invoke();
+                result = 1;
+            }
+            return result;
+        }
+
         #endregion
     }
 }

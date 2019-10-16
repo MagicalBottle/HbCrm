@@ -114,6 +114,11 @@ namespace HbCrm.Web
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseStatusCodePagesWithRedirects("/page{0}.html"); //在根目录编辑各种状态码的错误页https://localhost:5001/page404.html
+            }
+
             app.UseAuthentication();
             app.UseStaticFiles();
             app.UseMvc(routes =>

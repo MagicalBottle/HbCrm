@@ -72,5 +72,12 @@ namespace HbCrm.Data
         /// </summary>
         /// <param name="enabled">true 开启，false 关闭</param>
         void LazyLoadingEnabled(bool enabled);
+
+        /// <summary>
+        /// 开启事务执行
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns>result 大于0成功</returns>
+         int BeginTransaction(Action action);
     }
 }
