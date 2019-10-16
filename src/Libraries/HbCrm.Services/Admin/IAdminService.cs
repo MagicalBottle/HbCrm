@@ -45,8 +45,9 @@ namespace HbCrm.Services.Admin
         /// 是否存在账号名称
         /// </summary>
         /// <param name="userName">账号名称</param>
+        /// <param name="excludeId">排除那个Id的名称</param>
         /// <returns>true 存在，false 不存在</returns>
-        bool ExistAdminUserName(string userName);
+        bool ExistAdminUserName(string userName,int excludeId=0);
 
         /// <summary>
         /// 新增一个账号
@@ -63,5 +64,22 @@ namespace HbCrm.Services.Admin
         /// <param name="roleIds">账号分配了的角色id</param>
         /// <returns></returns>
         int AddAdmin(SysAdmin admin, List<int> roleIds);
+
+
+        /// <summary>
+        ///  更新一个账号
+        /// </summary>
+        /// <param name="admin">账号实体</param>
+        /// <param name="roleIds">账号分配了的角色id</param>
+        /// <returns></returns>
+        int UpdateAdmin(SysAdmin admin, List<int> roleIds);
+        
+
+        /// <summary>
+        /// 根据Id获取实体
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        SysAdmin GetAdminById(int id);
     }
 }

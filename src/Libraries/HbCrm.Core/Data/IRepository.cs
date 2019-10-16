@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 
 
+
 namespace HbCrm.Core.Data
 {
     public partial interface IRepository<TEntity> where TEntity : class
@@ -48,25 +49,25 @@ namespace HbCrm.Core.Data
         /// 更新实体
         /// </summary>
         /// <param name="entity">实体</param>
-        void Update(TEntity entity);
+        int Update(TEntity entity);
 
         /// <summary>
         /// 更新多个实体
         /// </summary>
         /// <param name="entities">多个实体</param>
-        void Update(IEnumerable<TEntity> entities);
+        int Update(IEnumerable<TEntity> entities);
 
         /// <summary>
         /// 删除实体
         /// </summary>
         /// <param name="entity">实体</param>
-        void Delete(TEntity entity);
+        int Delete(TEntity entity);
 
         /// <summary>
         /// 删除多个实体
         /// </summary>
         /// <param name="entities">多个实体</param>
-        void Delete(IEnumerable<TEntity> entities);
+        int Delete(IEnumerable<TEntity> entities);
 
         /// <summary>
         /// 开启关闭懒加载
@@ -87,6 +88,19 @@ namespace HbCrm.Core.Data
         /// <param name="action"></param>
         /// <returns>result 大于0成功</returns>
         int BeginTransaction(Action action);
+
+
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <param name="sql">要执行的sql</param>
+        /// <param name="parameters">执行的sql中用到的参数</param>
+        /// <example>
+        /// _dbContext.ExecuteSqlCommand("EXEC [LanguagePackImport] @LanguageId, @XmlPackage, @UpdateExistingResources",
+        ///        pLanguageId, pXmlPackage, pUpdateExistingResources);
+        /// </example>
+        /// <returns>执行的条数</returns>
+        int ExecuteSqlCommand(RawSqlString sql, params object[] parameters);
         #endregion
     }
 }

@@ -20,5 +20,10 @@ namespace HbCrm.Web.Controllers
           // var admin= _adminService.GetAdminByUserName("lily");
             return View();
         }
+
+        public IActionResult Edit()
+        {
+            return View();
+        }
     }
 }

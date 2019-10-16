@@ -132,6 +132,19 @@ namespace HbCrm.Data
         }
 
         /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <param name="sql">要执行的sql</param>
+        /// <param name="parameters">执行的sql中用到的参数</param>
+        /// <returns>执行的条数</returns>
+        public int ExecuteSqlCommand(RawSqlString sql, params object[] parameters)
+        {
+            var result = 0;
+            result = this.Database.ExecuteSqlCommand(sql, parameters);
+            return result;
+        }
+
+        /// <summary>
         /// 将实体从context中分离
         /// </summary>
         /// <typeparam name="TEntity">实体的类型</typeparam>

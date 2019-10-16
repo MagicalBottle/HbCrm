@@ -138,86 +138,72 @@ namespace HbCrm.Data
         /// 更新实体
         /// </summary>
         /// <param name="entity">实体</param>
-        public void Update(TEntity entity)
+        public int Update(TEntity entity)
         {
 
+            int result = -1;
             if (entity == null)
             {
                 throw new ArgumentNullException(nameof(entity));
             }
-            try
-            {
-                this.Entities.Update(entity);
-                _context.SaveChanges();
-            }
-            catch (DbUpdateException exception)
-            {
-                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(exception), exception);
-            }
+
+            this.Entities.Update(entity);
+            result = _context.SaveChanges();
+            return result;
         }
 
         /// <summary>
         /// 更新多个实体
         /// </summary>
         /// <param name="entities">多个实体</param>
-        public void Update(IEnumerable<TEntity> entities)
+        public int Update(IEnumerable<TEntity> entities)
         {
+            int result = -1;
 
             if (entities == null)
             {
                 throw new ArgumentNullException(nameof(entities));
             }
-            try
-            {
-                this.Entities.UpdateRange(entities);
-                _context.SaveChanges();
-            }
-            catch (DbUpdateException exception)
-            {
-                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(exception), exception);
-            }
+            this.Entities.UpdateRange(entities);
+            result = _context.SaveChanges();
+
+            return result;
         }
         /// <summary>
         /// 删除实体
         /// </summary>
         /// <param name="entity">实体</param>
-        public void Delete(TEntity entity)
+        public int Delete(TEntity entity)
         {
 
+            int result = -1;
             if (entity == null)
             {
                 throw new ArgumentNullException(nameof(entity));
             }
-            try
-            {
-                this.Entities.Remove(entity);
-                _context.SaveChanges();
-            }
-            catch (DbUpdateException exception)
-            {
-                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(exception), exception);
-            }
+
+            this.Entities.Remove(entity);
+            result = _context.SaveChanges();
+
+            return result;
         }
         /// <summary>
         /// 删除多个实体
         /// </summary>
         /// <param name="entities">多个实体</param>
-        public void Delete(IEnumerable<TEntity> entities)
+        public int Delete(IEnumerable<TEntity> entities)
         {
 
+            int result = -1;
             if (entities == null)
             {
                 throw new ArgumentNullException(nameof(entities));
             }
-            try
-            {
-                this.Entities.RemoveRange(entities);
-                _context.SaveChanges();
-            }
-            catch (DbUpdateException exception)
-            {
-                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(exception), exception);
-            }
+
+            this.Entities.RemoveRange(entities);
+            result = _context.SaveChanges();
+
+            return result;
         }
 
 
@@ -248,7 +234,19 @@ namespace HbCrm.Data
         /// <returns>result 大于0成功</returns>
         public int BeginTransaction(Action action)
         {
-           return _context.BeginTransaction(action);
+            return _context.BeginTransaction(action);
+        }
+
+
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <param name="sql">要执行的sql</param>
+        /// <param name="parameters">执行的sql中用到的参数</param>
+        /// <returns>执行的条数</returns>
+        public int ExecuteSqlCommand(RawSqlString sql, params object[] parameters)
+        {
+            return _context.ExecuteSqlCommand(sql, parameters);
         }
 
         #endregion

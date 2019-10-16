@@ -1,0 +1,7 @@
+官方文档
+https://docs.microsoft.com/zh-cn/ef/core/
+
+多对多关系，建立中间表（网页最底部）
+https://docs.microsoft.com/zh-cn/ef/core/modeling/relationships
+
+由于不直接支持多对多，那么查询的时候手动join中间表

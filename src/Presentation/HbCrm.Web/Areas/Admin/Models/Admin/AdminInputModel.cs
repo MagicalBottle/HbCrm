@@ -8,6 +8,11 @@ namespace HbCrm.Web.Areas.Admin.Models.Admin
     public class AdminInputModel
     {
         /// <summary>
+        /// Id
+        /// </summary>
+        public int Id { get; set; }
+
+        /// <summary>
         /// 账号名称
         /// </summary>
         public string UserName { get; set; }

@@ -25,7 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reference", "Reference", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Note", "Reference\Note\Note.csproj", "{725BE8BD-7ADC-4D7C-BABE-3B275A760DBD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HbCrm.Services.Tests", "Tests\HbCrm.Services.Tests\HbCrm.Services.Tests.csproj", "{901DD959-3740-4A2A-A0B2-5A169133CFF4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HbCrm.Services.Tests", "Tests\HbCrm.Services.Tests\HbCrm.Services.Tests.csproj", "{901DD959-3740-4A2A-A0B2-5A169133CFF4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -85,6 +85,9 @@ namespace HbCrm.Services.Admin
                              select c;
             var sysAdmin = queryAdmin.FirstOrDefault();
 
+            if (sysAdmin==null)
+                return null;
+
             //对应角色
             var queryRoles = from r in _roleRepository.Table
                              join ar in _adminRoleRepository.Table on r.Id equals ar.RoleId
@@ -198,13 +201,20 @@ namespace HbCrm.Services.Admin
         /// 是否存在账号名称
         /// </summary>
         /// <param name="userName">账号名称</param>
+        /// <param name="excludeId">排除那个Id的名称</param>
         /// <returns>true 存在，false 不存在</returns>
-        public bool ExistAdminUserName(string userName)
+       public bool ExistAdminUserName(string userName, int excludeId=0)
         {
             bool isExist = true;
 
             var query = from m in _adminRepository.TableNoTracking
                         select m;
+
+            if (excludeId > 0)
+            {
+                query = query.Where(m => m.Id != excludeId);
+            }
+
             isExist = query.Any(m => m.UserName == userName);
 
             return isExist;
@@ -243,6 +253,75 @@ namespace HbCrm.Services.Admin
             result = _adminRepository.BeginTransaction(() =>
             {
                 result = _adminRepository.Insert(admin);
+                if (roleIds != null && roleIds.Count > 0)
+                {
+                    foreach (var id in roleIds)
+                    {
+                        var ar = new SysAdminRole()
+                        {
+                            AdminId = admin.Id,
+                            RoleId = id,
+                            CreateBy = admin.CreateBy,
+                            CreatebyName = admin.CreatebyName,
+                            CreateDate = admin.CreateDate,
+                            LastUpdateBy = admin.LastUpdateBy,
+                            LastUpdateByName = admin.LastUpdateByName,
+                            LastUpdateDate = admin.LastUpdateDate
+                        };
+                        admin.AdminRoles.Add(ar);
+                    }
+                    result = _adminRoleRepository.Insert(admin.AdminRoles);
+                }
+            });
+            return result;
+        }
+
+        /// <summary>
+        /// 根据Id获取实体
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public SysAdmin GetAdminById(int id)
+        {
+            if (id==0)
+            {
+                return null;
+            }
+
+            var query = from c in _adminRepository.TableNoTracking
+                        orderby c.Id
+                        where c.Id == id
+                        select c;
+            var sysAdmin = query.FirstOrDefault();
+
+            //对应角色
+            var queryRoles = from r in _roleRepository.TableNoTracking
+                             join ar in _adminRoleRepository.Table on r.Id equals ar.RoleId
+                             join a in _adminRepository.Table on ar.AdminId equals a.Id
+                             where a.Id == id
+                             orderby r.Id
+                             select r;
+            var sysRoles = queryRoles.ToList();
+            sysAdmin.Roles = sysRoles;
+
+            return sysAdmin;
+        }
+
+        /// <summary>
+        ///  更新一个账号
+        /// </summary>
+        /// <param name="admin">账号实体</param>
+        /// <param name="roleIds">账号分配了的角色id</param>
+        /// <returns></returns>
+        public int UpdateAdmin(SysAdmin admin, List<int> roleIds)
+        {
+            int result = -1;
+            result = _adminRepository.BeginTransaction(() =>
+            {
+                result = _adminRepository.Update(admin);
+
+                result = _adminRoleRepository.ExecuteSqlCommand("DELETE FROM SysAdminRole WHERE AdminId=@AdminId", admin.Id);
+
                 if (roleIds != null && roleIds.Count > 0)
                 {
                     foreach (var id in roleIds)

@@ -77,7 +77,7 @@ namespace HbCrm.Core.Domain.Admin
         /// <summary>
         /// 对应角色集合
         /// </summary>
-        public List<SysRole> Roles { get; set; } = new List<SysRole>();
+        public  List<SysRole> Roles { get; set; } = new List<SysRole>();
 
         /// <summary>
         /// 用户对应功能集合

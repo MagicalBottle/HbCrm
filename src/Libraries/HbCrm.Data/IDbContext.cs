@@ -57,8 +57,25 @@ namespace HbCrm.Data
         /// <param name="doNotEnsureTransaction">true，不使用事务；false 使用事务。默认false，使用事务</param>
         /// <param name="timeout">执行sql的超时时间，和连接超时时间不同。通常在数据库连接字符串中设置</param>
         /// <param name="parameters">执行的sql中用到的参数</param>
+        /// <example>
+        /// _dbContext.ExecuteSqlCommand("EXEC [LanguagePackImport] @LanguageId, @XmlPackage, @UpdateExistingResources",
+        ///        false, 600, pLanguageId, pXmlPackage, pUpdateExistingResources);
+        /// </example>
         /// <returns>执行的条数</returns>
         int ExecuteSqlCommand(RawSqlString sql, bool doNotEnsureTransaction = false, int? timeout = null, params object[] parameters);
+
+
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <param name="sql">要执行的sql</param>
+        /// <param name="parameters">执行的sql中用到的参数</param>
+        /// <example>
+        /// _dbContext.ExecuteSqlCommand("EXEC [LanguagePackImport] @LanguageId, @XmlPackage, @UpdateExistingResources",
+        ///        pLanguageId, pXmlPackage, pUpdateExistingResources);
+        /// </example>
+        /// <returns>执行的条数</returns>
+        int ExecuteSqlCommand(RawSqlString sql,params object[] parameters);
 
         /// <summary>
         /// 将实体从context中分离
