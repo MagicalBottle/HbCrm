@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
-
-
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace HbCrm.Core.Data
 {
@@ -25,6 +24,7 @@ namespace HbCrm.Core.Data
         #endregion
 
         #region Methods
+        EntityEntry<TEntity> Entry(TEntity entity);
 
         /// <summary>
         /// 获取实体

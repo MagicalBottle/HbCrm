@@ -318,9 +318,40 @@ namespace HbCrm.Services.Admin
             int result = -1;
             result = _adminRepository.BeginTransaction(() =>
             {
-                result = _adminRepository.Update(admin);
+                #region 封装成方法更新指定列
+                var entry = _adminRepository.Entry(admin);
+                entry.State = EntityState.Modified;
+                var dic = new Dictionary<string, object>() {
+                    { "UserName", "wangwu" }, { "NickName", "王五" }, { "Password", "123456" },
+                     { "Email", "123456" },{ "WeChar", "123456" }
+                };
+                
+                foreach (var p in entry.Properties)
+                {
+                    bool isModified = false;                   
+                    foreach (var keyvalue in dic)
+                    {
+                        if (p.Metadata.Name.Equals(keyvalue.Key, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            p.CurrentValue = dic[keyvalue.Key];
+                            p.IsModified = true;
+                            isModified = true;
+                            break;
+                        }
+                    }
+                    if (!isModified)
+                    {
+                        p.IsModified = isModified;
+                    }
+                }
 
-                result = _adminRoleRepository.ExecuteSqlCommand("DELETE FROM SysAdminRole WHERE AdminId=@AdminId", admin.Id);
+                entry.Context.SaveChanges();
+                #endregion
+
+                //var ad= _adminRepository.Entry(admin).Entity;
+                //result = _adminRepository.Update(admin);
+
+                result = _adminRoleRepository.ExecuteSqlCommand("DELETE FROM sys_adminrole WHERE AdminId=@AdminId", admin.Id);
 
                 if (roleIds != null && roleIds.Count > 0)
                 {
@@ -330,12 +361,12 @@ namespace HbCrm.Services.Admin
                         {
                             AdminId = admin.Id,
                             RoleId = id,
-                            CreateBy = admin.CreateBy,
-                            CreatebyName = admin.CreatebyName,
-                            CreateDate = admin.CreateDate,
                             LastUpdateBy = admin.LastUpdateBy,
                             LastUpdateByName = admin.LastUpdateByName,
-                            LastUpdateDate = admin.LastUpdateDate
+                            LastUpdateDate = admin.LastUpdateDate,
+                            CreateBy = admin.LastUpdateBy,
+                            CreatebyName = admin.LastUpdateByName,
+                            CreateDate = admin.LastUpdateDate
                         };
                         admin.AdminRoles.Add(ar);
                     }

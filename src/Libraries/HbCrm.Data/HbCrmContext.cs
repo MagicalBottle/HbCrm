@@ -1,5 +1,6 @@
 ﻿using HbCrm.Data.Mapping;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -64,6 +65,11 @@ namespace HbCrm.Data
         protected virtual new DbSet<TEntity> Set<TEntity>() where TEntity : class
         {
             return base.Set<TEntity>();
+            
+        }
+        protected virtual new EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class
+        {
+            return base.Entry<TEntity>(entity);
         }
 
 

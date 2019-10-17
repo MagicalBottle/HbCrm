@@ -1,5 +1,6 @@
 ﻿using HbCrm.Core;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,14 @@ namespace HbCrm.Data
         /// <typeparam name="TEntity">实体的类型</typeparam>
         /// <returns>给定的实体类型的实例的DbSet</returns>
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
+
+
+        /// <summary>
+        /// 返回一个泛型的DbSet，用来查询或者保存实体的实例
+        /// </summary>
+        /// <typeparam name="TEntity">实体的类型</typeparam>
+        /// <returns>给定的实体类型的实例的DbSet</returns>
+        EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;
 
         /// <summary>
         /// 把所有在context中的的更改写入的数据库

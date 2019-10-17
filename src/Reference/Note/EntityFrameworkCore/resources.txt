@@ -5,3 +5,17 @@ https://docs.microsoft.com/zh-cn/ef/core/
 https://docs.microsoft.com/zh-cn/ef/core/modeling/relationships
 
 由于不直接支持多对多，那么查询的时候手动join中间表
+
+更新指定列  文档中叫 防止过多发布
+https://docs.microsoft.com/zh-cn/aspnet/core/data/ef-rp/update-related-data?view=aspnetcore-3.0
+https://docs.microsoft.com/zh-cn/aspnet/core/data/ef-rp/crud?view=aspnetcore-3.0#overposting
+
+Entry<T>.CurrentValues.SetValues(Object); T为数据库对应的表，object 为DTO 通常比T的字段少，达到更新知道字段
+Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry.CurrentValues.SetValues(Object)
+https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.entityframeworkcore.changetracking.entityentry.currentvalues?view=efcore-3.0
+https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.entityframeworkcore.changetracking.propertyvalues?view=efcore-3.0
+https://blog.csdn.net/u011511086/article/details/96747730  这个有用
+https://entityframeworkcore.com/saving-data-entity-graph
+
+大数据插入 BulkInsert
+https://entityframeworkcore.com/saving-data-bulk-insert

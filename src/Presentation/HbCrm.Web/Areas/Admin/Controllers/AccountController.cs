@@ -2,6 +2,7 @@
 using HbCrm.Core;
 using HbCrm.Core.Domain.Admin;
 using HbCrm.Core.Domain.Authorize;
+using HbCrm.Data;
 using HbCrm.Services.Admin;
 using HbCrm.Services.Authorize;
 using HbCrm.Services.Web;
@@ -13,6 +14,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,13 +25,16 @@ namespace HbCrm.Web.Areas.Admin.Controllers
         private readonly IAdminService _adminService;
         private readonly IWorkContext _context;
         private readonly IMapper _mapper;
+        private readonly IDbContext _dbContext;
         public AccountController(IAdminService adminService,
             IWorkContext context,
-           IMapper mapper)
+           IMapper mapper,
+           IDbContext dbContext)
         {
             _adminService = adminService;
             _context = context;
             _mapper = mapper;
+            _dbContext = dbContext;
         }
 
         [AdminAuthorize(Policy = PermissionKeys.AdminView)]
@@ -112,6 +117,8 @@ namespace HbCrm.Web.Areas.Admin.Controllers
             admin.LastUpdateBy = admin.CreateBy;
             admin.LastUpdateByName = admin.CreatebyName;
             admin.LastUpdateDate = admin.CreateDate;
+
+           
 
             var result = _adminService.AddAdmin(admin,param.RoleIds);
             if (result < 0)

@@ -5,6 +5,7 @@ using System.Text;
 using HbCrm.Core;
 using HbCrm.Core.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace HbCrm.Data
 {
@@ -87,6 +88,11 @@ namespace HbCrm.Data
         #endregion
 
         #region Methods
+
+        public EntityEntry<TEntity> Entry(TEntity entity)
+        {
+            return _context.Entry<TEntity>(entity);
+        }
 
         /// <summary>
         /// 获取实体
