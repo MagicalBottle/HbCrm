@@ -14,8 +14,8 @@ namespace HbCrm.Data.Mapping.Admin
             builder.ToTable("sys_adminrole");
             builder.HasKey(model => model.Id);
 
-            builder.HasOne(model => model.SysAdmin).WithMany(model => model.AdminRoles).HasForeignKey(model => model.AdminId);
-            builder.HasOne(model => model.SysRole).WithMany(model => model.AdminRoles).HasForeignKey(model => model.RoleId);
+            builder.HasOne(model => model.SysAdmin).WithMany(model => model.AdminRoles).HasForeignKey(model => model.AdminId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(model => model.SysRole).WithMany(model => model.AdminRoles).HasForeignKey(model => model.RoleId).OnDelete(DeleteBehavior.Cascade);
 
         }
     }

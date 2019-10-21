@@ -56,10 +56,10 @@ namespace HbCrm.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult Login( [FromBody] AdminLoginInputModel adminLoginModel)
+        public IActionResult Login( [FromBody] AdminLoginInput adminLoginModel)
         {
             HbCrm.Core.Domain.Admin.SysAdmin admin = _adminService.GetAdminAllInforByUserName(adminLoginModel.UserName);
-            AdminLoginSuccessOutputModel loginSuccessModel = new AdminLoginSuccessOutputModel();
+            AdminLoginSuccessOutput loginSuccessModel = new AdminLoginSuccessOutput();
             loginSuccessModel.LoginStatus = LoginStatus.Error;
             if (admin != null && admin.Password == adminLoginModel.Password)
             {

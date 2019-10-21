@@ -186,7 +186,8 @@ namespace HbCrm.Data
         /// <returns>大于0成功</returns>
         public int Update(TEntity entity, params Expression<Func<TEntity, object>>[] properties) 
         {
-
+            //https://www.cnblogs.com/CreateMyself/p/7291839.html
+            //https://docs.microsoft.com/zh-cn/aspnet/core/data/ef-rp/crud?view=aspnetcore-3.0#overposting
             #region 封装成方法更新指定列
             //var entry = _context.Entry(entity);
             //entry.State = EntityState.Modified;
@@ -259,6 +260,8 @@ namespace HbCrm.Data
         /// <returns>大于0成功</returns>
         public int UpdateRange(IEnumerable<TEntity> entities, params Expression<Func<TEntity, object>>[] properties)
         {
+            //https://www.cnblogs.com/CreateMyself/p/7291839.html
+            //https://docs.microsoft.com/zh-cn/aspnet/core/data/ef-rp/crud?view=aspnetcore-3.0#overposting
             int result = -1;
             if (entities == null)
             {

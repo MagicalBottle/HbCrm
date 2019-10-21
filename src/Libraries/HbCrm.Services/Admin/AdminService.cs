@@ -374,5 +374,17 @@ namespace HbCrm.Services.Admin
             return result;
         }
 
+        /// <summary>
+        /// 获取所有的管理员，按照id正序
+        /// </summary>
+        /// <returns></returns>
+        public List<SysAdmin> GetAllAdmins()
+        {
+            var query = from m in _adminRepository.TableNoTracking
+                        orderby m.Id
+                        select m;
+            return query.ToList();
+        }
+
     }
 }

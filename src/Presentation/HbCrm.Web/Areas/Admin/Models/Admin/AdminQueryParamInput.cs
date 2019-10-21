@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace HbCrm.Web.Areas.Admin.Models.Admin
 {
-    public class AdminQueryParamInputModel: QueryParamInputModel
+    public class AdminQueryParamInput: BaseQueryParamInput
     {
         /// <summary>
         /// 登录账号名称

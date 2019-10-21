@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace HbCrm.Web.Areas.Admin.Models.Admin
 {
-    public class AdminInputModel
+    public class AdminInput
     {
         /// <summary>
         /// Id

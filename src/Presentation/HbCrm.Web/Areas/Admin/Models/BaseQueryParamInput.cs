@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace HbCrm.Web.Areas.Admin.Models
 {
-    public abstract class QueryParamInputModel
+    public abstract class BaseQueryParamInput
     {
         /// <summary>
         /// 每页条数 默认10

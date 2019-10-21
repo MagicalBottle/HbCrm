@@ -7,9 +7,9 @@ using FluentValidation;
 
 namespace HbCrm.Web.Areas.Validators.Admin
 {
-    public class AdminInputModelValidator: HbCrmAdminBaseValidator<AdminInputModel>
+    public class AdminInputValidator: HbCrmAdminBaseValidator<AdminInput>
     {
-        public AdminInputModelValidator()
+        public AdminInputValidator()
         {
             RuleFor(c => c.UserName).NotEmpty().WithMessage("登录名不能为空");
             RuleFor(c => c.NickName).NotEmpty().WithMessage("登录名不能为空");

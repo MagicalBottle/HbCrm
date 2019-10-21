@@ -81,5 +81,11 @@ namespace HbCrm.Services.Admin
         /// <param name="id"></param>
         /// <returns></returns>
         SysAdmin GetAdminById(int id);
+
+        /// <summary>
+        /// 获取所有的管理员，按照id正序
+        /// </summary>
+        /// <returns></returns>
+        List<SysAdmin> GetAllAdmins();
     }
 }

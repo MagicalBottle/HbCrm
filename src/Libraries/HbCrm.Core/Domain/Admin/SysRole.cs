@@ -13,14 +13,14 @@ namespace HbCrm.Core.Domain.Admin
         public int Id { get; set; }
 
         /// <summary>
-        /// 角色显示名称
+        /// 角色名称
         /// </summary>
         public string RoleName { get; set; }
-
+        
         /// <summary>
-        /// 角色系统名称
+        /// 角色状态
         /// </summary>
-        public string RoleSystermName { get; set; }
+        public int RoleStatus { get; set; }
 
         /// <summary>
         /// 角色说明
@@ -28,24 +28,24 @@ namespace HbCrm.Core.Domain.Admin
         public string RoleRemark { get; set; }
 
         /// <summary>
-        /// 角色状态
-        /// </summary>
-        public int RoleStatus { get; set; }
-
-        /// <summary>
         /// 用户角色关联表
         /// </summary>
-        public virtual List<SysAdminRole> AdminRoles { get; set; }
+        public virtual List<SysAdminRole> AdminRoles { get; set; } = new List<SysAdminRole>();
 
         /// <summary>
         /// 功能角色关联表
         /// </summary>
-        public virtual List<SysFunctionRole> FunctionRoles { get; set; }
+        public virtual List<SysFunctionRole> FunctionRoles { get; set; } = new List<SysFunctionRole>();
 
         /// <summary>
         /// 菜单角色关联表
         /// </summary>
-        public virtual List<SysMenuRole> MenuRoles { get; set; }
+        public virtual List<SysMenuRole> MenuRoles { get; set; } = new List<SysMenuRole>();
+
+        /// <summary>
+        /// 包含的管理员
+        /// </summary>
+        public List<SysAdmin> Admins { get; set; } = new List<SysAdmin>();
 
     }
 }

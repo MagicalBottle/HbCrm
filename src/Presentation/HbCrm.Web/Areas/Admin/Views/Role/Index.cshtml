@@ -1,0 +1,325 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<!-- Css -->
+@section Css{
+    <link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.min.css?v=1.15.4" />
+    <link href="~/css/admin.css?v=1.0.0" rel="stylesheet" />
+}
+<!-- Css -->
+<!-- Scripts -->
+@section Scripts{
+    <script type="text/javascript" src="~/lib/bootstrap-table/bootstrap-table.min.js?v=1.15.4"></script>
+    <script src="~/lib/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <script type="text/javascript">
+        //初始化
+        var InitTable = function (url) {
+            //先销毁表格
+            $('#list-table').bootstrapTable("destroy");
+            //加载表格
+            $('#list-table').bootstrapTable({
+                rowStyle: function (row, index) {//row 表示行数据，object,index为行索引，从0开始
+                    var style = "";
+                    if (row.SignInTime == '' || row.SignOutTime == '') {
+                        style = { css: { 'color': 'red' } };
+                    }
+                    return style;
+                },
+                locale: 'zh-CN',//语言选择
+                showHeader: true,     //是否显示列头
+                //classes: 'table-no-bordered',
+                showLoading: true,
+                undefinedText: '',
+                showFullscreen: true,
+                paginationHAlign: 'right',
+                //silent: true,
+                url: url,
+                method: 'post',                      //请求方式（*）
+                contentType: 'application/x-www-form-urlencoded',//后台不需要[frombody]
+                toolbar: "#toolbar ",                //自定义工具栏
+                toolbarAlign: '',                //自定义工具栏位置 默认left.  right 不赋值就独立成行
+                //icons: { fullscreen:"fas fa-expand"},                //按钮图标 要定义要整套，算了不改了
+                buttonsClass: 'primary',                    //写了之后会自动转换为btn-primary（蓝色）、btn-danger（红色）、btn-warning（黄色）等格式，所以前面不要再加”btn-“，默认为btn-default（白色）
+                //striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination:true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "desc",                   //排序方式
+                queryParamsType: '',                 //配合queryParams使用，传递的默认参数pageSize, pageNumber, searchText, sortName, sortOrder
+                queryParams: queryParams,           //传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*） 如果最小的10页大于返回的数据总条数也不会显示
+                showPaginationSwitch: true,         //默认为false隐藏每页数据条数选择，设为true显示
+                paginationLoop: true,             //是否无限循环
+                search: false,                      //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                //searchAlign: 'left',
+                //strictSearch: true,
+                showColumns: true,                  //是否显示所有的列
+                showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                //height: 680,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+                showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //是否显示详细视图
+                showExport: true,
+                //exportDataType: 'all',
+                exportDataType: "selected",        //导出checkbox选中的行数
+                totalField: "Total",                  //默认为total  为了统一大小写
+                dataField: "Rows",                    //默认为rows 为了统一大小写
+                //detailViewIcon:true,                   // card 视图显示前面‘+’图标
+                detailViewByClick: true,               //设置后 配合detailFormatter 可以获取明细信息
+                detailView: true,                       //设置后 配合detailFormatter
+                columns: [
+                    {
+                        field: 'Id',
+                        title: '序号',
+                        sortable: true
+                    },
+                    {
+                        field: 'RoleName',
+                        title: '角色名称',
+                        sortable: true
+                    },
+                    {
+                        field: 'RoleSystermName',
+                        title: '角色系统名称',
+                        sortable: true
+                    },
+                    {
+                        field: 'RoleStatus',
+                        title: '角色状态',
+                        sortable: true
+                    },
+                    {
+                        field: 'RoleRemark',
+                        title: '角色说明',
+                        sortable: true
+                    },
+                    {
+                        field: 'action',
+                        title: '操作',
+                        width: 110,
+                        //events: 'operateEvents',
+                        formatter: 'operateFormatter',       //自定义表格内容，字符串内是方法名称
+                    }
+                    //,
+                    //{
+                    //    checkbox: true
+                    //}
+                ],
+                 detailFormatter:function(index, row, $element) {
+                    var detail = '<div class="card-views">';
+                    detail += '<div class="card-view"><span class="card-view-title">Id</span><span class="card-view-value">' + row.Id + '</span></div >';
+                     detail += '<div class="card-view"><span class="card-view-title">角色名称</span><span class="card-view-value">' + row.RoleName + '</span></div>';
+                     detail += '<div class="card-view"><span class="card-view-title">角色系统名称</span><span class="card-view-value">' + (row.RoleSystermName == null ? "" : row.RoleSystermName) + '</span></div>';
+                     detail += '<div class="card-view"><span class="card-view-title">角色状态</span><span class="card-view-value">' + (row.RoleStatus == null ? "" : row.RoleStatus) + '</span></div>';
+                     detail += '<div class="card-view"><span class="card-view-title">角色说明</span><span class="card-view-value">' + (row.RoleRemark == null ? "" : row.RoleRemark) + '</span></div>';
+                     detail += '<div class="card-view"><span class="card-view-title">操作</span><span class="card-view-value"><a class="btn btn-sm btn-primary" href="@Url.Action("Edit", "Role", new { area="Admin"})/' + row.Id + '" title="编辑"><i class="fas fa-edit"></i></a>　<a class="btn btn-sm btn-danger" href="javascript:deleteEntity (' + row.Id + ')" title="删除"><i class="fas fa-trash-alt"></i></a></span></div>';
+                    detail += '</div > ';
+                    return detail;
+                },
+                responseHandler: function (res) {
+                    return JSON.parse(res);//转成json否则不能显示
+                },
+                onLoadSuccess: function (data) {//data responseHandler已经处理好的数据
+                    if (data.Status == 0) {
+                        alert("查询失败，错误信息：" + data.Message);
+                    }
+                },
+                onLoadError: function (status, jqXHR) {
+                    alert("查询异常!");
+                }
+            });
+            return InitTable;
+        };
+
+        // 单元格，自定义设置
+        // 操作按钮
+        function operateFormatter(value, row, index) {
+            return [
+                '<a class="btn btn-sm btn-primary" href="@Url.Action("Edit","Role",new { area="Admin"})/'+row.Id+'" title="编辑"><i class="fas fa-edit"></i></a>　',
+                '<a class="btn btn-sm btn-danger" href="javascript:deleteEntity(' + row.Id + ')" title="删除"><i class="fas fa-trash-alt"></i></a>'
+            ].join('');
+        };
+
+        // 查询参数
+        function queryParams(params) {
+            params.RoleName = $("#RoleName").val().trim();
+            params.RoleSystermName = $("#RoleSystermName").val().trim();
+            params.RoleStatus = $("#RoleStatus").val().trim();
+            params.RoleRemark = $("#RoleRemark").val().trim();           
+            return params
+        }
+         //删除数据
+        function deleteEntity(id) {
+            $("#deleteInfo").modal('toggle');
+            //aja异步请求
+            $.ajax({
+                url: '@Url.Action("Delete", "Role", new { area="Admin"})',
+                type: 'post',
+                //contentType: 'application/json;charset=utf-8',
+                data: { Id: id },
+                success: function (responseData) {
+                    data = JSON.parse(responseData);
+                    if (data.Status == 1) {
+                        refresh();
+                        $("#deleteInfo").alert();
+                    } else { 
+                        alert('数据删除失败' + data.Message);
+                    }
+                },
+                error: function (data) {
+                        alert('数据删除失败' + data);
+                    }
+                });
+        };
+
+        $("#btn_query").click(function () {
+            refresh();
+        });
+
+        function refresh() {
+            $('#list-table').bootstrapTable("refresh");
+        }
+
+        //回车键
+        document.onkeydown = function (e) {
+            if (!e) e = window.event; //火狐中是 window.event
+            if ((e.keyCode || e.which) == 13) {
+                var query = document.getElementById("btn_query");
+                query.focus();
+                query.click();
+            }
+        };
+        $(function () {
+            url = '@Url.Action("List", "Role", new { area="Admin"})';
+            InitTable(url);
+        });
+
+    </script>
+}
+<!-- Scripts -->
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <a id="btn-add-menu" href="@Url.Action("Add","Role",new { area = "Admin" })" class="btn btn-info btn-primary">
+                    <i class="fas fa-plus"></i>
+                    新增
+                </a>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index","Role",new { area="Admin"})">角色</a></li>
+                    <li class="breadcrumb-item active">账号权限</li>
+                    <li class="breadcrumb-item active">设置</li>
+                </ol>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+<!-- Main content -->
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <!-- 数据表格-->
+                <div class="card card-gray">
+                    <div class="card-header link border-0 " data-card-widget="collapse">
+                        <div class="d-flex justify-content-between">
+                            <h3 class="card-title">角色列表</h3><div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="toolbar">
+                            <!-- 搜索框-->
+                            <div class="card card-green">
+                                <div class="card-header link border-0 " data-card-widget="collapse">
+                                    <div class="d-flex justify-content-between">
+                                        <h3 class="card-title">搜索项</h3><div class="card-tools">
+                                            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-row align-items-center">
+                                        <div class="col-6">
+                                            <div class="input-group mb-2">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">角色名称</div>
+                                                </div>
+                                                <input id="RoleName" name="RoleName" type="text" class="form-control" placeholder="角色名称">
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="input-group mb-2">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">角色系统名称</div>
+                                                </div>
+                                                <input id="RoleSystermName" name="RoleSystermName" type="text" class="form-control" placeholder="角色系统名称">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row align-items-center">
+                                        <div class="col-6">
+                                            <div class="input-group mb-2">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">角色状态</div>
+                                                </div>
+                                                <input id="RoleStatus" name="RoleStatus" type="text" class="form-control" placeholder="角色状态">
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="input-group mb-2">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">角色说明</div>
+                                                </div>
+                                                <input id="RoleRemark" name="RoleRemark" type="text" class="form-control" placeholder="角色说明">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row align-items-center justify-content-center">
+                                        <div class="col-4">
+                                            <button id="btn_query" class="btn btn-primary btn-block">查询</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 搜索框-->
+                        </div>
+
+                        <table id="list-table"></table>
+                    </div>
+                </div>
+                <!-- 数据表格-->
+
+            </div>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+</div>
+<!-- /.content -->
+
+<div id="deleteInfo" class="modal fade">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="alert alert-success" role="alert">
+                删除成功！
+            </div>
+        </div>
+    </div>
+</div>

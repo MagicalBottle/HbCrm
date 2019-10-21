@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace HbCrm.Web.Areas.Admin.Models.Authorize
 {
-    public class MenuQueryParamInputModel : QueryParamInputModel
+    public class MenuQueryParamInputModel : BaseQueryParamInput
     {
         /// <summary>
         /// 菜单显示名称

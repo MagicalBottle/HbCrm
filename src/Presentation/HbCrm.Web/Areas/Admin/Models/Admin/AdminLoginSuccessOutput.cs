@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace HbCrm.Web.Areas.Admin.Models.Admin
 {
-    public class AdminLoginSuccessOutputModel
+    public class AdminLoginSuccessOutput
     {
         /// <summary>
         /// 登录状态

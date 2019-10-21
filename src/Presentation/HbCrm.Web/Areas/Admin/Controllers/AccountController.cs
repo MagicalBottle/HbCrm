@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -41,7 +42,7 @@ namespace HbCrm.Web.Areas.Admin.Controllers
         }
 
         [AdminAuthorize(Policy = PermissionKeys.AdminView)]
-        public IActionResult List(AdminQueryParamInputModel param)
+        public IActionResult List(AdminQueryParamInput param)
         {
             IPagedList<SysAdmin> admin = null;
             var result = new PagedListReponseOutPut<SysAdmin>();
@@ -77,10 +78,9 @@ namespace HbCrm.Web.Areas.Admin.Controllers
             return View();
         }
 
-
         [AdminAuthorize(Policy = PermissionKeys.AdminAdd)]
         [HttpPost]
-        public IActionResult Add(AdminInputModel param)
+        public IActionResult Add(AdminInput param)
         {
             var response = new ReponseOutPut();
             response.Code = "menu_add_success";
@@ -106,7 +106,7 @@ namespace HbCrm.Web.Areas.Admin.Controllers
                 return new JsonResult(JsonConvert.SerializeObject(response));
             }
 
-            SysAdmin admin = _mapper.Map<AdminInputModel, SysAdmin>(param);
+            SysAdmin admin = _mapper.Map<AdminInput, SysAdmin>(param);
 
             admin.CreateBy = _context.Admin.Id;
             admin.CreatebyName = _context.Admin.UserName;
@@ -137,10 +137,10 @@ namespace HbCrm.Web.Areas.Admin.Controllers
 
         [AdminAuthorize(Policy = PermissionKeys.AdminEdit)]
         [HttpPost]
-        public IActionResult Edit(AdminInputModel param)
+        public IActionResult Edit(AdminInput param)
         {
             var response = new ReponseOutPut();
-            response.Code = "menu_add_success";
+            response.Code = "account_edit_success";
             response.Message = "新增账号成功";
             if (!ModelState.IsValid)
             {
@@ -163,7 +163,7 @@ namespace HbCrm.Web.Areas.Admin.Controllers
                 return new JsonResult(JsonConvert.SerializeObject(response));
             }
 
-            SysAdmin admin = _mapper.Map<AdminInputModel, SysAdmin>(param);
+            SysAdmin admin = _mapper.Map<AdminInput, SysAdmin>(param);
 
             admin.LastUpdateBy = _context.Admin.Id;
             admin.LastUpdateByName = _context.Admin.UserName;
@@ -173,12 +173,34 @@ namespace HbCrm.Web.Areas.Admin.Controllers
             if (result < 0)
             {
                 response.Status = ReutnStatus.Error;
-                response.Code = "menu_add_error";
+                response.Code = "account_edit_error";
                 response.Message = "更新账号失败";
             }
 
             return new JsonResult(JsonConvert.SerializeObject(response));
+        }              
+        
+        [AdminAuthorize(Policy = PermissionKeys.AdminView)]
+        public IActionResult GetAllAdmins()
+        {
+            List<SysAdmin> admins = null;
+            var result = new ListReponseOutPut<SelectOutPut>();
+            try
+            {
+                admins = _adminService.GetAllAdmins();
+
+                List<SelectOutPut> rows = _mapper.Map<List<SysAdmin>, List<SelectOutPut>>(admins);
+                result.Rows = rows;
+            }
+            catch (Exception ex)
+            {
+                result.Status = ReutnStatus.Error;
+                result.Code = "get_data_error";
+                result.Message = "Error";
+            }
+            return new JsonResult(JsonConvert.SerializeObject(result));
         }
+
 
     }
 }

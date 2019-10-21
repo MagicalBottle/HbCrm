@@ -13,6 +13,7 @@ namespace HbCrm.Data.Mapping.Admin
         {
             builder.ToTable("sys_role");
             builder.HasKey(model => model.Id);
+            builder.Ignore(m => m.Admins);
         }
     }
 }
