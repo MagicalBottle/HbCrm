@@ -25,16 +25,13 @@ namespace HbCrm.Web.Areas.Admin.Controllers
         private readonly IAdminService _adminService;
         private readonly IWorkContext _context;
         private readonly IMapper _mapper;
-        private readonly IDbContext _dbContext;
         public AccountController(IAdminService adminService,
             IWorkContext context,
-           IMapper mapper,
-           IDbContext dbContext)
+           IMapper mapper)
         {
             _adminService = adminService;
             _context = context;
             _mapper = mapper;
-            _dbContext = dbContext;
         }
 
         [AdminAuthorize(Policy = PermissionKeys.AdminView)]

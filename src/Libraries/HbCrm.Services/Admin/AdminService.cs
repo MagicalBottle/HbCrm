@@ -85,7 +85,7 @@ namespace HbCrm.Services.Admin
                              select c;
             var sysAdmin = queryAdmin.FirstOrDefault();
 
-            if (sysAdmin==null)
+            if (sysAdmin == null)
                 return null;
 
             //对应角色
@@ -203,7 +203,7 @@ namespace HbCrm.Services.Admin
         /// <param name="userName">账号名称</param>
         /// <param name="excludeId">排除那个Id的名称</param>
         /// <returns>true 存在，false 不存在</returns>
-       public bool ExistAdminUserName(string userName, int excludeId=0)
+        public bool ExistAdminUserName(string userName, int excludeId = 0)
         {
             bool isExist = true;
 
@@ -283,7 +283,7 @@ namespace HbCrm.Services.Admin
         /// <returns></returns>
         public SysAdmin GetAdminById(int id)
         {
-            if (id==0)
+            if (id == 0)
             {
                 return null;
             }
@@ -318,60 +318,58 @@ namespace HbCrm.Services.Admin
             int result = -1;
             result = _adminRepository.BeginTransaction(() =>
             {
-                #region 封装成方法更新指定列
-                var entry = _adminRepository.Entry(admin);
-                entry.State = EntityState.Modified;
-                var dic = new Dictionary<string, object>() {
-                    { "UserName", "wangwu" }, { "NickName", "王五" }, { "Password", "123456" },
-                     { "Email", "123456" },{ "WeChar", "123456" }
-                };
-                
-                foreach (var p in entry.Properties)
+
+                result = _adminRepository.Update(admin,
+                    m => m.UserName, m => m.NickName, m => m.Email, m => m.MobilePhone, m => m.QQ, m => m.WeChar, m => m.LastUpdateBy, m => m.LastUpdateByName, m => m.LastUpdateDate);
+
+                var adminRoles = _adminRoleRepository.Table.Where(m => m.AdminId == admin.Id).ToList();
+
+                #region 删除
+                //没有设置 全部删除
+                if (roleIds == null || roleIds.Count <= 0)
                 {
-                    bool isModified = false;                   
-                    foreach (var keyvalue in dic)
+                    _adminRoleRepository.Delete(adminRoles);
+                }
+                else
+                {
+                    List<SysAdminRole> remveadminRoles = new List<SysAdminRole>();
+                    foreach (var adminRole in adminRoles)
                     {
-                        if (p.Metadata.Name.Equals(keyvalue.Key, StringComparison.InvariantCultureIgnoreCase))
+                        //没有包含，删除数据库
+                        if (!roleIds.Any(id => id == adminRole.RoleId))
                         {
-                            p.CurrentValue = dic[keyvalue.Key];
-                            p.IsModified = true;
-                            isModified = true;
-                            break;
+                            remveadminRoles.Add(adminRole);
                         }
                     }
-                    if (!isModified)
-                    {
-                        p.IsModified = isModified;
-                    }
+                    _adminRoleRepository.Delete(remveadminRoles);
                 }
-
-                entry.Context.SaveChanges();
                 #endregion
 
-                //var ad= _adminRepository.Entry(admin).Entity;
-                //result = _adminRepository.Update(admin);
-
-                result = _adminRoleRepository.ExecuteSqlCommand("DELETE FROM sys_adminrole WHERE AdminId=@AdminId", admin.Id);
-
+                #region 插入
                 if (roleIds != null && roleIds.Count > 0)
                 {
                     foreach (var id in roleIds)
                     {
-                        var ar = new SysAdminRole()
+                        if (!adminRoles.Any(m => m.RoleId == id))
                         {
-                            AdminId = admin.Id,
-                            RoleId = id,
-                            LastUpdateBy = admin.LastUpdateBy,
-                            LastUpdateByName = admin.LastUpdateByName,
-                            LastUpdateDate = admin.LastUpdateDate,
-                            CreateBy = admin.LastUpdateBy,
-                            CreatebyName = admin.LastUpdateByName,
-                            CreateDate = admin.LastUpdateDate
-                        };
-                        admin.AdminRoles.Add(ar);
+                            //不存在新增
+                            var ar = new SysAdminRole()
+                            {
+                                AdminId = admin.Id,
+                                RoleId = id,
+                                LastUpdateBy = admin.LastUpdateBy,
+                                LastUpdateByName = admin.LastUpdateByName,
+                                LastUpdateDate = admin.LastUpdateDate,
+                                CreateBy = admin.LastUpdateBy,
+                                CreatebyName = admin.LastUpdateByName,
+                                CreateDate = admin.LastUpdateDate
+                            };
+                            admin.AdminRoles.Add(ar);
+                        }
                     }
                     result = _adminRoleRepository.Insert(admin.AdminRoles);
                 }
+                #endregion
             });
             return result;
         }

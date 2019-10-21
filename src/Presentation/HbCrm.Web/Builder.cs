@@ -36,7 +36,8 @@ namespace HbCrm.Web
         {
             services.AddEasyCaching(option => option.UseInMemory("hbcrm_memory_cache"));
             services.AddScoped<ICacheManager, MemoryCacheManager>();//封装一层，缓存用的是EasyCaching
-            services.AddScoped<IDbContext, HbCrmContext>();
+            //services.AddScoped<IDbContext, HbCrmContext>();
+            
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
             HbCrmConfiguration hbCrmConfiguration = config.GetSection("HbCrmConfiguration").Get<HbCrmConfiguration>();
@@ -59,7 +60,6 @@ namespace HbCrm.Web
 
                 }
             });
-
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

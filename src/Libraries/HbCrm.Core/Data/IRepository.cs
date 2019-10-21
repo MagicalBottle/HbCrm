@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -24,7 +25,6 @@ namespace HbCrm.Core.Data
         #endregion
 
         #region Methods
-        EntityEntry<TEntity> Entry(TEntity entity);
 
         /// <summary>
         /// 获取实体
@@ -56,6 +56,22 @@ namespace HbCrm.Core.Data
         /// </summary>
         /// <param name="entities">多个实体</param>
         int Update(IEnumerable<TEntity> entities);
+
+        /// <summary>
+        /// 更新实体，指定要更新的属性
+        /// </summary>
+        /// <param name="entity">更新实体</param>
+        /// <param name="properties">更新的属性</param>
+        /// <returns>大于0成功</returns>
+        int Update(TEntity entity, params Expression<Func<TEntity, object>>[] properties);
+
+        /// <summary>
+        /// 更新实体集合，指定要更新的属性
+        /// </summary>
+        /// <param name="entities">更新实体集合</param>
+        /// <param name="properties">更新的属性</param>
+        /// <returns>大于0成功</returns>
+        int UpdateRange(IEnumerable<TEntity> entities, params Expression<Func<TEntity, object>>[] properties);
 
         /// <summary>
         /// 删除实体

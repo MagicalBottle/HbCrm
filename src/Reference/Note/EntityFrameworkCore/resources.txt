@@ -19,3 +19,22 @@ https://entityframeworkcore.com/saving-data-entity-graph
 
 大数据插入 BulkInsert
 https://entityframeworkcore.com/saving-data-bulk-insert
+
+
+ 
+https://www.cnblogs.com/CreateMyself/p/7291839.html 
+https://github.com/aspnet/EntityFrameworkCore/issues/795  
+
+System.Linq.Dynamic.Core 
+https://entityframework-plus.net/ef-core-batch-update 
+ 
+EFCoreTools&Extensions
+https://docs.microsoft.com/en-us/ef/core/extensions/
+ 
+使用事务
+https://docs.microsoft.com/zh-cn/ef/core/saving/transactions
+
+仓储和工作单元
+https://www.cnblogs.com/landeanfen/p/4837520.html
+ 
+

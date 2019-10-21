@@ -16,7 +16,7 @@ namespace HbCrm.Data.Tests
             DbContextOptions<HbCrmContext> options = new DbContextOptions<HbCrmContext>();
 
             HbCrmContext context = new HbCrmContext(options);
-            string script=context.GenerateCreateScript();
+           // string script=context.GenerateCreateScript();
 
         }
     }

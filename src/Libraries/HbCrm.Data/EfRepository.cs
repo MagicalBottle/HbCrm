@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using HbCrm.Core;
 using HbCrm.Core.Data;
@@ -16,7 +18,7 @@ namespace HbCrm.Data
         /// <summary>
         /// context
         /// </summary>
-        private readonly IDbContext _context;
+        private readonly HbCrmContext _context;
 
         /// <summary>
         /// 实体的集合
@@ -56,7 +58,7 @@ namespace HbCrm.Data
 
         #region Ctor
 
-        public EfRepository(IDbContext context)
+        public EfRepository(HbCrmContext context)
         {
             _context = context;
         }
@@ -175,6 +177,128 @@ namespace HbCrm.Data
 
             return result;
         }
+
+        /// <summary>
+        /// 更新实体，指定要更新的属性
+        /// </summary>
+        /// <param name="entity">更新实体</param>
+        /// <param name="properties">更新的属性</param>
+        /// <returns>大于0成功</returns>
+        public int Update(TEntity entity, params Expression<Func<TEntity, object>>[] properties) 
+        {
+
+            #region 封装成方法更新指定列
+            //var entry = _context.Entry(entity);
+            //entry.State = EntityState.Modified;
+            //var dic = new Dictionary<string, object>() {
+            //        { "UserName", "wangwu" }, { "NickName", "王五" }, { "Password", "123456" },
+            //         { "Email", "123456" },{ "WeChar", "123456" }
+            //    };
+
+            //foreach (var p in entry.Properties)
+            //{
+            //    bool isModified = false;
+            //    foreach (var keyvalue in dic)
+            //    {
+            //        if (p.Metadata.Name.Equals(keyvalue.Key, StringComparison.InvariantCultureIgnoreCase))
+            //        {
+            //            p.CurrentValue = dic[keyvalue.Key];
+            //            p.IsModified = true;
+            //            isModified = true;
+            //            break;
+            //        }
+            //    }
+            //    if (!isModified)
+            //    {
+            //        p.IsModified = isModified;
+            //    }
+            //}
+
+            //entry.Context.SaveChanges();
+            #endregion
+
+            int result = -1;
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+            var dbEntityEntry = _context.Entry(entity);
+            if (properties.Any())
+            {
+                foreach (var property in properties)
+                {
+                    dbEntityEntry.Property(property).IsModified = true;
+                }
+            }
+            else
+            {
+                foreach (var rawProperty in dbEntityEntry.Entity.GetType().GetTypeInfo().DeclaredProperties)
+                {
+                    var originalValue = dbEntityEntry.Property(rawProperty.Name).OriginalValue;
+                    var currentValue = dbEntityEntry.Property(rawProperty.Name).CurrentValue;
+                    foreach (var property in properties)
+                    {
+                        if (originalValue != null && !originalValue.Equals(currentValue))
+                            dbEntityEntry.Property(property).IsModified = true;
+                    }
+
+                }
+            }
+
+            result = _context.SaveChanges();
+
+            return result;
+        }
+
+
+        /// <summary>
+        /// 更新实体集合，指定要更新的属性
+        /// </summary>
+        /// <param name="entities">更新实体集合</param>
+        /// <param name="properties">更新的属性</param>
+        /// <returns>大于0成功</returns>
+        public int UpdateRange(IEnumerable<TEntity> entities, params Expression<Func<TEntity, object>>[] properties)
+        {
+            int result = -1;
+            if (entities == null)
+            {
+                throw new ArgumentNullException(nameof(entities));
+            }
+
+            foreach (var entity in entities)
+            {
+                var dbEntityEntry = _context.Entry(entity);
+                //Notice that:当更新实体指定属性时，若实体从数据库中查询而出，此时实体已被跟踪，则无需处理，若实例化对象而更新对象指定属性，此时需要将其状态修改为Unchanged即需要附加
+                //if (!isNoTracking) { dbEntityEntry.State = EntityState.Unchanged; }
+                if (properties.Any())
+                {
+                    foreach (var property in properties)
+                    {
+                        dbEntityEntry.Property(property).IsModified = true;
+                    }
+                }
+                else
+                {
+                    foreach (var rawProperty in dbEntityEntry.Entity.GetType().GetTypeInfo().DeclaredProperties)
+                    {
+                        var originalValue = dbEntityEntry.Property(rawProperty.Name).OriginalValue;
+                        var currentValue = dbEntityEntry.Property(rawProperty.Name).CurrentValue;
+                        foreach (var property in properties)
+                        {
+                            if (originalValue != null && !originalValue.Equals(currentValue))
+                                dbEntityEntry.Property(property).IsModified = true;
+                        }
+
+                    }
+                }
+            }
+
+            result = _context.SaveChanges();
+
+            return result;
+        }
+
+
         /// <summary>
         /// 删除实体
         /// </summary>
@@ -219,7 +343,7 @@ namespace HbCrm.Data
         /// <param name="enabled">true 开启，false 关闭</param>
         public void LazyLoadingEnabled(bool enabled)
         {
-            _context.LazyLoadingEnabled(enabled);
+            _context.ChangeTracker.LazyLoadingEnabled = enabled;
         }
 
 
@@ -230,7 +354,16 @@ namespace HbCrm.Data
         /// <param name="entity">要分离的实体实例</param>
         public void Detach(TEntity entity)
         {
-            _context.Detach(entity);
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+            var entityEntry = this.Entry(entity);
+            if (entityEntry == null)
+            {
+                return;
+            }
+            entityEntry.State = EntityState.Detached;
         }
 
         /// <summary>
@@ -240,7 +373,30 @@ namespace HbCrm.Data
         /// <returns>result 大于0成功</returns>
         public int BeginTransaction(Action action)
         {
-            return _context.BeginTransaction(action);
+
+            int result = -1;
+            if (_context.Database.CurrentTransaction == null)
+            {
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        action.Invoke();
+                        transaction.Commit();
+                        result = 1;
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                    }
+                }
+            }
+            else
+            {
+                action.Invoke();
+                result = 1;
+            }
+            return result;
         }
 
 
@@ -252,7 +408,9 @@ namespace HbCrm.Data
         /// <returns>执行的条数</returns>
         public int ExecuteSqlCommand(RawSqlString sql, params object[] parameters)
         {
-            return _context.ExecuteSqlCommand(sql, parameters);
+            var result = 0;
+            result = _context.Database.ExecuteSqlCommand(sql, parameters);
+            return result;
         }
 
         #endregion
