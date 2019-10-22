@@ -69,7 +69,7 @@ namespace HbCrm.Services.Admin
                 query = query.Where(m => m.RoleName.IndexOf(roleName) > -1);
             }
             
-            query = query.Where(m => m.RoleStatus == roleStatus);
+            query = query.Where(m => m.Status == roleStatus);
 
 
             if (!string.IsNullOrEmpty(roleRemark))

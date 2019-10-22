@@ -26,29 +26,48 @@ namespace HbCrm.Data.Migrations
 
                     b.Property<DateTime>("CreateDate");
 
-                    b.Property<string>("CreatebyName");
+                    b.Property<string>("CreatebyName")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
-                    b.Property<string>("Email");
+                    b.Property<string>("Email")
+                        .HasMaxLength(100);
 
-                    b.Property<string>("Guid");
+                    b.Property<string>("Guid")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.Property<int>("LastUpdateBy");
 
-                    b.Property<string>("LastUpdateByName");
+                    b.Property<string>("LastUpdateByName")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.Property<DateTime>("LastUpdateDate");
 
-                    b.Property<string>("MobilePhone");
+                    b.Property<string>("MobilePhone")
+                        .HasMaxLength(50);
 
-                    b.Property<string>("NickName");
+                    b.Property<string>("NickName")
+                        .HasMaxLength(50);
 
-                    b.Property<string>("Password");
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
-                    b.Property<string>("QQ");
+                    b.Property<string>("QQ")
+                        .HasMaxLength(50);
 
-                    b.Property<string>("UserName");
+                    b.Property<int>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(1);
 
-                    b.Property<string>("WeChar");
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("WeChar")
+                        .HasMaxLength(50);
 
                     b.HasKey("Id");
 
@@ -66,11 +85,15 @@ namespace HbCrm.Data.Migrations
 
                     b.Property<DateTime>("CreateDate");
 
-                    b.Property<string>("CreatebyName");
+                    b.Property<string>("CreatebyName")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.Property<int>("LastUpdateBy");
 
-                    b.Property<string>("LastUpdateByName");
+                    b.Property<string>("LastUpdateByName")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.Property<DateTime>("LastUpdateDate");
 
@@ -94,85 +117,32 @@ namespace HbCrm.Data.Migrations
 
                     b.Property<DateTime>("CreateDate");
 
-                    b.Property<string>("CreatebyName");
+                    b.Property<string>("CreatebyName")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.Property<int>("LastUpdateBy");
 
-                    b.Property<string>("LastUpdateByName");
+                    b.Property<string>("LastUpdateByName")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.Property<DateTime>("LastUpdateDate");
 
-                    b.Property<string>("RoleName");
+                    b.Property<string>("RoleName")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
-                    b.Property<string>("RoleRemark");
+                    b.Property<string>("RoleRemark")
+                        .HasMaxLength(255);
 
-                    b.Property<int>("RoleStatus");
+                    b.Property<int>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(1);
 
                     b.HasKey("Id");
 
                     b.ToTable("sys_role");
-                });
-
-            modelBuilder.Entity("HbCrm.Core.Domain.Authorize.SysFunction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("CreateBy");
-
-                    b.Property<DateTime>("CreateDate");
-
-                    b.Property<string>("CreatebyName");
-
-                    b.Property<string>("FunctionName");
-
-                    b.Property<string>("FunctionRemark");
-
-                    b.Property<int>("FunctionSort");
-
-                    b.Property<string>("FunctionSystermName");
-
-                    b.Property<int>("LastUpdateBy");
-
-                    b.Property<string>("LastUpdateByName");
-
-                    b.Property<DateTime>("LastUpdateDate");
-
-                    b.Property<int>("MenuId");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("sys_function");
-                });
-
-            modelBuilder.Entity("HbCrm.Core.Domain.Authorize.SysFunctionRole", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("CreateBy");
-
-                    b.Property<DateTime>("CreateDate");
-
-                    b.Property<string>("CreatebyName");
-
-                    b.Property<int>("FunctionId");
-
-                    b.Property<int>("LastUpdateBy");
-
-                    b.Property<string>("LastUpdateByName");
-
-                    b.Property<DateTime>("LastUpdateDate");
-
-                    b.Property<int>("RoleId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FunctionId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("sys_functionrole");
                 });
 
             modelBuilder.Entity("HbCrm.Core.Domain.Authorize.SysMenu", b =>
@@ -184,27 +154,47 @@ namespace HbCrm.Data.Migrations
 
                     b.Property<DateTime>("CreateDate");
 
-                    b.Property<string>("CreatebyName");
+                    b.Property<string>("CreatebyName")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.Property<int>("LastUpdateBy");
 
-                    b.Property<string>("LastUpdateByName");
+                    b.Property<string>("LastUpdateByName")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.Property<DateTime>("LastUpdateDate");
 
-                    b.Property<string>("MenuIcon");
+                    b.Property<string>("MenuIcon")
+                        .HasMaxLength(50);
 
-                    b.Property<string>("MenuName");
+                    b.Property<string>("MenuName")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
-                    b.Property<string>("MenuRemark");
+                    b.Property<string>("MenuRemark")
+                        .HasMaxLength(255);
 
-                    b.Property<int>("MenuSort");
+                    b.Property<int>("MenuSort")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(0);
 
-                    b.Property<string>("MenuSystermName");
+                    b.Property<string>("MenuSystermName")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<int>("MenuType");
 
                     b.Property<string>("MenuUrl");
 
-                    b.Property<int>("ParentMenuId");
+                    b.Property<int>("ParentMenuId")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("Type")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(1);
 
                     b.HasKey("Id");
 
@@ -220,11 +210,15 @@ namespace HbCrm.Data.Migrations
 
                     b.Property<DateTime>("CreateDate");
 
-                    b.Property<string>("CreatebyName");
+                    b.Property<string>("CreatebyName")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.Property<int>("LastUpdateBy");
 
-                    b.Property<string>("LastUpdateByName");
+                    b.Property<string>("LastUpdateByName")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.Property<DateTime>("LastUpdateDate");
 
@@ -250,19 +244,6 @@ namespace HbCrm.Data.Migrations
 
                     b.HasOne("HbCrm.Core.Domain.Admin.SysRole", "SysRole")
                         .WithMany("AdminRoles")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("HbCrm.Core.Domain.Authorize.SysFunctionRole", b =>
-                {
-                    b.HasOne("HbCrm.Core.Domain.Authorize.SysFunction", "SysFunction")
-                        .WithMany("FunctionRoles")
-                        .HasForeignKey("FunctionId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("HbCrm.Core.Domain.Admin.SysRole", "SysRole")
-                        .WithMany("FunctionRoles")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

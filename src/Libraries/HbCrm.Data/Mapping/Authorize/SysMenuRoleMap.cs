@@ -14,8 +14,8 @@ namespace HbCrm.Data.Mapping.Authorize
             builder.ToTable("sys_menurole");
             builder.HasKey(model => model.Id);
 
-            builder.HasOne(model => model.SysMenu).WithMany(model => model.MenuRoles).HasForeignKey(model => model.MenuId);
-            builder.HasOne(model => model.SysRole).WithMany(model => model.MenuRoles).HasForeignKey(model => model.RoleId);
+            builder.HasOne(model => model.SysMenu).WithMany(model => model.MenuRoles).HasForeignKey(model => model.MenuId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(model => model.SysRole).WithMany(model => model.MenuRoles).HasForeignKey(model => model.RoleId).OnDelete(DeleteBehavior.Cascade);
 
         }
     }

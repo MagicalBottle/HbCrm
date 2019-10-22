@@ -8,26 +8,23 @@
 @section Css{
     <link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.min.css?v=1.15.4" />
     <link href="~/css/admin.css?v=1.0.0" rel="stylesheet" />
+    <link href="~/lib/jquery-treegrid/css/jquery.treegrid.css" rel="stylesheet" />
 }
 <!-- Css -->
 <!-- Scripts -->
 @section Scripts{
     <script type="text/javascript" src="~/lib/bootstrap-table/bootstrap-table.min.js?v=1.15.4"></script>
     <script src="~/lib/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="~/lib/jquery-treegrid/js/jquery.treegrid.js"></script>
+    <script src="~/lib/bootstrap-table/extensions/treegrid/bootstrap-table-treegrid.js"></script>
     <script type="text/javascript">
         //初始化
+        $table = $('#list-menu-table');
         var InitTable = function (url) {
             //先销毁表格
-            $('#list-menu-table').bootstrapTable("destroy");
+            $table.bootstrapTable("destroy");
             //加载表格
-            $('#list-menu-table').bootstrapTable({
-                rowStyle: function (row, index) {//row 表示行数据，object,index为行索引，从0开始
-                    var style = "";
-                    if (row.SignInTime == '' || row.SignOutTime == '') {
-                        style = { css: { 'color': 'red' } };
-                    }
-                    return style;
-                },
+            $table.bootstrapTable({
                 locale: 'zh-CN',//语言选择
                 //searchAlign: 'left',
                 //search: true,   //显示隐藏搜索框
@@ -45,14 +42,14 @@
                 toolbarAlign: '',                //自定义工具栏位置 默认left.  right 不赋值就独立成行
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
-                pagination:true,                   //是否显示分页（*）
-                sortable: true,                     //是否启用排序
+                pagination:false,                   //是否显示分页（*）
+                sortable: false,                     //是否启用排序
                 sortOrder: "asc",                   //排序方式
                 queryParamsType: '',                 //配合queryParams使用，传递的默认参数pageSize, pageNumber, searchText, sortName, sortOrder
                 queryParams: queryParams,           //传递参数（*）
                 sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
                 pageNumber: 1,                       //初始化加载第一页，默认第一页
-                pageSize: 2,                       //每页的记录行数（*）
+                pageSize: 10,                       //每页的记录行数（*）
                 pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*） 如果最小的10页大于返回的数据总条数也不会显示
                 showPaginationSwitch: true,         //默认为false隐藏每页数据条数选择，设为true显示
                 paginationLoop: true,             //是否无限循环
@@ -64,46 +61,47 @@
                 clickToSelect: true,                //是否启用点击选中行
                 //height: 680,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
                 uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
-                showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+                idField:"Id",
+                showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
                 cardView: false,                    //是否显示详细视图
                 showExport: true,
                 //exportDataType: 'all',
                 exportDataType: "selected",        //导出checkbox选中的行数
                 totalField: "Total",                  //默认为total  为了统一大小写
                 dataField: "Rows",                    //默认为rows 为了统一大小写
-                detailViewByClick: true,               //设置后 配合detailFormatter 可以获取明细信息
-                detailView: true,                       //设置后 配合detailFormatter
-                columns: [{
-                        field: 'Id',
-                    title: '序号',
-                    sortable:true,
-                    detailFormatter: 'detailFormatter'
-                }, {
+                //detailViewByClick: true,               //设置后 配合detailFormatter 可以获取明细信息
+                //detailView: true,                       //设置后 配合detailFormatter
+                columns: [
+                    {
                         field: 'MenuName',
-                        title: '菜单名称',
-                        sortable: true,
-                        detailFormatter: 'detailFormatter'
-                }, {
+                        title: '菜单名称'
+                    }, {
+                        field: 'MenuSystermName',
+                        title: '菜单系统名称'
+                    },{
+                        field: 'MenuType',
+                        title: '菜单类型',
+                        formatter: 'typeFormatter'
+                    }, {
+                        field: 'MenuIcon',
+                        title: '菜单图标',
+                        formatter: 'MenuIconFormatter'
+
+                    }, {
                         field: 'MenuUrl',
-                        title: '菜单地址',
-                        sortable: true,
-                        detailFormatter: 'detailFormatter'
-                }, {
+                        title: '菜单链接'
+                    }, {
+                        field: 'MenuSort',
+                        title: '菜单排序'
+                    },{
                         field: 'MenuRemark',
-                        title: '菜单说明',
-                        sortable: true,
-                        detailFormatter: 'detailFormatter'
+                        title: '菜单说明'
                 },{
                     field: 'action',
                     title: '操作',
                     width: 110,
-                    //events: 'operateEvents',
-                    formatter: 'operateFormatter',       //自定义表格内容，字符串内是方法名称
+                    formatter: 'operateFormatter'       //自定义表格内容，字符串内是方法名称
                     }
-                    //,
-                    //{
-                    //    checkbox: true
-                    //}
                 ],
                 responseHandler: function (res) {
                     return JSON.parse(res);//转成json否则不能显示
@@ -115,6 +113,22 @@
                 },
                 onLoadError: function (status, jqXHR) {
                     alert("查询异常!");
+                },
+                treeShowField: 'MenuName',
+                parentIdField: 'ParentMenuId',
+                onPostBody: function () {
+                    var columns = $table.bootstrapTable('getOptions').columns
+
+                    if (columns && columns[0][1].visible) {
+                        $table.treegrid({
+                            expanderExpandedClass: 'fas fa-caret-square-down',
+                            expanderCollapsedClass: 'fas fa-caret-square-up',
+                            treeColumn: 0,
+                            onChange: function () {
+                                $table.bootstrapTable('resetWidth')
+                            }
+                        })
+                    }
                 }
             });
             return InitTable;
@@ -125,33 +139,54 @@
         function operateFormatter(value, row, index) {
             return [
                 '<a class="btn btn-sm btn-primary" href="@Url.Action("Edit","Menu",new { area="Admin"})/'+row.Id+'" title="编辑"><i class="fas fa-edit"></i></a>　',
-                '<a class="btn btn-sm btn-danger" href="javascript:deleteMenu(' + row.Id + ')" title="删除"><i class="fas fa-trash-alt"></i></a>'
+                '<a class="btn btn-sm btn-danger" onclick="deleteMenu(this)" href="#" title="删除"><i class="fas fa-trash-alt"></i></a>'
             ].join('');
         };
-        //每行点击显示
-        //detailFormatter
-        function detailFormatter(index, row, $element) {
-            var detail = '<div class="card-views">';
-            detail += '<div class="card-view"><span class="card-view-title">Id</span><span class="card-view-value">' + row.Id + '</span></div >';
-            detail += '<div class="card-view"><span class="card-view-title">菜单名称</span><span class="card-view-value">' + row.MenuName + '</span></div>';
-            detail += '<div class="card-view"><span class="card-view-title">菜单地址</span><span class="card-view-value">' + row.MenuUrl + '</span></div>';
-            detail += '<div class="card-view"><span class="card-view-title">菜单说明</span><span class="card-view-value">' + (row.MenuRemark == null ? "" : row.MenuRemark) + '</span></div>';
-            detail += '<div class="card-view"><span class="card-view-title">操作</span><span class="card-view-value"><a class="btn btn-sm btn-primary" href="@Url.Action("Edit","Menu",new { area="Admin"})/' + row.Id + '" title="编辑"><i class="fas fa-edit"></i></a>　<a class="btn btn-sm btn-danger" href="javascript:deleteMenu(' + row.Id + ')" title="删除"><i class="fas fa-trash-alt"></i></a></span></div>';
-            detail += '</div > ';
-            return detail;
+
+        //菜单类型
+         function typeFormatter(value, row, index) {
+            return row.Type==1?"菜单":"功能";
         };
+
+        //菜单图标
+        function MenuIconFormatter(value, row, index) {
+            return '<i class="' + row.MenuIcon + '"></i> ' + row.MenuIcon ;
+        };
+
 
         // 查询参数
         function queryParams(params) {
-            params.menuName = $("#menuName").val().trim();
-            params.menuSystermName = $("#menuSystermName").val().trim();
+            //params.menuName = $("#menuName").val().trim();
+            //params.menuSystermName = $("#menuSystermName").val().trim();
             return params
         }
          //删除数据
-        function deleteMenu(id) {
-            $("#deleteInfo").modal('toggle');
+        function deleteMenu(element) {
+            $tr = $(element).closest("tr");//从当前元素往上找，找到第一个tr即返回，如果没找到返回空jQuery对象
+
+            if (!$tr) {
+                alert('没有找到删除行');
+            }
+
+            var $nodes = getThisAllNodes($tr);//获取所有子节点
+            var ids = [];
+            $.each($nodes, function (index, node) {
+                var $node = $(node);
+                var id = $node.attr("data-uniqueid");
+                ids.push(id);
+            });
+
+            var isDelete = false;
+            if (ids.length > 1) { 
+                if (confirm('您删除的菜单包含子菜单，子菜单会一起删除。确定要删除吗？') == true) {
+                    isDelete = true;
+                } else {
+                    isDelete = false;
+                }
+            }
+            if (isDelete) {
             //aja异步请求
-            $.ajax({
+            @*$.ajax({
                 url: '@Url.Action("Delete","Menu",new { area="Admin"})',
                 type: 'post',
                 contentType: 'application/json;charset=utf-8',
@@ -163,8 +198,26 @@
                 error: function (data) {
                         alert('数据删除失败' + data);
                     }
-                });
+                });*@
+            }
         };
+        //获取此节点的所有子孙节点（递归遍历）
+        function getThisAllNodes($tr) {
+            var nodeArry = [];
+            var $nodes = $tr.treegrid('getChildNodes');
+
+            nodeArry=nodeArry.concat($tr);//添加当前的
+
+            if ($nodes == null || $nodes.length <= 0) {
+                return nodeArry;
+            }
+
+            $.each($nodes, function (index, node) {
+                nodeArry=nodeArry.concat(getThisAllNodes($(node)));
+            });
+
+            return nodeArry;
+        }
 
         $("#btn_query").click( function () {
             InitTable(url);
@@ -228,43 +281,43 @@
                     <div class="card-body">
                         <div id="toolbar">
                             <!-- 搜索框-->
-                            <div class="card card-green">
-                                <div class="card-header link border-0 " data-card-widget="collapse">
-                                    <div class="d-flex justify-content-between">
-                                        <h3 class="card-title">搜索项</h3><div class="card-tools">
-                                            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                                                <i class="fas fa-minus"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="form-row align-items-center">
-                                        <div class="col-6">
-                                            <div class="input-group mb-2">
-                                                <div class="input-group-prepend">
-                                                    <div class="input-group-text">菜单名称</div>
-                                                </div>
-                                                <input id="menuName" name="menuName" type="text" class="form-control" placeholder="菜单名称" aria-label="Username" aria-describedby="basic-addon1">
-                                            </div>
-                                        </div>
-                                        <div class="col-6">
-                                            <div class="input-group mb-2">
-                                                <div class="input-group-prepend">
-                                                    <div class="input-group-text">菜单系统名称</div>
-                                                </div>
-                                                <input id="menuSystermName" name="menuSystermName" type="text" class="form-control" placeholder="菜单系统名称" aria-label="Username" aria-describedby="basic-addon1">
+                            @*<div class="card card-green">
+                                    <div class="card-header link border-0 " data-card-widget="collapse">
+                                        <div class="d-flex justify-content-between">
+                                            <h3 class="card-title">搜索项</h3><div class="card-tools">
+                                                <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="card-body">
+                                        <div class="form-row align-items-center">
+                                            <div class="col-6">
+                                                <div class="input-group mb-2">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text">菜单名称</div>
+                                                    </div>
+                                                    <input id="menuName" name="menuName" type="text" class="form-control" placeholder="菜单名称" aria-label="Username" aria-describedby="basic-addon1">
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="input-group mb-2">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text">菜单系统名称</div>
+                                                    </div>
+                                                    <input id="menuSystermName" name="menuSystermName" type="text" class="form-control" placeholder="菜单系统名称" aria-label="Username" aria-describedby="basic-addon1">
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                    <div class="row align-items-center justify-content-center">
-                                        <div class="col-4">
-                                            <button id="btn_query" class="btn btn-primary btn-block">查询</button>
+                                        <div class="row align-items-center justify-content-center">
+                                            <div class="col-4">
+                                                <button id="btn_query" class="btn btn-primary btn-block">查询</button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                                </div>*@
                             <!-- 搜索框-->
                         </div>
                         <table id="list-menu-table"></table>

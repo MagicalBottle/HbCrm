@@ -62,9 +62,7 @@ namespace HbCrm.Web
             });
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-
-            services.AddScoped<IFunctionService, FunctionService>();
+                        
             services.AddScoped<IMenuService, MenuService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IAdminService, AdminService>();

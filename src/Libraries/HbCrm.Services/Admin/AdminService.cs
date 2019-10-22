@@ -19,18 +19,14 @@ namespace HbCrm.Services.Admin
 
         private readonly IRepository<SysMenu> _menuRepository;
         private readonly IRepository<SysMenuRole> _menuRoleRepository;
-
-        private readonly IRepository<SysFunction> _functionRepository;
-        private readonly IRepository<SysFunctionRole> _functionRoleRepository;
+        
 
 
         public AdminService(IRepository<SysAdmin> adminRepository,
             IRepository<SysAdminRole> adminRoleRepository,
             IRepository<SysRole> roleRepository,
              IRepository<SysMenu> menuRepository,
-              IRepository<SysMenuRole> menuRoleRepository,
-              IRepository<SysFunction> functionRepository,
-              IRepository<SysFunctionRole> functionRoleRepository)
+              IRepository<SysMenuRole> menuRoleRepository)
         {
             _adminRepository = adminRepository;
             _adminRoleRepository = adminRoleRepository;
@@ -38,9 +34,7 @@ namespace HbCrm.Services.Admin
 
             _menuRepository = menuRepository;
             _menuRoleRepository = menuRoleRepository;
-
-            _functionRepository = functionRepository;
-            _functionRoleRepository = functionRoleRepository;
+            
         }
         public SysAdmin GetAdminByUserNameNoLazy(string userName)
         {
@@ -107,18 +101,7 @@ namespace HbCrm.Services.Admin
                             orderby m.Id
                             select m;
             var sysMenus = queryMenu.ToList();
-            sysAdmin.Menus = sysMenus;
-
-            //对应功能
-            var queryFunction = from f in _functionRepository.Table
-                                join fr in _functionRoleRepository.Table on f.Id equals fr.FunctionId
-                                join ar in _adminRoleRepository.Table on fr.RoleId equals ar.RoleId
-                                join a in _adminRepository.Table on ar.AdminId equals a.Id
-                                where a.UserName == userName
-                                orderby f.Id
-                                select f;
-            var sysFunctions = queryFunction.ToList();
-            sysAdmin.Functions = sysFunctions;
+            sysAdmin.Menus = sysMenus;           
 
             return sysAdmin;
         }

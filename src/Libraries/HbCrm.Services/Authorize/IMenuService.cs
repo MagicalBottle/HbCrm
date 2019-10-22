@@ -43,6 +43,12 @@ namespace HbCrm.Services.Authorize
         IPagedList<SysMenu> GetMenus( int pageNumber = 1, int pageSize = 10, string menuName = null, string menuSystermName = null, string sortName = "Id", string sortOrder ="ASC");
 
         /// <summary>
+        /// 获取所有的菜单
+        /// </summary>
+        /// <returns></returns>
+        List<SysMenu> GetAllMenus();
+
+        /// <summary>
         /// 获取菜单下的所有子菜单（只获取一级）
         /// </summary>
         /// <param name="parentId"></param>

@@ -201,6 +201,21 @@ namespace HbCrm.Services.Authorize
 
 
         /// <summary>
+        /// 获取所有的菜单
+        /// </summary>
+        /// <returns></returns>
+        public List<SysMenu> GetAllMenus()
+        {
+            //null 传播 https://github.com/StefH/System.Linq.Dynamic.Core/wiki/NullPropagation
+
+            var query = from m in _menuRepository.TableNoTracking
+                        orderby m.ParentMenuId ascending,m.MenuSort ascending
+                        select m;
+            return query.ToList();
+        }
+
+
+        /// <summary>
         /// 获取菜单下的所有子菜单（只获取一级）
         /// </summary>
         /// <param name="parentId"></param>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HbCrm.Core.Domain.DataEnumerate;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -27,7 +28,7 @@ namespace HbCrm.Core.Domain.Authorize
         public string MenuSystermName { get; set; }
 
         /// <summary>
-        /// 菜单连接
+        /// 菜单链接
         /// </summary>
         public string MenuUrl { get; set; }
 
@@ -35,6 +36,20 @@ namespace HbCrm.Core.Domain.Authorize
         /// 上级菜单ID
         /// </summary>
         public int ParentMenuId { get; set; }
+
+        /// <summary>
+        /// 菜单类型 1，链接；2功能。操作的时候看<see cref="MenuType"/>
+        /// </summary>
+        public int Type { get; set; }
+
+        /// <summary>
+        /// 菜单类型 1，链接；2功能
+        /// </summary>
+        public MenuType MenuType
+        {
+            get { return (MenuType)Type; }
+            set { Type = (int)value; }
+        }        
 
         /// <summary>
         /// 菜单图标
@@ -60,7 +75,7 @@ namespace HbCrm.Core.Domain.Authorize
         /// <summary>
         /// 子菜单
         /// </summary>
-        public virtual List<SysMenu> ChildrenMenus { get; set; } = new List<SysMenu>();
+        public List<SysMenu> ChildrenMenus { get; set; } = new List<SysMenu>();
 
         /// <summary>
         /// 父菜单
@@ -79,4 +94,6 @@ namespace HbCrm.Core.Domain.Authorize
         #endregion
 
     }
+
+
 }

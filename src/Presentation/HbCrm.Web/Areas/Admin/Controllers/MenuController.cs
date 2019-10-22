@@ -32,20 +32,41 @@ namespace HbCrm.Web.Areas.Admin.Controllers
             return View();
         }
 
+        #region 
+        //[AdminAuthorize(Policy = PermissionKeys.MenuView)]
+        //public IActionResult List( [FromBody] MenuQueryParamInputModel param)
+        //{
+        //    IPagedList<SysMenu> menus = null;
+        //    var result = new PagedListReponseOutPut<SysMenu>();
+        //    try
+        //    {
+        //        menus = _menuService.GetMenus(
+        //            pageNumber: param.PageNumber,
+        //            pageSize: param.PageSize,
+        //            menuName: param.MenuName,
+        //            menuSystermName: param.MenuSystermName,
+        //            sortName: param.SortName,
+        //            sortOrder: param.SortOrder);
+        //        result.Rows = menus;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        result.Status = ReutnStatus.Error;
+        //        result.Message = "Error";
+        //    }
+        //    return new JsonResult(JsonConvert.SerializeObject(result, new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd HH:mm:ss.ffff" }));
+        //}
+        #endregion 
+
+
         [AdminAuthorize(Policy = PermissionKeys.MenuView)]
-        public IActionResult List( [FromBody] MenuQueryParamInputModel param)
+        public IActionResult List()
         {
-            IPagedList<SysMenu> menus = null;
-            var result = new PagedListReponseOutPut<SysMenu>();
+           List<SysMenu> menus = null;
+            var result = new ListReponseOutPut<SysMenu>();
             try
             {
-                menus = _menuService.GetMenus(
-                    pageNumber: param.PageNumber,
-                    pageSize: param.PageSize,
-                    menuName: param.MenuName,
-                    menuSystermName: param.MenuSystermName,
-                    sortName: param.SortName,
-                    sortOrder: param.SortOrder);
+                menus = _menuService.GetAllMenus();
                 result.Rows = menus;
             }
             catch (Exception ex)

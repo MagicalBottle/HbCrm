@@ -1,6 +1,8 @@
 ﻿@using HbCrm.Core.Domain.Authorize
+@using HbCrm.Core.Domain.DataEnumerate
 @using System.Text
 @using System.Collections;
+@using System.Linq;
 @inject HbCrm.Services.Web.IWorkContext _context
 @inject HbCrm.Services.Authorize.IMenuService _menuService
 <!DOCTYPE html>
@@ -17,7 +19,7 @@
 </head>
 <body class="sidebar-mini">
     @{
-        var menusFormData = _menuService.FormData(_context.Admin.Menus);
+        var menusFormData = _menuService.FormData(_context.Admin.Menus.Where(m => m.MenuType == MenuType.Menu).ToList());
 
         _menuService.ActiveMenu(menusFormData, _context.HttpContext);
 
@@ -65,8 +67,8 @@
                     </a>
                 </li>
                 @*<li class="nav-item">
-                    <a href="@Url.Action("Index","Home",new { area = "Admin"})" class="nav-link">HBCRM</a>
-                </li>*@
+                        <a href="@Url.Action("Index","Home",new { area = "Admin"})" class="nav-link">HBCRM</a>
+                    </li>*@
                 <li></li>
             </ul>
 
@@ -80,7 +82,7 @@
                     <a href="@Url.Action("Logout","Home",new { area = "Admin" })" class="nav-link">退出</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">缓存</a>                    
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">缓存</a>
                     <div class="dropdown-menu dropdown-menu-right">
                         <a class="dropdown-item" href="#">清除缓存</a>
                     </div>

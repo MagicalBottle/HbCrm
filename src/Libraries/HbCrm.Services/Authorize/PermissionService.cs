@@ -7,21 +7,22 @@ using HbCrm.Core.Domain.Authorize;
 using System.Linq;
 using HbCrm.Core.Caching;
 using HbCrm.Core.Domain.Admin;
+using HbCrm.Core.Domain.DataEnumerate;
 
 namespace HbCrm.Services.Authorize
 {
     public class PermissionService : IPermissionService
     {
         private readonly IWorkContext _workContext;
-        private readonly IFunctionService _functionService;
+        private readonly IMenuService _menuService;
         private readonly ICacheManager _cache;
-        
+
         public PermissionService(IWorkContext workContext,
-            IFunctionService functionService,
-            ICacheManager cache)
+            IMenuService menuService,
+        ICacheManager cache)
         {
             _workContext = workContext;
-            _functionService= functionService;
+            _menuService = menuService;
             _cache = cache;
         }
 
@@ -36,7 +37,7 @@ namespace HbCrm.Services.Authorize
             {
                 return false;
             }
-           return this.Authorize(functionSystermName, _workContext.Admin);
+            return this.Authorize(functionSystermName, _workContext.Admin);
         }
         /// <summary>
         ///  判定权限
@@ -50,15 +51,15 @@ namespace HbCrm.Services.Authorize
             {
                 return false;
             }
-            foreach (var f in admin.Functions)
+            foreach (var f in admin.Menus.Where(m=>m.MenuType== MenuType.Function))
             {
-                if (functionSystermName.Equals(f.FunctionSystermName,StringComparison.InvariantCultureIgnoreCase))
+                if (functionSystermName.Equals(f.MenuSystermName, StringComparison.InvariantCultureIgnoreCase))
                 {
                     return true;
                 }
             }
-            return false ;
+            return false;
         }
-        
+
     }
 }

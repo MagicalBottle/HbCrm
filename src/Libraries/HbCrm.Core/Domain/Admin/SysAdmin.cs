@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using HbCrm.Core.Domain.Authorize;
+using HbCrm.Core.Domain.DataEnumerate;
 
 namespace HbCrm.Core.Domain.Admin
 {
@@ -69,6 +70,20 @@ namespace HbCrm.Core.Domain.Admin
         public string WeChar { get; set; }
 
         /// <summary>
+        /// 状态,操作的时候用<see cref="AdminStatus"/>
+        /// </summary>
+        public int Status { get; set; }
+
+        /// <summary>
+        /// 状态
+        /// </summary>
+        public AdminStatus AdminStatus
+        {
+            get { return (AdminStatus)Status; }
+            set { Status = (int)value; }
+        }
+
+        /// <summary>
         /// 用户角色关联表
         /// </summary>
         public virtual List<SysAdminRole> AdminRoles { get; set; } = new List<SysAdminRole>();
@@ -78,12 +93,7 @@ namespace HbCrm.Core.Domain.Admin
         /// 对应角色集合
         /// </summary>
         public  List<SysRole> Roles { get; set; } = new List<SysRole>();
-
-        /// <summary>
-        /// 用户对应功能集合
-        /// </summary>
-        public List<SysFunction> Functions { get; set; } = new List<SysFunction>();
-
+        
         /// <summary>
         /// 用户对应菜单集合
         /// </summary>
