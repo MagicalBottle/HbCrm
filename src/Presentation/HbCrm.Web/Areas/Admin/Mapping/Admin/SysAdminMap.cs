@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using HbCrm.Core.Domain.Admin;
+using HbCrm.Core.Domain.Authorize;
 using HbCrm.Web.Areas.Admin.Models;
 using HbCrm.Web.Areas.Admin.Models.Admin;
+using HbCrm.Web.Areas.Admin.Models.Authorize;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +32,10 @@ namespace HbCrm.Web.Areas.Admin.Mapping.Admin
 
             CreateMap<RoleInput, SysRole>()
                 .ForMember(to => to.AdminRoles, option => option.Ignore());
+
+
+            CreateMap<MenuInput, SysMenu>()
+                .ForMember(to => to.Deep, option => option.Ignore());
 
             //.ForMember(to => to.AdminRoles, option => option.MapFrom<List<SysAdminRole>>(
             //    (f, t) =>

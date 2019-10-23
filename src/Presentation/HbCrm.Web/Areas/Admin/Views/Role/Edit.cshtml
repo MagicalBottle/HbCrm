@@ -166,7 +166,7 @@
                             </div>
                             <div class="form-group  col-6">
                                 <label for="RoleStatus" class="col-form-label">角色状态</label>
-                                <input type="text" class="form-control" id="RoleStatus" name="RoleStatus" placeholder="角色状态" value="@Model.RoleStatus">
+                                <input type="text" class="form-control" id="RoleStatus" name="RoleStatus" placeholder="角色状态" value="@Model.Status">
                             </div>
                         </div>
 
@@ -186,6 +186,7 @@
                             <input type="button" id="btn-save" value="保存" class="btn btn-success mr-5 " style="width:8rem;">
                             <input type="button" id="btn-save-edit" value="保存/编辑" class="btn btn-success" style="width:8rem;">
                         </div>
+                        <input type="hidden" value="@Model.Id" />
                     </form>
 
                 </div>

@@ -87,5 +87,12 @@ namespace HbCrm.Services.Admin
         /// </summary>
         /// <returns></returns>
         List<SysAdmin> GetAllAdmins();
+
+        /// <summary>
+        /// 删除实体
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        int Delete(int id);
     }
 }

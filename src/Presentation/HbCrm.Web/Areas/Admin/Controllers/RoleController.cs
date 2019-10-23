@@ -215,5 +215,20 @@ namespace HbCrm.Web.Areas.Admin.Controllers
             return new JsonResult(JsonConvert.SerializeObject(response));
         }
 
+        //[AdminAuthorize(Policy = PermissionKeys.RoleEdit)]
+        //public IActionResult Permission(int id)
+        //{
+        //    var role = _roleService.GetMenus(id);
+        //    return View(role);
+        //}
+
+
+        //[AdminAuthorize(Policy = PermissionKeys.RoleEdit)]
+        //[HttpPost]
+        //public IActionResult Permission(int id)
+        //{
+        //    var role = _roleService.GetMenus(id);
+        //    return View(role);
+        //}
     }
 }

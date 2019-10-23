@@ -198,7 +198,7 @@ namespace HbCrm.Services.Admin
             {
 
                 result = _roleRepository.Update(role,
-                    m => m.RoleName, m => m.RoleStatus, m => m.RoleRemark, m => m.LastUpdateBy, m => m.LastUpdateByName, m => m.LastUpdateDate);
+                    m => m.RoleName, m => m.Status, m => m.RoleRemark, m => m.LastUpdateBy, m => m.LastUpdateByName, m => m.LastUpdateDate);
 
                 var adminRoles = _adminRoleRepository.Table.Where(m => m.RoleId == role.Id).ToList();
 

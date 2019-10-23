@@ -303,7 +303,7 @@ namespace HbCrm.Services.Admin
             {
 
                 result = _adminRepository.Update(admin,
-                    m => m.UserName, m => m.NickName, m => m.Email, m => m.MobilePhone, m => m.QQ, m => m.WeChar, m => m.LastUpdateBy, m => m.LastUpdateByName, m => m.LastUpdateDate);
+                    m => m.UserName, m => m.NickName, m => m.Password, m => m.Email, m => m.MobilePhone, m => m.QQ, m => m.WeChar, m => m.LastUpdateBy, m => m.LastUpdateByName, m => m.LastUpdateDate);
 
                 var adminRoles = _adminRoleRepository.Table.Where(m => m.AdminId == admin.Id).ToList();
 
@@ -368,6 +368,30 @@ namespace HbCrm.Services.Admin
                         select m;
             return query.ToList();
         }
+
+        /// <summary>
+        /// 删除实体
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public int Delete(int id)
+        {
+            if (id <= 0)
+            {
+                return 0;
+            }
+            int result = -1;
+            var model = _adminRepository.Table.Where(m =>m.Id==id).ToList();
+            try
+            {
+                result = _adminRepository.Delete(model);
+            }
+            catch (Exception ex)
+            {
+            }
+            return result;
+        }
+
 
     }
 }

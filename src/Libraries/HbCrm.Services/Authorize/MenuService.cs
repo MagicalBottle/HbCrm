@@ -174,7 +174,7 @@ namespace HbCrm.Services.Authorize
             {
                 //Contains 会包含 or name=''   indexof 不会  找不到-1
                 //转换成mysql locate() 只要找到返回的结果都大于0
-                query = query.Where(m => m.MenuName.IndexOf(menuName)>-1);
+                query = query.Where(m => m.MenuName.IndexOf(menuName) > -1);
             }
 
             if (!string.IsNullOrEmpty(menuSystermName))
@@ -188,7 +188,7 @@ namespace HbCrm.Services.Authorize
             }
             if (sortOrder.ToUpper() == "ASC")
             {
-                query= query.OrderBy(sortName+ " ASC");
+                query = query.OrderBy(sortName + " ASC");
             }
             if (sortOrder.ToUpper() == "DESC")
             {
@@ -209,7 +209,7 @@ namespace HbCrm.Services.Authorize
             //null 传播 https://github.com/StefH/System.Linq.Dynamic.Core/wiki/NullPropagation
 
             var query = from m in _menuRepository.TableNoTracking
-                        orderby m.ParentMenuId ascending,m.MenuSort ascending
+                        orderby m.ParentMenuId ascending, m.MenuSort ascending
                         select m;
             return query.ToList();
         }
@@ -223,7 +223,7 @@ namespace HbCrm.Services.Authorize
         public List<SysMenu> GetLevelMenus(int parentId = 0)
         {
             var query = from m in _menuRepository.TableNoTracking
-                        where m.ParentMenuId==parentId
+                        where m.ParentMenuId == parentId
                         orderby m.Id ascending
                         select m;
             return query.ToList();
@@ -233,12 +233,17 @@ namespace HbCrm.Services.Authorize
         /// 是否存在同名系统菜单
         /// </summary>
         /// <param name="menuSystermName"></param>
+        /// <param name="id">排查某个菜单，id</param>
         /// <returns></returns>
-        public bool ExistMenuByMenuSystermName(string menuSystermName)
+        public bool ExistMenuByMenuSystermName(string menuSystermName,int id=0)
         {
             var query = from m in _menuRepository.TableNoTracking
                         where m.MenuSystermName == menuSystermName
                         select m;
+            if (id > 0)
+            {
+                query = query.Where(m => m.Id != id);
+            }
             if (query.ToList().Count() > 0)
             {
                 return true;
@@ -256,13 +261,70 @@ namespace HbCrm.Services.Authorize
             int result = -1;
             try
             {
-                result= _menuRepository.Insert(menu);
+                result = _menuRepository.Insert(menu);
             }
             catch (Exception ex)
             {
             }
             return result;
         }
+        /// <summary>
+        /// 删除菜单
+        /// </summary>
+        /// <param name="menuIds">菜单id</param>
+        /// <returns></returns>
+        public int DeleteMenu(int[] menuIds)
+        {
+            if (menuIds == null || menuIds.Length <= 0)
+            {
+                return 0;
+            }
+            int result = -1;
+            var menus = _menuRepository.Table.Where(m => menuIds.Contains(m.Id)).ToList();
+            try
+            {
+                result = _menuRepository.Delete(menus);
+            }
+            catch (Exception ex)
+            {
+            }
+            return result;
+        }
+        /// <summary>
+        /// 根据Id获取实体
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public SysMenu Get(int id)
+        {
+            if (id == 0)
+            {
+                return null;
+            }
+
+            var query = from c in _menuRepository.TableNoTracking
+                        orderby c.Id
+                        where c.Id == id
+                        select c;
+            var model = query.FirstOrDefault();
+
+            return model;
+        }
+
+        /// <summary>
+        ///  更新实体
+        /// </summary>
+        /// <param name="model">实体</param>
+        /// <returns></returns>
+        public int Update(SysMenu model)
+        {
+            int result = -1;
+            result = _menuRepository.Update(model,
+               m => m.MenuName, m => m.MenuSystermName, m => m.MenuIcon, m => m.MenuUrl, m => m.MenuSort, m => m.ParentMenuId, m => m.Type,
+                m => m.MenuRemark, m => m.LastUpdateBy, m => m.LastUpdateByName, m => m.LastUpdateDate);
+            return result;
+        }
+
 
     }
 }

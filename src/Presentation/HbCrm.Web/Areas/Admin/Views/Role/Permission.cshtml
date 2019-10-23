@@ -163,7 +163,7 @@
          //删除数据
         function deleteMenu(e) {
             e.stopPropagation();
-            $tr = $(e.target).closest("tr");//从当前元素往上找，找到第一个tr即返回，如果没找到返回空jQuery对象            
+            $tr = $(e.target).closest("tr");//从当前元素往上找，找到第一个tr即返回，如果没找到返回空jQuery对象
             if (!$tr || $tr.length<=0) {
                 alert('没有找到删除行');
                 return;
@@ -185,7 +185,7 @@
                     isDelete = false;
                     return;
                 }
-            }            
+            }
             if (isDelete) {
                 //aja异步请求
                 $.ajax({
@@ -286,46 +286,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div id="toolbar">
-                            <!-- 搜索框-->
-                            @*<div class="card card-green">
-                                    <div class="card-header link border-0 " data-card-widget="collapse">
-                                        <div class="d-flex justify-content-between">
-                                            <h3 class="card-title">搜索项</h3><div class="card-tools">
-                                                <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                                                    <i class="fas fa-minus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="form-row align-items-center">
-                                            <div class="col-6">
-                                                <div class="input-group mb-2">
-                                                    <div class="input-group-prepend">
-                                                        <div class="input-group-text">菜单名称</div>
-                                                    </div>
-                                                    <input id="menuName" name="menuName" type="text" class="form-control" placeholder="菜单名称" aria-label="Username" aria-describedby="basic-addon1">
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="input-group mb-2">
-                                                    <div class="input-group-prepend">
-                                                        <div class="input-group-text">菜单系统名称</div>
-                                                    </div>
-                                                    <input id="menuSystermName" name="menuSystermName" type="text" class="form-control" placeholder="菜单系统名称" aria-label="Username" aria-describedby="basic-addon1">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row align-items-center justify-content-center">
-                                            <div class="col-4">
-                                                <button id="btn_query" class="btn btn-primary btn-block">查询</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>*@
-                            <!-- 搜索框-->
+                        <div id="toolbar">                           
                         </div>
                         <table id="list-menu-table"></table>
                     </div>

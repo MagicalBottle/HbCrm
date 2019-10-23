@@ -86,11 +86,6 @@
                         sortable: true
                     },
                     {
-                        field: 'RoleSystermName',
-                        title: '角色系统名称',
-                        sortable: true
-                    },
-                    {
                         field: 'RoleStatus',
                         title: '角色状态',
                         sortable: true
@@ -103,7 +98,7 @@
                     {
                         field: 'action',
                         title: '操作',
-                        width: 110,
+                        width: 155,
                         //events: 'operateEvents',
                         formatter: 'operateFormatter',       //自定义表格内容，字符串内是方法名称
                     }
@@ -114,12 +109,15 @@
                 ],
                  detailFormatter:function(index, row, $element) {
                     var detail = '<div class="card-views">';
-                    detail += '<div class="card-view"><span class="card-view-title">Id</span><span class="card-view-value">' + row.Id + '</span></div >';
+                    detail += '<div class="card-view"><span class="card-view-title">Id</span><span class="card-view-value">' + row.Id + '</span></div>';
                      detail += '<div class="card-view"><span class="card-view-title">角色名称</span><span class="card-view-value">' + row.RoleName + '</span></div>';
-                     detail += '<div class="card-view"><span class="card-view-title">角色系统名称</span><span class="card-view-value">' + (row.RoleSystermName == null ? "" : row.RoleSystermName) + '</span></div>';
                      detail += '<div class="card-view"><span class="card-view-title">角色状态</span><span class="card-view-value">' + (row.RoleStatus == null ? "" : row.RoleStatus) + '</span></div>';
-                     detail += '<div class="card-view"><span class="card-view-title">角色说明</span><span class="card-view-value">' + (row.RoleRemark == null ? "" : row.RoleRemark) + '</span></div>';
-                     detail += '<div class="card-view"><span class="card-view-title">操作</span><span class="card-view-value"><a class="btn btn-sm btn-primary" href="@Url.Action("Edit", "Role", new { area="Admin"})/' + row.Id + '" title="编辑"><i class="fas fa-edit"></i></a>　<a class="btn btn-sm btn-danger" href="javascript:deleteEntity (' + row.Id + ')" title="删除"><i class="fas fa-trash-alt"></i></a></span></div>';
+                     detail += '<div class="card-view"><span class="card-view-title">角色说明</span><span class="card-view-value">' + (row.RoleRemark == null ? "" : row.RoleRemark) + '</span></div>'; 
+                     detail += '<div class="card-view"><span class="card-view-title">操作</span><span class="card-view-value">';
+                         detail += '<a class="btn btn-sm btn-primary" href = "@Url.Action("Edit", "Role", new { area="Admin"})/' + row.Id + '" title="编辑"><i class="fas fa-edit"></i></a> ';
+                         detail += '<a class="btn btn-sm btn-success"  href = "@Url.Action("Permission", "Role", new { area="Admin"})/' + row.Id + '" title="分配权限"> <i class="fas fa-key"></i></a>';
+                         detail += '<button class="btn btn-sm btn-danger ml-1" onclick="deleteEntity (' + row.Id + ')" title = "删除" > <i class="fas fa-trash-alt"></i></button>';
+                         detail+='</span ></div> ';
                     detail += '</div > ';
                     return detail;
                 },
@@ -142,8 +140,9 @@
         // 操作按钮
         function operateFormatter(value, row, index) {
             return [
-                '<a class="btn btn-sm btn-primary" href="@Url.Action("Edit","Role",new { area="Admin"})/'+row.Id+'" title="编辑"><i class="fas fa-edit"></i></a>　',
-                '<a class="btn btn-sm btn-danger" href="javascript:deleteEntity(' + row.Id + ')" title="删除"><i class="fas fa-trash-alt"></i></a>'
+                '<a class="btn btn-sm btn-primary" href="@Url.Action("Edit","Role",new { area="Admin"})/' + row.Id + '" title="编辑"><i class="fas fa-edit"></i></a>　',
+                '<a class="btn btn-sm btn-success "  href = "@Url.Action("Permission", "Role", new { area="Admin"})/' + row.Id + '" title = "分配权限" > <i class="fas fa-key"></i></a >',
+                '<button class="btn btn-sm btn-danger ml-3" onclick="deleteEntity(' + row.Id + ')" title="删除"><i class="fas fa-trash-alt"></i></button>'
             ].join('');
         };
 
@@ -168,13 +167,13 @@
                     data = JSON.parse(responseData);
                     if (data.Status == 1) {
                         refresh();
-                        $("#deleteInfo").alert();
+                        alert('数据删除成功');
                     } else { 
-                        alert('数据删除失败' + data.Message);
+                        alert('数据删除失败');
                     }
                 },
                 error: function (data) {
-                        alert('数据删除失败' + data);
+                        alert('数据删除异常');
                     }
                 });
         };

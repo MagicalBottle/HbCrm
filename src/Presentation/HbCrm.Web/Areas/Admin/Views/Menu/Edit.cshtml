@@ -1,4 +1,4 @@
-﻿
+﻿@model HbCrm.Core.Domain.Authorize.SysMenu
 @{
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
@@ -15,7 +15,7 @@
     <script src="~/lib/jquery-formvalidation/js/formvalidation.js"></script>
     <script type="text/javascript">
         var menuData = [];
-        var validator  = $("#form-add-menu").formvalidation({
+        var validator = $("#form-edit").formvalidation({
             rules: {
                 menuName: {
                     required: true
@@ -41,51 +41,25 @@
                 menuUrl: "请输入菜单地址"
             },
             submitHandler: function (form) {
-                var requestData = {};
-                requestData.menuName = $("#menuName").val().trim();
-                requestData.menuSystermName = $("#menuSystermName").val().trim();
-                requestData.firstParentMenuId = $("#firstParentMenuId").val().trim();
-                requestData.secondParentMenuId = $("#secondParentMenuId").val().trim();
-                requestData.thirdParentMenuId = $("#thirdParentMenuId").val().trim();
-                requestData.menuIcon = $("#menuIcon").val().trim();
-                requestData.menuSort = $("#menuSort").val().trim();
-                requestData.menuUrl = $("#menuUrl").val().trim();
-                requestData.menuRemark = $("#menuRemark").val().trim();
-                requestData.menuType = $("input[name='MenuType']:checked").val();
                 $.ajax({
                     type: "POST",
-                    url: "@Url.Action("Add", "Menu", new { area = "Admin" })",
+                    url: "@Url.Action("Edit", "Menu", new { area = "Admin" })",
                     dataType: "json",
-                    //contentType: "application/json;charset=utf-8",
                     contentType: "application/x-www-form-urlencoded",
-                    //data: JSON.stringify(requestData),
                     data: $(form).serialize(),
                     error: function (request, message, error) {
                         alert(request);
                     },
                     success: function (responseData) {
                         data = JSON.parse(responseData);
-                        if (data.Status == 1) {
+                         if (data.Status == 1) {
                             var backToList = $("#btn-save").data("backToList");
                             if (backToList) {
                                 window.location.href = "@Url.Action("Index", "Menu", new { area = "Admin" })";
                             } else {
-                                //清空所有选项
-                                $("#menuName").val("");
-                                $("#menuSystermName").val("");
-                                $("#firstParentMenuId").val(-1);
-                                $("#menuIcon").val("");
-                                $("#menuSort").val(0);
-                                $("#menuUrl").val("");
-                                $("#menuRemark").val("");
-                                $("input[name='MenuType'][value='1']").attr("checked", "true");
+                                alert("保存成功，请继续修改");
                             }
                         } else {
-                            if (data.Code == "menu_exsit_menuSystermName") {
-                                alert("菜单系统名称已存在");
-                                $("#menuSystermName").focus();
-                                return;
-                            }
                             alert(data.Message)
                         }
                     }//success
@@ -93,16 +67,16 @@
             }//submitHandler
         }); //validator
         $("#btn-save").click(function () {
-            $(this).data("backToList",true);
+            $(this).data("backToList", true);
             if (validator.form()) {
-                $("#form-add-menu").submit();
+                $("#form-edit").submit();
             }
         });
 
-        $("#btn-save-add").click(function () {
+        $("#btn-save-edit").click(function () {
             $("#btn-save").data("backToList", false);
             if (validator.form()) {
-                $("#form-add-menu").submit();
+                $("#form-edit").submit();
             }
         });
 
@@ -129,7 +103,7 @@
             if (selectValue && selectValue > 0) {
                 $("input[name='MenuType'][value='1']").attr("checked", false);
                 $("input[name='MenuType'][value='2']").attr("checked", true);
-            } else { 
+            } else {
                 $("input[name='MenuType'][value='1']").attr("checked", true);
                 $("input[name='MenuType'][value='2']").attr("checked", false);
             }
@@ -150,14 +124,29 @@
                     break;
             };
             $select.html("");
-            var selectOption = '<option value="-2">请选择</option>';
-            selectOption += '<option value="-1">作为' + strDeep+'级菜单</option>';
+            //var selectOption = '<option value="-2">请选择</option>';
+            var selectOption = '<option value="-1">作为' + strDeep+'级菜单</option>';
             $.each(data, function (index, item, value) {
                 selectOption += '<option value="' + item.Id + '">' + item.MenuName + '</option>';
             });
             $select.append(selectOption);
             $select.trigger("change");
         }
+
+        function getParentAllMenus(menus, menu) {
+            var menuArry = new Array();
+            menuArry = menuArry.concat(menu);//添加当前的
+            if (menuArry == null || menuArry.length <= 0) {
+                return menuArry;
+            }
+            $.each(menus, function (index, item) {
+                if (item.Id == menu.ParentMenuId) {
+                    menuArry = menuArry.concat(getParentAllMenus(menus, item));
+                }                
+            });
+            return menuArry;
+        }
+
         $(function () {
             //获取全部菜单
              $.ajax({
@@ -176,7 +165,33 @@
                            var firstData= $.map(menuData, function (item) {
                                return item.ParentMenuId == 0 ? item: null;
                             });
-                            buildSeleteOption($("#firstParentMenuId"), firstData,1);
+                            buildSeleteOption($("#firstParentMenuId"), firstData, 1);
+                            //当前menu
+                            var currentMenu = {};
+                            $.each(menuData, function (index, item) {
+                                if (item.Id == @Model.Id) {
+                                    currentMenu = item;
+                                }
+                            });
+                            //获取当前和父、祖父菜单
+                            var menuArry = getParentAllMenus(menuData, currentMenu);
+                            if (menuArry.length == 2) { 
+                                $("#firstParentMenuId").val(menuArry[1].Id);
+                                $("#firstParentMenuId").trigger("change");
+                            }
+                            if (menuArry.length == 3) {
+                                $("#firstParentMenuId").val(menuArry[2].Id);
+                                $("#firstParentMenuId").trigger("change");
+                                $("#secondParentMenuId").val(menuArry[1].Id);
+                            }
+                            if (menuArry.length == 4) {
+                                $("#firstParentMenuId").val(menuArry[3].Id);
+                                $("#firstParentMenuId").trigger("change");
+                                $("#secondParentMenuId").val(menuArry[2].Id);
+                                $("#secondParentMenuId").trigger("change");
+                                $("#thirdParentMenuId").val(menuArry[1].Id);
+                                $("input[name='MenuType'][value='2']").attr("checked", "true");
+                            }
                         } else {
                             alert("获取菜单失败，请刷新页面！");
                         }
@@ -201,7 +216,7 @@
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="@Url.Action("Add","Menu",new { area="Admin"})">新增菜单</a></li>
+                    <li class="breadcrumb-item"><a href="@Url.Action("Edit","Menu",new { area="Admin",id=Model.Id})">修改菜单</a></li>
                     <li class="breadcrumb-item active">账号权限</li>
                     <li class="breadcrumb-item active">设置</li>
                 </ol>
@@ -216,7 +231,7 @@
         <div class="col-12">
             <div class="card card-green">
                 <div class="card-header link" data-card-widget="collapse">
-                    <h3 class="card-title">新增菜单</h3>
+                    <h3 class="card-title">修改菜单</h3>
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
                             <i class="fas fa-minus"></i>
@@ -224,15 +239,15 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form id="form-add-menu">
+                    <form id="form-edit">
                         <div class="form-row ">
                             <div class="form-group col-6">
                                 <label for="menuName" class=" col-form-label">菜单名称</label>
-                                <input type="text" class="form-control" id="menuName" name="menuName" placeholder="菜单名称">
+                                <input type="text" class="form-control" id="menuName" name="menuName" placeholder="菜单名称" value="@Model.MenuName">
                             </div>
                             <div class="form-group  col-6">
                                 <label for="menuSystermName" class="col-form-label">菜单系统名称</label>
-                                <input type="text" class="form-control" id="menuSystermName" name="menuSystermName" placeholder="菜单系统名称">
+                                <input type="text" class="form-control" id="menuSystermName" name="menuSystermName" placeholder="菜单系统名称" value="@Model.MenuSystermName">
                             </div>
                         </div>
                         <div class="form-row">
@@ -270,7 +285,7 @@
                             <div class="form-group col-6">
                                 <label for="menuIcon" class=" col-form-label ">菜单图标</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="menuIcon" name="menuIcon" placeholder="菜单图标">
+                                    <input type="text" class="form-control" id="menuIcon" name="menuIcon" placeholder="菜单图标" value="@Model.MenuIcon">
                                     <div class="input-group-append">
                                         <button class="btn btn-outline-info" type="button" id="button-addon2">选择图标</button>
                                     </div>
@@ -278,23 +293,24 @@
                             </div>
                             <div class="form-group  col-6">
                                 <label for="menuSort" class="col-form-label">排序</label>
-                                <input type="text" class="form-control" id="menuSort" name="menuSort" placeholder="0" value="0">
+                                <input type="text" class="form-control" id="menuSort" name="menuSort" placeholder="0" value="@Model.MenuSort">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="menuUrl" class="col-form-label">菜单地址</label>
-                            <input type="text" class="form-control" id="menuUrl" name="menuUrl" placeholder="菜单地址" value="#">
+                            <input type="text" class="form-control" id="menuUrl" name="menuUrl" placeholder="菜单地址" value="@Model.MenuUrl">
                         </div>
                         <div class="form-group">
                             <label for="menuRemark" class=" col-form-label">菜单说明</label>
-                            <textarea class="form-control" id="menuRemark" name="menuRemark" placeholder="菜单说明"></textarea>
+                            <textarea class="form-control" id="menuRemark" name="menuRemark" placeholder="菜单说明">@Model.MenuRemark</textarea>
                         </div>
 
                         <div class="row justify-content-center ">
                             <input type="button" id="btn-save" value="保存" class="btn btn-success mr-5 " style="width:8rem;">
                             <input type="button" id="btn-save-add" value="保存/添加" class="btn btn-success" style="width:8rem;">
                         </div>
+                        <input type="hidden" value="@Model.Id"/>
                     </form>
 
                 </div>

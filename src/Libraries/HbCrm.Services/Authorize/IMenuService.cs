@@ -54,13 +54,14 @@ namespace HbCrm.Services.Authorize
         /// <param name="parentId"></param>
         /// <returns></returns>
         List<SysMenu> GetLevelMenus(int parentId = 0);
-
+                
         /// <summary>
         /// 是否存在同名系统菜单
         /// </summary>
         /// <param name="menuSystermName">系统菜单名称</param>
+        /// <param name="id">排查某个菜单，id</param>
         /// <returns></returns>
-        bool ExistMenuByMenuSystermName(string menuSystermName);
+        bool ExistMenuByMenuSystermName(string menuSystermName, int id = 0);
 
         /// <summary>
         /// 添加菜单
@@ -68,5 +69,26 @@ namespace HbCrm.Services.Authorize
         /// <param name="menu">菜单实体</param>
         /// <returns>-1插入失败</returns>
         int AddMenu(SysMenu menu);
+
+        /// <summary>
+        /// 删除菜单
+        /// </summary>
+        /// <param name="menuIds">菜单id</param>
+        /// <returns></returns>
+        int DeleteMenu(int[] menuIds);
+
+        /// <summary>
+        /// 根据Id获取实体
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        SysMenu Get(int id);
+
+        /// <summary>
+        ///  更新实体
+        /// </summary>
+        /// <param name="model">实体</param>
+        /// <returns></returns>
+        int Update(SysMenu model);
     }
 }

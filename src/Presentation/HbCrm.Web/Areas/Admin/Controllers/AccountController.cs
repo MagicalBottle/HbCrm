@@ -201,6 +201,21 @@ namespace HbCrm.Web.Areas.Admin.Controllers
             return new JsonResult(JsonConvert.SerializeObject(result));
         }
 
+        [AdminAuthorize(Policy = PermissionKeys.AdminDelete)]
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            var response = new ReponseOutPut();
+            var result = _adminService.Delete(id);
+            if (result < 0)
+            {
+                response.Status = ReutnStatus.Error;
+                response.Code = "error";
+                response.Message = "删除账号失败";
+            }
+
+            return new JsonResult(JsonConvert.SerializeObject(response));
+        }
 
     }
 }

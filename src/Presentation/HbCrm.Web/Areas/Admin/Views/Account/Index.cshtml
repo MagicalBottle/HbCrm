@@ -155,7 +155,7 @@
         function operateFormatter(value, row, index) {
             return [
                 '<a class="btn btn-sm btn-primary" href="@Url.Action("Edit","Account",new { area="Admin"})/'+row.Id+'" title="编辑"><i class="fas fa-edit"></i></a>　',
-                '<a class="btn btn-sm btn-danger" href="javascript:deleteMenu(' + row.Id + ')" title="删除"><i class="fas fa-trash-alt"></i></a>'
+                '<button class="btn btn-sm btn-danger" onclick="deleteModel(event,' + row.Id+ ')" title="删除"><i class="fas fa-trash-alt"></i></button>'
             ].join('');
         };
 
@@ -170,20 +170,25 @@
             return params
         }
          //删除数据
-        function deleteMenu(id) {
-            $("#deleteInfo").modal('toggle');
+        function deleteModel(e, id) {
+            e.stopPropagation();
             //aja异步请求
             $.ajax({
                 url: '@Url.Action("Delete", "Account", new { area="Admin"})',
                 type: 'post',
-                contentType: 'application/json;charset=utf-8',
-                data: { Id: id },
-                success: function (data) {
-                    $("#deleteInfo").alert();
-                    refresh();
+                contentType: "application/x-www-form-urlencoded",
+                data: "id=" + id,
+                success: function (responseData) {
+                    data = JSON.parse(responseData);
+                    if (data.Status == 1) {
+                        alert("删除成功");
+                        refresh();
+                    } else {
+                        alert('数据删除失败');
+                    }
                 },
                 error: function (data) {
-                        alert('数据删除失败' + data);
+                        alert('数据删除异常');
                     }
                 });
         };
