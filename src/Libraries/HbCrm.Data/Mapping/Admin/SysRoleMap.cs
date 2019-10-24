@@ -21,6 +21,7 @@ namespace HbCrm.Data.Mapping.Admin
 
             builder.Ignore(m => m.RoleStatus);
             builder.Ignore(m => m.Admins);
+            builder.Ignore(m => m.Menus);
         }
     }
 }

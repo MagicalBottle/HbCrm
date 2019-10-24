@@ -71,7 +71,6 @@ namespace HbCrm.Services.Admin
         {
             if (string.IsNullOrWhiteSpace(userName))
                 return null;
-
             //用户信息
             var queryAdmin = from c in _adminRepository.Table
                              orderby c.Id
@@ -101,7 +100,7 @@ namespace HbCrm.Services.Admin
                             orderby m.Id
                             select m;
             var sysMenus = queryMenu.ToList();
-            sysAdmin.Menus = sysMenus;           
+            sysAdmin.Menus = sysMenus;
 
             return sysAdmin;
         }
@@ -266,7 +265,7 @@ namespace HbCrm.Services.Admin
         /// <returns></returns>
         public SysAdmin GetAdminById(int id)
         {
-            if (id == 0)
+            if (id <= 0)
             {
                 return null;
             }
@@ -276,6 +275,11 @@ namespace HbCrm.Services.Admin
                         where c.Id == id
                         select c;
             var sysAdmin = query.FirstOrDefault();
+
+            if (sysAdmin == null)
+            {
+                return null;
+            }
 
             //对应角色
             var queryRoles = from r in _roleRepository.TableNoTracking
@@ -392,6 +396,34 @@ namespace HbCrm.Services.Admin
             return result;
         }
 
+
+        /// <summary>
+        /// 查找账号的菜单权限
+        /// </summary>
+        /// <param name="id">账号id</param>
+        /// <returns></returns>
+        public List<SysMenu> GetMenus(int id)
+        {
+            List<SysMenu> menus = new List<SysMenu>();
+
+            if (id <= 0)
+            {
+                return null;
+            }
+            
+            var queryMenu = from m in _menuRepository.TableNoTracking
+                            join mr in _menuRoleRepository.TableNoTracking on m.Id equals mr.MenuId
+                            join r in _roleRepository.TableNoTracking on mr.RoleId equals r.Id
+                            join ar in _adminRoleRepository.TableNoTracking on r.Id equals ar.RoleId
+                            join a in _adminRepository.TableNoTracking on ar.AdminId equals a.Id
+                            where a.Id == id
+                            orderby m.Id
+                            select m;
+
+            menus = queryMenu.ToList();
+            
+            return menus;
+        }
 
     }
 }

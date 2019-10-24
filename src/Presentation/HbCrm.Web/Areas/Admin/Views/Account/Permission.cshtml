@@ -1,6 +1,6 @@
 ﻿@using HbCrm.Core.Domain.Authorize
 @using HbCrm.Core.Domain.Admin
-@model HbCrm.Core.Domain.Admin.SysRole
+@model IEnumerable<HbCrm.Core.Domain.Authorize.SysMenu>
 
 @{
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
@@ -20,16 +20,17 @@
     <script src="~/lib/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
     <script src="~/lib/jquery-treegrid/js/jquery.treegrid.js"></script>
     <script src="~/lib/bootstrap-table/extensions/treegrid/bootstrap-table-treegrid.js"></script>
-    <script type="text/javascript">       
+    <script type="text/javascript">
+
         @{
             //获取关联的菜单
             string strArry = string.Empty;
             strArry += "[";
-            foreach (var model in Model.Menus)
+            foreach (var model in Model)
             {
                 strArry += (model.Id + ",");
             }
-            if (Model.Menus.Count() > 0)
+            if (Model.Count() > 0)
             {
                 strArry = strArry.Substring(0, strArry.Length - 1);
             }
@@ -40,7 +41,7 @@
             var roleMenus =@ViewBag.Menus;
         //初始化
         $table = $('#list-menu-table');
-        var InitTable = function (url) {            
+        var InitTable = function (url) {
             //先销毁表格
             $table.bootstrapTable("destroy");
             //加载表格
@@ -90,7 +91,7 @@
                 dataField: "Rows",                    //默认为rows 为了统一大小写
                 //detailViewByClick: true,               //设置后 配合detailFormatter 可以获取明细信息
                 //detailView: true,                       //设置后 配合detailFormatter
-                checkboxHeader:true,                        //全选功能
+                //checkboxHeader:true,                        //全选功能
                 columns: [
                     {
                         checkbox: 'true',
@@ -179,64 +180,17 @@
                     return;
                 }
             });
-            return checked;
+            return {
+                disabled: 'false', checked: checked
+            };
         };
-        
+
         // 查询参数
         function queryParams(params) {
             return params
         }
 
-        //保存
-        $("#btn-save").click(function () {
-            $(this).data("backToList", true);
-            Save();
-        });
-        //保存继续编辑
-        $("#btn-save-edit").click(function () {
-            $("#btn-save").data("backToList", false);
-            Save();
-        });
 
-         //保存
-        function Save() {
-            var selecteds = $table.bootstrapTable('getSelections');
-            if (!selecteds || selecteds.length <= 0) { 
-                alert("没有选中任何行");
-                return;
-            }
-            var menuIds = [];
-            $.each(selecteds, function (index, item) {
-                menuIds.push(item.Id);
-            });
-            var requestData = {};
-            requestData.Id =@Model.Id;
-            requestData.menuIds = menuIds;
-             $.ajax({
-                    type: "POST",
-                    url: "@Url.Action("Permission", "Role", new { area = "Admin" })",
-                    dataType: "json",
-                    contentType: "application/x-www-form-urlencoded",
-                    data:requestData,
-                    error: function (request, message, error) {
-                        alert(request);
-                    },
-                    success: function (responseData) {
-                        data = JSON.parse(responseData);
-                         if (data.Status == 1) {
-                            var backToList = $("#btn-save").data("backToList");
-                            if (backToList) {
-                                window.location.href = "@Url.Action("Index", "Role", new { area = "Admin" })";
-                            } else {
-                                alert("保存成功，请继续修改");
-                            }
-                        } else {
-                            alert(data.Message)
-                        }
-                    }//success
-            });//ajax          
-
-        };
         //获取此节点的所有子孙节点（递归遍历）
         function getThisAllNodes($tr) {
             var nodeArry = [];
@@ -263,7 +217,7 @@
                 menuIds.push(id);
             });
         }
-        
+
         $(function () {
             url = '@Url.Action("List","Menu",new { area="Admin"})';
             InitTable(url);
@@ -277,14 +231,14 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <a id="btn-add-menu" href="@Url.Action("Index","Role",new { area = "Admin" })" class="btn btn-info btn-primary">
+                <a id="btn-add-menu" href="@Url.Action("Index","Account",new { area = "Admin" })" class="btn btn-info btn-primary">
                     <i class="fas fa-angle-left"></i>
-                    返回角色列表
+                    返回账号列表
                 </a>
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="@Url.Action("Permission","Role",new { area="Admin",Id=Model.Id})">角色权限配置</a></li>
+                    <li class="breadcrumb-item"><a href="@Url.Action("Permission","Account",new { area="Admin"})">拥有权限列表</a></li>
                     <li class="breadcrumb-item active">账号权限</li>
                     <li class="breadcrumb-item active">设置</li>
                 </ol>
@@ -296,14 +250,17 @@
 <!-- Main content -->
 <div class="content">
     <div class="container-fluid">
+        <div class="callout callout-info bg-yellow">
+            <h5><i class="fas fa-info"></i> 说明:</h5>
+            打勾的代表已经拥有的权限，为打勾的代表未拥有的权限，要分配权限请到<a class="link" href="@Url.Action("Index","Role",new { area = "Admin" })">角色列表</a>。
+        </div>
+
         <div class="row">
             <div class="col-12">
-
-
                 <div class="card card-gray">
                     <div class="card-header link border-0 " data-card-widget="collapse">
                         <div class="d-flex justify-content-between">
-                            <h3 class="card-title">角色权限配置</h3><div class="card-tools">
+                            <h3 class="card-title">拥有的权限</h3><div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
                                     <i class="fas fa-minus"></i>
                                 </button>
@@ -314,11 +271,6 @@
                         <div id="toolbar">
                         </div>
                         <table id="list-menu-table"></table>
-                        <div class="row justify-content-center mt-5">
-                            <input type="button" id="btn-save" value="保存" class="btn btn-success mr-5 " style="width:8rem;">
-                            <input type="button" id="btn-save-edit" value="保存/编辑" class="btn btn-success" style="width:8rem;">
-                        </div>
-                        <input type="hidden" value="@Model.Id" />
                     </div>
                 </div>
                 <!-- /.card -->

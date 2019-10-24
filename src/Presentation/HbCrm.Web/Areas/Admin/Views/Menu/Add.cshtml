@@ -112,7 +112,8 @@
             var secondData = $.map(menuData, function (item) {
                 return item.ParentMenuId == selectValue ? item : null;
             });
-            buildSeleteOption($("#secondParentMenuId"), secondData,2);
+            buildSeleteOption($("#secondParentMenuId"), secondData, 2);
+            setMenuSystemName(selectValue);
         });
         //二级菜单选择
         $("#secondParentMenuId").on("change",function () {
@@ -120,7 +121,8 @@
             var thirdData = $.map(menuData, function (item) {
                 return item.ParentMenuId == selectValue ? item : null;
             });
-            buildSeleteOption($("#thirdParentMenuId"), thirdData,3);
+            buildSeleteOption($("#thirdParentMenuId"), thirdData, 3);
+            setMenuSystemName(selectValue);
         });
 
         //三级级菜单选择
@@ -129,10 +131,11 @@
             if (selectValue && selectValue > 0) {
                 $("input[name='MenuType'][value='1']").attr("checked", false);
                 $("input[name='MenuType'][value='2']").attr("checked", true);
-            } else { 
+            } else {
                 $("input[name='MenuType'][value='1']").attr("checked", true);
                 $("input[name='MenuType'][value='2']").attr("checked", false);
             }
+            setMenuSystemName(selectValue);
         });
 
         //构建下拉选项
@@ -157,6 +160,14 @@
             });
             $select.append(selectOption);
             $select.trigger("change");
+        }
+        //系统名称自动填上
+        function setMenuSystemName(id) {
+            $.each(menuData, function (index, item) {
+                if (item.Id == id) {
+                    $("#menuSystermName").val(item.MenuSystermName);
+                }
+            });
         }
         $(function () {
             //获取全部菜单
@@ -231,9 +242,10 @@
                                 <input type="text" class="form-control" id="menuName" name="menuName" placeholder="菜单名称">
                             </div>
                             <div class="form-group  col-6">
-                                <label for="menuSystermName" class="col-form-label">菜单系统名称</label>
-                                <input type="text" class="form-control" id="menuSystermName" name="menuSystermName" placeholder="菜单系统名称">
+                                <label for="menuSort" class="col-form-label">排序</label>
+                                <input type="text" class="form-control" id="menuSort" name="menuSort" placeholder="0" value="0">
                             </div>
+
                         </div>
                         <div class="form-row">
                             <div class="form-group col-6">
@@ -267,6 +279,10 @@
                         </div>
 
                         <div class="form-row">
+                            <div class="form-group  col-6">
+                                <label for="menuSystermName" class="col-form-label">菜单系统名称</label>
+                                <input type="text" class="form-control" id="menuSystermName" name="menuSystermName" placeholder="菜单系统名称">
+                            </div>
                             <div class="form-group col-6">
                                 <label for="menuIcon" class=" col-form-label ">菜单图标</label>
                                 <div class="input-group">
@@ -275,10 +291,6 @@
                                         <button class="btn btn-outline-info" type="button" id="button-addon2">选择图标</button>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group  col-6">
-                                <label for="menuSort" class="col-form-label">排序</label>
-                                <input type="text" class="form-control" id="menuSort" name="menuSort" placeholder="0" value="0">
                             </div>
                         </div>
 

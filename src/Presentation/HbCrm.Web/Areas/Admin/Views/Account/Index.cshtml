@@ -113,7 +113,7 @@
                     {
                         field: 'action',
                         title: '操作',
-                        width: 110,
+                        width: 155,
                         //events: 'operateEvents',
                         formatter: 'operateFormatter',       //自定义表格内容，字符串内是方法名称
                     }
@@ -130,8 +130,12 @@
                     detail += '<div class="card-view"><span class="card-view-title">邮箱</span><span class="card-view-value">' + (row.Email == null ? "" : row.Email) + '</span></div>';
                     detail += '<div class="card-view"><span class="card-view-title">手机号</span><span class="card-view-value">' + (row.MobilePhone == null ? "" : row.MobilePhone) + '</span></div>';
                     detail += '<div class="card-view"><span class="card-view-title">QQ</span><span class="card-view-value">' + (row.QQ == null ? "" : row.QQ) + '</span></div>';
-                    detail += '<div class="card-view"><span class="card-view-title">微信号</span><span class="card-view-value">' + (row.WeChar == null ? "" : row.WeChar) + '</span></div>';
-                    detail += '<div class="card-view"><span class="card-view-title">操作</span><span class="card-view-value"><a class="btn btn-sm btn-primary" href="@Url.Action("Edit", "Account", new { area="Admin"})/' + row.Id + '" title="编辑"><i class="fas fa-edit"></i></a>　<a class="btn btn-sm btn-danger" href="javascript:deleteMenu(' + row.Id + ')" title="删除"><i class="fas fa-trash-alt"></i></a></span></div>';
+                    detail += '<div class="card-view"><span class="card-view-title">微信号</span><span class="card-view-value">' + (row.WeChar == null ? "" : row.WeChar) + '</span></div>';   
+                    detail += '<div class="card-view"><span class="card-view-title">操作</span><span class="card-view-value">';
+                         detail += '<a class="btn btn-sm btn-primary" href = "@Url.Action("Edit", "Account", new { area="Admin"})/' + row.Id + '" title="编辑"><i class="fas fa-edit"></i></a> ';
+                         detail += '<a class="btn btn-sm btn-success"  href = "@Url.Action("Permission", "Account", new { area="Admin"})/' + row.Id + '" title="查看权限"> <i class="fas fa-search"></i></a>';
+                         detail += '<button class="btn btn-sm btn-danger ml-1" onclick="deleteModel (' + row.Id + ')" title = "删除" > <i class="fas fa-trash-alt"></i></button>';
+                         detail += '</span ></div> ';
                     detail += '</div > ';
                     return detail;
                 },
@@ -154,8 +158,9 @@
         // 操作按钮
         function operateFormatter(value, row, index) {
             return [
-                '<a class="btn btn-sm btn-primary" href="@Url.Action("Edit","Account",new { area="Admin"})/'+row.Id+'" title="编辑"><i class="fas fa-edit"></i></a>　',
-                '<button class="btn btn-sm btn-danger" onclick="deleteModel(event,' + row.Id+ ')" title="删除"><i class="fas fa-trash-alt"></i></button>'
+                '<a class="btn btn-sm btn-primary" href="@Url.Action("Edit", "Account", new { area="Admin"})/' + row.Id + '" title="编辑"><i class="fas fa-edit"></i></a>　',
+                '<a class="btn btn-sm btn-success "  href = "@Url.Action("Permission", "Account", new { area="Admin"})/' + row.Id + '" title = "查看权限" > <i class="fas fa-search"></i></a >',
+                '<button class="btn btn-sm btn-danger ml-3" onclick="deleteModel(' + row.Id + ')" title="删除"><i class="fas fa-trash-alt"></i></button>'
             ].join('');
         };
 
@@ -170,8 +175,7 @@
             return params
         }
          //删除数据
-        function deleteModel(e, id) {
-            e.stopPropagation();
+        function deleteModel(id) {
             //aja异步请求
             $.ajax({
                 url: '@Url.Action("Delete", "Account", new { area="Admin"})',

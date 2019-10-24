@@ -217,5 +217,12 @@ namespace HbCrm.Web.Areas.Admin.Controllers
             return new JsonResult(JsonConvert.SerializeObject(response));
         }
 
+        [AdminAuthorize(Policy = PermissionKeys.AdminPermission)]
+        public IActionResult Permission(int id)
+        {
+            List<SysMenu> model = _adminService.GetMenus(id);
+            return View(model);
+        }
+
     }
 }

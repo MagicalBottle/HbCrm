@@ -52,5 +52,10 @@ namespace HbCrm.Core.Domain.Admin
         /// </summary>
         public List<SysAdmin> Admins { get; set; } = new List<SysAdmin>();
 
+        /// <summary>
+        /// 包含的菜单权限
+        /// </summary>
+        public List<SysMenu> Menus { get; set; } = new List<SysMenu>();
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using HbCrm.Core.Data;
 using HbCrm.Core.Domain.Admin;
+using HbCrm.Core.Domain.Authorize;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,13 +18,20 @@ namespace HbCrm.Services.Admin
         private readonly IRepository<SysAdminRole> _adminRoleRepository;
         private readonly IRepository<SysAdmin> _adminRepository;
 
+        private readonly IRepository<SysMenuRole> _menuRoleRepository;
+        private readonly IRepository<SysMenu> _menuRepository;
+
         public RoleService(IRepository<SysRole> roleRepository,
              IRepository<SysAdminRole> adminRoleRepository,
-             IRepository<SysAdmin> adminRepository)
+             IRepository<SysAdmin> adminRepository,
+             IRepository<SysMenuRole> menuRoleRepository,
+             IRepository<SysMenu> menuRepository)
         {
             _roleRepository = roleRepository;
             _adminRoleRepository = adminRoleRepository;
             _adminRepository = adminRepository;
+            _menuRoleRepository = menuRoleRepository;
+            _menuRepository = menuRepository;
         }
 
         /// <summary>
@@ -68,7 +76,7 @@ namespace HbCrm.Services.Admin
                 //转换成mysql locate() 只要找到返回的结果都大于0
                 query = query.Where(m => m.RoleName.IndexOf(roleName) > -1);
             }
-            
+
             query = query.Where(m => m.Status == roleStatus);
 
 
@@ -264,6 +272,110 @@ namespace HbCrm.Services.Admin
             var role = _roleRepository.Table.Where(m => m.Id == id);
 
             result = _roleRepository.Delete(role);
+            return result;
+        }
+
+        /// <summary>
+        /// 获取角色，包含角色对应的菜单权限
+        /// </summary>
+        /// <param name="">角色id</param>
+        /// <returns></returns>
+        public SysRole GetRoleWithMenus(int id)
+        {
+            if (id <= 0)
+            {
+                return null;
+            }
+
+            var query = from m in _roleRepository.TableNoTracking
+                        where m.Id == id
+                        select m;
+
+            var model = query.FirstOrDefault();
+
+            if (model == null)
+                return null;
+
+            var queryMenu = from m in _menuRepository.TableNoTracking
+                            join mr in _menuRoleRepository.TableNoTracking on m.Id equals mr.MenuId
+                            join r in _roleRepository.TableNoTracking on mr.RoleId equals r.Id
+                            where r.Id == id
+                            orderby m.Id
+                            select m;
+
+            var menus = queryMenu.ToList();
+
+            model.Menus = menus;
+
+            return model;
+        }
+
+
+
+        /// <summary>
+        ///  更新角色的权限
+        /// </summary>
+        /// <param name="role">角色</param>
+        /// <param name="adminIds">包含的菜单id</param>
+        /// <returns></returns>
+        public int UpdatePermission(SysRole role, List<int> menuIds)
+        {
+            int result = -1;
+            result = _roleRepository.BeginTransaction(() =>
+            {
+
+                result = _roleRepository.Update(role,
+                    m => m.LastUpdateBy, m => m.LastUpdateByName, m => m.LastUpdateDate);
+
+                var menuRoles = _menuRoleRepository.Table.Where(m => m.RoleId == role.Id).ToList();
+
+                #region 删除
+                //没有设置 全部删除
+                if (menuIds == null || menuIds.Count() <= 0)
+                {
+                    _menuRoleRepository.Delete(menuRoles);
+                }
+                else
+                {
+                    List<SysMenuRole> remveMenuRoles = new List<SysMenuRole>();
+                    foreach (var menuRole in menuRoles)
+                    {
+                        //没有包含，删除数据库
+                        if (!menuIds.Any(id => id == menuRole.MenuId))
+                        {
+                            remveMenuRoles.Add(menuRole);
+                        }
+                    }
+                    _menuRoleRepository.Delete(remveMenuRoles);
+                }
+                #endregion
+
+                #region 插入
+                if (menuIds != null && menuIds.Count() > 0)
+                {
+                    foreach (var id in menuIds)
+                    {
+                        if (!menuRoles.Any(m => m.MenuId == id))
+                        {
+                            //不存在新增
+                            var mr = new SysMenuRole()
+                            {
+                                MenuId = id,
+                                RoleId = role.Id,
+                                LastUpdateBy = role.LastUpdateBy,
+                                LastUpdateByName = role.LastUpdateByName,
+                                LastUpdateDate = role.LastUpdateDate,
+                                CreateBy = role.LastUpdateBy,
+                                CreatebyName = role.LastUpdateByName,
+                                CreateDate = role.LastUpdateDate
+                            };
+                            role.MenuRoles.Add(mr);
+                        }
+                    }
+                    result = _menuRoleRepository.Insert(role.MenuRoles);
+                }
+                #endregion
+            });
             return result;
         }
 

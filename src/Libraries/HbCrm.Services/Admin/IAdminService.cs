@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using HbCrm.Core;
 using HbCrm.Core.Domain.Admin;
+using HbCrm.Core.Domain.Authorize;
 
 namespace HbCrm.Services.Admin
 {
@@ -94,5 +95,12 @@ namespace HbCrm.Services.Admin
         /// <param name="id">id</param>
         /// <returns></returns>
         int Delete(int id);
+
+        /// <summary>
+        /// 查找账号的菜单权限
+        /// </summary>
+        /// <param name="id">账号id</param>
+        /// <returns></returns>
+        List<SysMenu> GetMenus(int id);
     }
 }

@@ -72,5 +72,20 @@ namespace HbCrm.Services.Admin
         /// <param name="id">id</param>
         /// <returns></returns>
         int DeleteRoleById(int id);
+
+        /// <summary>
+        /// 获取角色，包含角色对应的菜单权限
+        /// </summary>
+        /// <param name="">角色id</param>
+        /// <returns></returns>
+         SysRole GetRoleWithMenus(int id);
+
+        /// <summary>
+        ///  更新角色的权限
+        /// </summary>
+        /// <param name="role">角色</param>
+        /// <param name="adminIds">包含的菜单id</param>
+        /// <returns></returns>
+        int UpdatePermission(SysRole role, List<int> menuIds);
     }
 }

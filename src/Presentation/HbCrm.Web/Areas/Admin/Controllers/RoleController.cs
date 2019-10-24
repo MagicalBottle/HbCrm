@@ -215,20 +215,41 @@ namespace HbCrm.Web.Areas.Admin.Controllers
             return new JsonResult(JsonConvert.SerializeObject(response));
         }
 
-        //[AdminAuthorize(Policy = PermissionKeys.RoleEdit)]
-        //public IActionResult Permission(int id)
-        //{
-        //    var role = _roleService.GetMenus(id);
-        //    return View(role);
-        //}
+        [AdminAuthorize(Policy = PermissionKeys.RoleEdit)]
+        public IActionResult Permission(int id)
+        {
+            var model = _roleService.GetRoleWithMenus(id);
+            return View(model);
+        }
 
 
-        //[AdminAuthorize(Policy = PermissionKeys.RoleEdit)]
-        //[HttpPost]
-        //public IActionResult Permission(int id)
-        //{
-        //    var role = _roleService.GetMenus(id);
-        //    return View(role);
-        //}
+        [AdminAuthorize(Policy = PermissionKeys.RoleEdit)]
+        [HttpPost]
+        public IActionResult Permission(int id,List<int> menuIds)
+        {
+            var response = new ReponseOutPut();
+            response.Code = "success";
+            response.Message = "分配权限成功";
+
+            if (menuIds == null || menuIds.Count() <= 0)
+            {
+                return new JsonResult(JsonConvert.SerializeObject(response));
+            }
+
+            var role = new SysRole();
+            role.Id = id;
+            role.LastUpdateBy = _context.Admin.Id;
+            role.LastUpdateByName = _context.Admin.UserName;
+            role.LastUpdateDate = DateTime.Now;
+
+            var result = _roleService.UpdatePermission(role, menuIds);
+            if (result < 0)
+            {
+                response.Status = ReutnStatus.Error;
+                response.Code = "error";
+                response.Message = "分配权限失败";
+            }
+            return new JsonResult(JsonConvert.SerializeObject(response));
+        }
     }
 }
