@@ -20,7 +20,8 @@
     <script src="~/lib/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
     <script src="~/lib/jquery-treegrid/js/jquery.treegrid.js"></script>
     <script src="~/lib/bootstrap-table/extensions/treegrid/bootstrap-table-treegrid.js"></script>
-    <script type="text/javascript">       
+    <script type="text/javascript">
+
         @{
             //获取关联的菜单
             string strArry = string.Empty;
@@ -40,7 +41,7 @@
             var roleMenus =@ViewBag.Menus;
         //初始化
         $table = $('#list-menu-table');
-        var InitTable = function (url) {            
+        var InitTable = function (url) {
             //先销毁表格
             $table.bootstrapTable("destroy");
             //加载表格
@@ -127,6 +128,8 @@
                         visible: false
                     }
                 ],
+                onCheck: checkFunction,
+                onUncheck: onUncheckFunction,
                 responseHandler: function (res) {
                     return JSON.parse(res);//转成json否则不能显示
                 },
@@ -181,7 +184,7 @@
             });
             return checked;
         };
-        
+
         // 查询参数
         function queryParams(params) {
             return params
@@ -201,7 +204,7 @@
          //保存
         function Save() {
             var selecteds = $table.bootstrapTable('getSelections');
-            if (!selecteds || selecteds.length <= 0) { 
+            if (!selecteds || selecteds.length <= 0) {
                 alert("没有选中任何行");
                 return;
             }
@@ -234,36 +237,88 @@
                             alert(data.Message)
                         }
                     }//success
-            });//ajax          
+            });//ajax
 
         };
-        //获取此节点的所有子孙节点（递归遍历）
-        function getThisAllNodes($tr) {
+
+        //选中事件
+        function checkFunction(row, $element) {
+            ////父级祖父级选中
+            //标识父级选中，不在触发事件
+            var isOnCheck = $element.data("isOnCheck");
+            if (isOnCheck != null && isOnCheck != undefined && isOnCheck == false) {
+                return;
+            }
+
+            $tr = $($element).closest("tr");//从当前元素往上找，找到第一个tr即返回，如果没找到返回空jQuery对象
+            var parentNodes = getThisAllParentNodes($tr);
+            $.each(parentNodes, function (index, $item) {
+                var clickIndex = $element.attr("data-index");
+                var rowIndex = $item.attr("data-index");
+                if (clickIndex != rowIndex) {
+                    $item.find('input[name="btSelectItem"]').first().data("isOnCheck", false);
+                    $table.bootstrapTable('check', rowIndex);
+                }
+            });
+            //所有子孙选中
+            var childNodes = getThisAllChildNodes($tr);
+            $.each(childNodes, function (index, $item) {
+                var clickIndex = $element.attr("data-index");
+                var rowIndex = $item.attr("data-index");
+                if (clickIndex != rowIndex) {
+                    $table.bootstrapTable('check', rowIndex)
+                }
+            });
+        }
+        //取消选中
+        function onUncheckFunction(row, $element) {
+            //所有子孙取消选中
+            $tr = $($element).closest("tr");//从当前元素往上找，找到第一个tr即返回，如果没找到返回空jQuery对象
+            var childNodes = getThisAllChildNodes($tr);
+            $.each(childNodes, function (index, $item) {
+                var clickIndex = $element.attr("data-index");
+                var rowIndex = $item.attr("data-index");
+                if (clickIndex != rowIndex) {
+                    $table.bootstrapTable('uncheck', rowIndex)
+                }
+            });
+        }
+
+        //获取此节点的所有子孙节点（递归遍历） 返回数组包含当前节点
+        function getThisAllChildNodes($tr) {
             var nodeArry = [];
             var $nodes = $tr.treegrid('getChildNodes');
 
-            nodeArry=nodeArry.concat($tr);//添加当前的
+            nodeArry = nodeArry.concat($tr);//添加当前的
 
             if ($nodes == null || $nodes.length <= 0) {
                 return nodeArry;
             }
 
             $.each($nodes, function (index, node) {
-                nodeArry=nodeArry.concat(getThisAllNodes($(node)));
+                nodeArry = nodeArry.concat(getThisAllChildNodes($(node)));
             });
 
             return nodeArry;
         }
-        function ddd() {
-            var $nodes = getThisAllNodes($tr);//获取所有子节点
-            var menuIds = [];
+        //获取此节点的所有父祖父节点（递归遍历） 返回数组包含当前节点
+        function getThisAllParentNodes($tr) {
+            var nodeArry = [];
+            var $nodes = $tr.treegrid('getParentNode');
+
+            nodeArry = nodeArry.concat($tr);//添加当前的
+
+            if ($nodes == null || $nodes.length <= 0) {
+                return nodeArry;
+            }
+
             $.each($nodes, function (index, node) {
-                var $node = $(node);
-                var id = $node.attr("data-uniqueid");
-                menuIds.push(id);
+                nodeArry = nodeArry.concat(getThisAllParentNodes($(node)));
             });
+
+            return nodeArry;
         }
-        
+
         $(function () {
             url = '@Url.Action("List","Menu",new { area="Admin"})';
             InitTable(url);

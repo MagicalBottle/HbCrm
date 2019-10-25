@@ -169,7 +169,7 @@
                 return;
             }
 
-            var $nodes = getThisAllNodes($tr);//获取所有子节点
+            var $nodes = getThisAllChildNodes($tr);//获取所有子节点
             var menuIds = [];
             $.each($nodes, function (index, node) {
                 var $node = $(node);
@@ -208,8 +208,8 @@
                 });//ajax
             }
         };
-        //获取此节点的所有子孙节点（递归遍历）
-        function getThisAllNodes($tr) {
+        //获取此节点的所有子孙节点（递归遍历） 返回数组包含当前节点
+        function getThisAllChildNodes  ($tr) {
             var nodeArry = [];
             var $nodes = $tr.treegrid('getChildNodes');
 
@@ -220,7 +220,24 @@
             }
 
             $.each($nodes, function (index, node) {
-                nodeArry=nodeArry.concat(getThisAllNodes($(node)));
+                nodeArry = nodeArry.concat(getThisAllChildNodes($(node)));
+            });
+
+            return nodeArry;
+        }
+        //获取此节点的所有父祖父节点（递归遍历） 返回数组包含当前节点
+        function getThisAllParentNodes($tr) { 
+            var nodeArry = [];
+            var $nodes = $tr.treegrid('getParentNode');
+
+            nodeArry = nodeArry.concat($tr);//添加当前的
+
+            if ($nodes == null || $nodes.length <= 0) {
+                return nodeArry;
+            }
+
+            $.each($nodes, function (index, node) {
+                nodeArry = nodeArry.concat(getThisAllParentNodes($(node)));
             });
 
             return nodeArry;
