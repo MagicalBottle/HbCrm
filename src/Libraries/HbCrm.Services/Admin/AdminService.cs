@@ -8,6 +8,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using Microsoft.EntityFrameworkCore;
 using HbCrm.Core;
+using HbCrm.Core.Domain.DataEnumerate;
 
 namespace HbCrm.Services.Admin
 {
@@ -85,7 +86,7 @@ namespace HbCrm.Services.Admin
             var queryRoles = from r in _roleRepository.Table
                              join ar in _adminRoleRepository.Table on r.Id equals ar.RoleId
                              join a in _adminRepository.Table on ar.AdminId equals a.Id
-                             where a.UserName == userName
+                             where a.UserName == userName && r.Status== (int)RoleStatus.Active
                              orderby r.Id
                              select r;
             var sysRoles = queryRoles.ToList();
@@ -94,9 +95,10 @@ namespace HbCrm.Services.Admin
             //对应菜单
             var queryMenu = from m in _menuRepository.Table
                             join mr in _menuRoleRepository.Table on m.Id equals mr.MenuId
+                            join r in _roleRepository.Table on mr.RoleId equals r.Id
                             join ar in _adminRoleRepository.Table on mr.RoleId equals ar.RoleId
                             join a in _adminRepository.Table on ar.AdminId equals a.Id
-                            where a.UserName == userName
+                            where a.UserName == userName && r.Status == (int)RoleStatus.Active
                             orderby m.Id
                             select m;
             var sysMenus = queryMenu.ToList();

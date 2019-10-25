@@ -6,6 +6,7 @@ using AutoMapper;
 using HbCrm.Core;
 using HbCrm.Core.Domain.Admin;
 using HbCrm.Core.Domain.Authorize;
+using HbCrm.Core.Domain.DataEnumerate;
 using HbCrm.Services.Admin;
 using HbCrm.Services.Authorize;
 using HbCrm.Services.Web;

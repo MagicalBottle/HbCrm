@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HbCrm.Core.Domain.Admin;
 using HbCrm.Core.Domain.Authorize;
+using HbCrm.Core.Domain.DataEnumerate;
 using HbCrm.Web.Areas.Admin.Models;
 using HbCrm.Web.Areas.Admin.Models.Admin;
 using HbCrm.Web.Areas.Admin.Models.Authorize;
@@ -31,7 +32,8 @@ namespace HbCrm.Web.Areas.Admin.Mapping.Admin
 
 
             CreateMap<RoleInput, SysRole>()
-                .ForMember(to => to.AdminRoles, option => option.Ignore());
+                .ForMember(to => to.AdminRoles, option => option.Ignore())
+                .ForMember(to => to.RoleStatus, opt => opt.MapFrom((source, destination)=> { return source.RoleStatus == 1 ? RoleStatus.Active : RoleStatus.Locked; }));
 
 
             CreateMap<MenuInput, SysMenu>()

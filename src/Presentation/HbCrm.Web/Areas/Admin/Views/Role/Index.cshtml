@@ -88,7 +88,7 @@
                     {
                         field: 'RoleStatus',
                         title: '角色状态',
-                        sortable: true
+                        formatter: 'roleStatusFormatter' 
                     },
                     {
                         field: 'RoleRemark',
@@ -100,7 +100,7 @@
                         title: '操作',
                         width: 155,
                         //events: 'operateEvents',
-                        formatter: 'operateFormatter',       //自定义表格内容，字符串内是方法名称
+                        formatter: 'operateFormatter'      //自定义表格内容，字符串内是方法名称
                     }
                     //,
                     //{
@@ -112,7 +112,7 @@
                     detail += '<div class="card-view"><span class="card-view-title">Id</span><span class="card-view-value">' + row.Id + '</span></div>';
                      detail += '<div class="card-view"><span class="card-view-title">角色名称</span><span class="card-view-value">' + row.RoleName + '</span></div>';
                      detail += '<div class="card-view"><span class="card-view-title">角色状态</span><span class="card-view-value">' + (row.RoleStatus == null ? "" : row.RoleStatus) + '</span></div>';
-                     detail += '<div class="card-view"><span class="card-view-title">角色说明</span><span class="card-view-value">' + (row.RoleRemark == null ? "" : row.RoleRemark) + '</span></div>'; 
+                     detail += '<div class="card-view"><span class="card-view-title">角色说明</span><span class="card-view-value">' + (row.RoleRemark == null ? "" : row.RoleRemark) + '</span></div>';
                      detail += '<div class="card-view"><span class="card-view-title">操作</span><span class="card-view-value">';
                          detail += '<a class="btn btn-sm btn-primary" href = "@Url.Action("Edit", "Role", new { area="Admin"})/' + row.Id + '" title="编辑"><i class="fas fa-edit"></i></a> ';
                          detail += '<a class="btn btn-sm btn-success"  href = "@Url.Action("Permission", "Role", new { area="Admin"})/' + row.Id + '" title="分配权限"> <i class="fas fa-key"></i></a>';
@@ -145,13 +145,17 @@
                 '<button class="btn btn-sm btn-danger ml-3" onclick="deleteEntity(' + row.Id + ')" title="删除"><i class="fas fa-trash-alt"></i></button>'
             ].join('');
         };
+        //状态
+        function roleStatusFormatter(value, row, index) {
+            return row.RoleStatus == 1 ? "启用" : "禁用";
+        };
 
         // 查询参数
         function queryParams(params) {
             params.RoleName = $("#RoleName").val().trim();
             params.RoleSystermName = $("#RoleSystermName").val().trim();
             params.RoleStatus = $("#RoleStatus").val().trim();
-            params.RoleRemark = $("#RoleRemark").val().trim();           
+            params.RoleRemark = $("#RoleRemark").val().trim();
             return params
         }
          //删除数据
@@ -168,7 +172,7 @@
                     if (data.Status == 1) {
                         refresh();
                         alert('数据删除成功');
-                    } else { 
+                    } else {
                         alert('数据删除失败');
                     }
                 },
@@ -279,7 +283,11 @@
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text">角色状态</div>
                                                 </div>
-                                                <input id="RoleStatus" name="RoleStatus" type="text" class="form-control" placeholder="角色状态">
+                                                <select class="form-control" id="RoleStatus" name="RoleStatus">
+                                                    <option value="-1" selected>全部状态</option>
+                                                    <option value="1" >启用</option>
+                                                    <option value="2" >禁用</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-6">

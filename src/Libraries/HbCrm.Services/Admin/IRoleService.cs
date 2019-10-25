@@ -31,7 +31,7 @@ namespace HbCrm.Services.Admin
             string sortName = "Id",
             string sortOrder = "DESC",
             string roleName = null,
-            int roleStatus = -1,
+            int roleStatus =-1,
             string roleRemark = null);
 
         /// <summary>

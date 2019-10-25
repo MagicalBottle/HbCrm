@@ -1,4 +1,5 @@
 ﻿@model HbCrm.Core.Domain.Admin.SysRole
+@using HbCrm.Core.Domain.DataEnumerate;
 @{
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
@@ -9,6 +10,7 @@
     <link href="~/css/admin.css?v=1.0.0" rel="stylesheet" />
     <link href="~/lib/jquery-select2/css/select2.css" rel="stylesheet" />
     <link href="~/lib/jquery-select2/theme/select2-bootstrap4.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap-switch/css/bootstrap-switch.min.css?v4.0.0" rel="stylesheet" />
 }
 <!-- Css -->
 <!-- Scripts -->
@@ -17,22 +19,22 @@
     <script src="~/lib/jquery-formvalidation/js/formvalidation.js"></script>
     <script src="~/lib/jquery-select2/js/select2.min.js"></script>
     <script src="~/lib/jquery-select2/js/i18n/zh-CN.js"></script>
+    <script src="~/lib/bootstrap-switch/js/bootstrap-switch.min.js?v4.0.0"></script>
     <script type="text/javascript">
         var validator = $("#form-edit").formvalidation({
             rules: {
                 RoleName: {
                     required: true
-                },
-                RoleStatus: {
-                    required: true
                 }
             },
             messages: {
-                RoleName: "请输入角色名称",
-                RoleStatus: "请输入角色状态"
+                RoleName: "请输入角色名称"
             },
             submitHandler: function (form) {
-                var requestData = $(form).serialize();
+                var roleStatus = $("#RoleStatus").is(":checked") ? 1 : 0;        // true / false
+                //var roleStatus = $("#RoleStatus").prop("checked") ? 1 : 0;        // true / false
+
+                var requestData = "RoleStatus=" + roleStatus + "&" + $(form).serialize();
                 $.ajax({
                     type: "POST",
                     url: "@Url.Action("Edit", "Role", new { area = "Admin" })",
@@ -50,6 +52,7 @@
                                 window.location.href = "@Url.Action("Index", "Role", new { area = "Admin" })";
                             } else {
                                 alert("保存成功，请继续修改");
+                                return;
                             }
                         } else {
                             alert(data.Message)
@@ -89,7 +92,7 @@
             ViewBag.Roles = strArry;
         }
         var selectedData=@ViewBag.Roles;
-       
+
 
         $(function () {
             //初始化
@@ -117,6 +120,20 @@
                     console.log(errorThrown);
                 }
             });//ajax
+            
+            @{
+                ViewBag.RoleStatusChecked= Model.RoleStatus == RoleStatus.Active ? "true" : "false";
+            }
+
+            $("#RoleStatus").bootstrapSwitch({
+                onColor: 'primary',
+                offColor: 'secondary',
+                onText: '启用',
+                offText: '禁用',
+                state:@ViewBag.RoleStatusChecked
+            });
+            $("#RoleStatus").prop("checked", @ViewBag.RoleStatusChecked);
+
         });
 
     </script>
@@ -166,7 +183,9 @@
                             </div>
                             <div class="form-group  col-6">
                                 <label for="RoleStatus" class="col-form-label">角色状态</label>
-                                <input type="text" class="form-control" id="RoleStatus" name="RoleStatus" placeholder="角色状态" value="@Model.Status">
+                                <div>
+                                    <input type="checkbox" class="form-control" id="RoleStatus" name="RoleStatus" placeholder="角色状态">
+                                </div>
                             </div>
                         </div>
 

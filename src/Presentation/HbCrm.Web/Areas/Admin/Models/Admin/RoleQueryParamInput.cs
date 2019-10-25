@@ -15,7 +15,7 @@ namespace HbCrm.Web.Areas.Admin.Models.Admin
         /// <summary>
         /// 角色状态
         /// </summary>
-        public int RoleStatus { get; set; } = 1;
+        public int RoleStatus { get; set; } = -1;
 
         /// <summary>
         /// 角色说明

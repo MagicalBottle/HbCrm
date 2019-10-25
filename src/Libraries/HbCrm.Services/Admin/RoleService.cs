@@ -8,6 +8,7 @@ using System.Linq;
 using HbCrm.Core;
 using System.Linq.Dynamic.Core;
 using Microsoft.EntityFrameworkCore;
+using HbCrm.Core.Domain.DataEnumerate;
 
 namespace HbCrm.Services.Admin
 {
@@ -62,7 +63,7 @@ namespace HbCrm.Services.Admin
             string sortName = "Id",
             string sortOrder = "DESC",
             string roleName = null,
-            int roleStatus = 1,
+            int roleStatus = -1,
             string roleRemark = null)
         {
             //null 传播 https://github.com/StefH/System.Linq.Dynamic.Core/wiki/NullPropagation
@@ -77,7 +78,10 @@ namespace HbCrm.Services.Admin
                 query = query.Where(m => m.RoleName.IndexOf(roleName) > -1);
             }
 
-            query = query.Where(m => m.Status == roleStatus);
+            if (roleStatus > 0)
+            {
+                query = query.Where(m => m.Status == roleStatus);
+            }
 
 
             if (!string.IsNullOrEmpty(roleRemark))

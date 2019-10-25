@@ -32,7 +32,7 @@
                 {
                     builder.Append("<li  class=\"nav-item has-treeview " + (menu.Active ? "menu-open" : "") + "\">");
                     builder.Append("<a class=\"nav-link " + (menu.Active ? "active" : "") + "\" href=\"#\" >");
-                    builder.Append("<i class=\"nav-icon fas fa-tachometer-alt\"></i>");
+                    builder.Append("<i class=\"nav-icon " + menu.MenuIcon + "\"></i>");
                     builder.Append("<p>" + menu.MenuName + "");
                     builder.Append("<i class=\"right fas fa-angle-left\"></i>");
                     builder.Append("</p>");
@@ -46,7 +46,7 @@
                 {
                     builder.Append("<li class=\"nav-item\">");
                     builder.Append("<a class=\"nav-link " + (menu.Active ? "active" : "") + "\" href=\"" + menu.MenuUrl + "\">");
-                    builder.Append("<i class=\"nav-icon fas fa-th\"></i>");
+                    builder.Append("<i class=\"nav-icon " + menu.MenuIcon + "\"></i>");
                     builder.Append("<p >" + menu.MenuName + "</p>");
                     builder.Append("</a>");
                     builder.Append("</li>");
