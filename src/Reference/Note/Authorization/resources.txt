@@ -1,0 +1,11 @@
+¹ÙÍø http://automapper.org/
+
+
+
+²Î¿¼ https://www.cnblogs.com/ibeisha/p/jwt-webapi.html
+	https://www.cnblogs.com/RayWang/p/9255093.html
+	http://www.imooc.com/article/273911
+
+µ¥µãµÇÂ¼SSO
+	https://www.cnblogs.com/xieqing/p/6519907.html
+	https://blog.csdn.net/qq_38401919/article/details/80535258
